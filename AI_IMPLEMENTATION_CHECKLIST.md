@@ -13,6 +13,10 @@ This document tracks important features and changes that affect deployment and m
 
 ### Core Infrastructure
 - [x] Supabase client setup (browser, server, middleware)
+- [x] Supabase project configured and linked (pcltfprbgwqmymmveloj)
+- [x] All database migrations applied (26 tables with RLS)
+- [x] Auth providers configured (email + OAuth ready)
+- [x] MCP server configured for Supabase
 - [x] i18n implementation (next-intl) with English and Estonian
 - [x] Service layer structure (Portfolio, Projects, CRM, Email)
 - [x] Shared packages (@portfolio/shared, @portfolio/database)
@@ -29,7 +33,13 @@ This document tracks important features and changes that affect deployment and m
 ## Planned Features
 
 ### Core Infrastructure
-- [ ] Authentication system (login/register pages)
+- [x] Authentication system (login/register pages)
+  - [x] Sign up page with validation
+  - [x] Sign in page with validation
+  - [x] Email verification flow
+  - [x] Password reset flow
+  - [x] Profile completion/onboarding
+  - [x] Auth middleware and route protection
 - [ ] API route implementation
 - [ ] Rate limiting middleware
 - [ ] Request validation with Zod
@@ -41,6 +51,9 @@ This document tracks important features and changes that affect deployment and m
 - [x] Portfolio service implementation (CRUD operations)
 - [x] Template system with apply functionality
 - [x] RLS policies for public/private access
+- [x] All portfolio tables migrated to Supabase
+- [x] Templates library seeded (5 starter templates)
+- [x] Complete RLS policies implemented (20 policies total)
 - [ ] Block-based page builder UI
 - [ ] SSG rendering for public sites
 - [x] Analytics integration (database and service)

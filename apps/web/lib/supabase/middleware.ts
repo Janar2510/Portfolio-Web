@@ -37,14 +37,29 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  // Extract locale and path without locale
+  const pathname = request.nextUrl.pathname;
+  const locale = pathname.split('/')[1];
+  const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
+
+  // Public auth routes that don't require authentication
+  const publicAuthRoutes = [
+    '/sign-in',
+    '/sign-up',
+    '/forgot-password',
+    '/reset-password',
+    '/verify-email',
+    '/auth/callback',
+  ];
+
+  const isPublicAuthRoute = publicAuthRoutes.some((route) =>
+    pathWithoutLocale.startsWith(route)
+  );
+
+  if (!user && !isPublicAuthRoute) {
+    // No user and not a public route, redirect to sign in
     const url = request.nextUrl.clone();
-    url.pathname = '/login';
+    url.pathname = `/${locale}/sign-in`;
     return NextResponse.redirect(url);
   }
 

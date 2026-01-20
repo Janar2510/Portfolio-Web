@@ -1,0 +1,41 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+.next
+out
+build
+dist
+.turbo
+
+# Generated files
+*.tsbuildinfo
+next-env.d.ts
+
+# Supabase
+.branches
+.temp
+supabase/.temp
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db

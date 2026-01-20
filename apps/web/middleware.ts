@@ -1,13 +1,90 @@
 import createMiddleware from 'next-intl/middleware';
+import { updateSession } from '@/lib/supabase/middleware';
 import { routing } from './i18n/routing';
+import { NextResponse, type NextRequest } from 'next/server';
 
-export default createMiddleware(routing);
+const intlMiddleware = createMiddleware(routing);
+
+// Public auth routes that don't require authentication
+const publicAuthRoutes = [
+  '/sign-in',
+  '/sign-up',
+  '/forgot-password',
+  '/reset-password',
+  '/verify-email',
+  '/auth/callback',
+];
+
+export async function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
+  const hostname = request.headers.get('host') || '';
+  
+  // Check if this is a subdomain request (portfolio site)
+  // Format: subdomain.domain.com or subdomain.localhost:3000
+  const subdomainMatch = hostname.match(/^([^.]+)\./);
+  const isSubdomainRoute = subdomainMatch && subdomainMatch[1] !== 'www' && subdomainMatch[1] !== 'app';
+  
+  // If it's a subdomain route, handle it differently
+  if (isSubdomainRoute) {
+    const subdomain = subdomainMatch[1];
+    const pathname = url.pathname;
+    
+    // Rewrite to /sites/[subdomain]/[slug] format
+    if (pathname === '/' || pathname === '') {
+      url.pathname = `/sites/${subdomain}`;
+    } else {
+      url.pathname = `/sites/${subdomain}${pathname}`;
+    }
+    
+    // Don't apply auth or locale middleware for public portfolio sites
+    return NextResponse.rewrite(url);
+  }
+
+  // For regular app routes, handle internationalization
+  const response = intlMiddleware(request);
+
+  // Extract locale from pathname
+  const pathname = request.nextUrl.pathname;
+  const locale = pathname.split('/')[1];
+  const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
+
+  // Check if this is a public auth route
+  const isPublicAuthRoute = publicAuthRoutes.some((route) =>
+    pathWithoutLocale.startsWith(route)
+  );
+
+  // Update Supabase session (this handles auth state)
+  const supabaseResponse = await updateSession(request);
+
+  // If it's a public auth route, allow access
+  if (isPublicAuthRoute) {
+    return response;
+  }
+
+  // For protected routes, check authentication
+  // The updateSession function already handles redirects for unauthenticated users
+  // But we need to merge the responses properly
+  if (supabaseResponse.status === 307 || supabaseResponse.status === 308) {
+    // If redirecting to login, use that response
+    return supabaseResponse;
+  }
+
+  // Otherwise, return the intl response with Supabase cookies
+  supabaseResponse.headers.forEach((value, key) => {
+    if (key.toLowerCase() === 'set-cookie') {
+      response.headers.set(key, value);
+    }
+  });
+
+  return response;
+}
 
 export const config = {
   matcher: [
     // Match all pathnames except for
     // - … if they start with `/api`, `/_next` or `/_vercel`
     // - … the ones containing a dot (e.g. `favicon.ico`)
-    '/((?!api|_next|_vercel|.*\\..*).*)',
+    // - … static files
+    '/((?!api|_next|_vercel|sites|.*\\..*).*)',
   ],
 };

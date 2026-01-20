@@ -79,3 +79,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reusable React hook for managing realtime subscriptions (useRealtimeSubscription)
 - Channel examples for tasks, deals, CRM activities, and emails
 - Best practices and performance considerations for realtime
+- Prettier configuration for code formatting
+- ESLint integration with Prettier
+- Shadcn UI setup with components.json
+- Tailwind CSS configuration with Shadcn UI theme
+- Button component from Shadcn UI
+- EditorConfig for consistent code style
+- Setup documentation and development guides
+- MCP server setup for Supabase integration
+- MCP configuration files and setup script
+- Documentation for Supabase MCP server (hosted and self-hosted options)
+- Supabase project configuration (pcltfprbgwqmymmveloj)
+- Setup scripts for Supabase project initialization
+- Migration verification script
+- Quick start guide with step-by-step instructions
+- Auth provider configuration documentation
+- Supabase project initialized and configured
+- All migrations applied successfully
