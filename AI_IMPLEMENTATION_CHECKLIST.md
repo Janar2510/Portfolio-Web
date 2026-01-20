@@ -66,11 +66,22 @@ This document tracks important features and changes that affect deployment and m
 - [x] Subtask/checklist support
 - [x] Task comments and attachments
 - [x] RLS policies for multi-tenant security
-- [ ] Kanban board UI
-- [ ] Drag-and-drop (dnd-kit) integration
+- [x] Kanban board UI
+- [x] Drag-and-drop (dnd-kit) integration
+- [x] Project list view with create/edit/delete
+- [x] Task detail modal with subtasks and comments
+- [x] Column and task drag-and-drop reordering
+- [x] Calendar view component (month/week/day)
+- [x] iCal feed generation
+- [x] Due date notifications edge function
 
 ### CRM Module
 - [x] CRM database schema (companies, contacts, pipeline stages, deals, activities, follow-ups)
+- [x] CRM data layer migration applied
+- [x] All CRM tables created with proper structure
+- [x] Comprehensive RLS policies implemented (24 policies)
+- [x] Database triggers for automatic updates
+- [x] Performance indexes created
 - [x] CRM service implementation (CRUD operations)
 - [x] Company management
 - [x] Contact management with tags and custom fields
@@ -79,9 +90,20 @@ This document tracks important features and changes that affect deployment and m
 - [x] Activity timeline tracking
 - [x] Follow-up reminder system
 - [x] RLS policies for multi-tenant security
-- [ ] CRM UI components
-- [ ] Pipeline visualization
-- [ ] Activity timeline UI
+- [x] CRM UI components
+- [x] Contact list with filtering/search
+- [x] Contact detail page with timeline
+- [x] Company management UI
+- [x] Activity timeline component
+- [x] Enhanced activity logging with complete/incomplete toggles
+- [x] Follow-up reminders component
+- [x] Notifications panel component
+- [x] Activities & Follow-ups page
+- [x] Follow-up notifications edge function
+- [x] Pipeline visualization
+- [x] Pipeline board with drag-and-drop
+- [x] Deal management UI
+- [x] Stage customization
 
 ### Email Module
 - [x] Email database schema (accounts, emails, templates)

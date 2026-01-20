@@ -8,6 +8,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Activities & Follow-ups system with comprehensive activity logging
+- FollowUpReminders component for managing follow-up reminders
+- NotificationsPanel component for centralized notification display
+- Activities page at `/crm/activities` route with tabbed interface
+- Enhanced ActivityTimeline with complete/incomplete toggles
+- Follow-up notifications edge function
+- Activity and follow-up status organization (overdue, today, tomorrow, completed)
+- Priority-based notification sorting
+- Pipeline board view with drag-and-drop deal management
+- PipelineBoard component with stage and deal drag-and-drop
+- DealCard component with value and probability display
+- PipelineStage component with deal statistics
+- DealDetailModal for viewing and editing deals
+- StageCustomization component for managing pipeline stages
+- Pipeline page at `/crm/pipeline` route
+- Deal creation and management
+- Stage reordering and customization
+- Automatic deal close date when moved to won stage
+- Contact management UI with list, filtering, and search
+- Contact detail page with activity timeline
+- Company management UI with list and contact association
+- ActivityTimeline component for CRM activities
+- ContactList component with advanced filtering (search, company, tags)
+- CompanyList component with contact counts
+- CRM routes: `/crm/contacts` and `/crm/companies`
+- Contact detail route: `/crm/contacts/[id]`
+- Badge UI component
+- CRM data layer migration complete
+- All CRM tables (companies, contacts, pipeline_stages, deals, crm_activities, follow_ups) migrated
+- Comprehensive RLS policies (24 policies total)
+- Database triggers for automatic data updates
+- Performance indexes for optimized queries
+- Calendar integration with month/week/day views
+- CalendarView component with multiple view modes
+- iCal feed generation API
+- Due date notifications edge function for task reminders
+- Calendar page at `/projects/calendar` route
+- iCal export functionality for external calendar applications
+- Task display in calendar with priority color coding
+- Kanban board UI with drag-and-drop functionality
+- ProjectList component for managing projects
+- KanbanBoard component with column and task drag-and-drop
+- TaskCard component with priority and due date indicators
+- TaskDetailModal with subtasks and comments management
+- Task detail editing (title, description, priority, due date)
+- Subtasks/checklist with completion tracking
+- Comments system with edit/delete functionality
+- Project creation with default columns (To Do, In Progress, Done)
+- Column reordering via drag-and-drop
+- Task movement between columns via drag-and-drop
+- Task reordering within columns via drag-and-drop
+- Projects page at `/projects` route
 - Initial project structure and architecture
 - Monorepo setup with Turbo
 - Next.js 14 application scaffold with App Router

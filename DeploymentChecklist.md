@@ -23,6 +23,9 @@
 - [ ] Run linter: `npm run lint`
 - [ ] Run build: `npm run build`
 - [ ] Test all API endpoints
+- [ ] Test Kanban board drag-and-drop functionality
+- [ ] Test task creation and editing
+- [ ] Test subtasks and comments
 - [ ] Verify i18n translations are complete
 
 ### Security
