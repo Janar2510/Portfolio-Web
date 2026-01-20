@@ -20,6 +20,9 @@ This document tracks important features and changes that affect deployment and m
 - [x] Gradient border animation system
 - [x] Basic routing with locale support
 - [x] Protected admin routes structure
+- [x] Database migration system
+- [x] Profiles and user_settings tables with RLS
+- [x] Profile service implementation
 
 ## In Progress
 
@@ -34,28 +37,52 @@ This document tracks important features and changes that affect deployment and m
 ### Portfolio Module
 
 ### Portfolio Module
-- [ ] Portfolio site creation
-- [ ] Block-based page builder
-- [ ] Template system
+- [x] Portfolio database schema (sites, pages, blocks, styles, templates)
+- [x] Portfolio service implementation (CRUD operations)
+- [x] Template system with apply functionality
+- [x] RLS policies for public/private access
+- [ ] Block-based page builder UI
 - [ ] SSG rendering for public sites
-- [ ] Analytics integration
+- [x] Analytics integration (database and service)
 
 ### Project Management Module
-- [ ] Project CRUD operations
-- [ ] Kanban board
-- [ ] Task management
-- [ ] Drag-and-drop (dnd-kit)
+- [x] Project database schema (projects, columns, tasks, subtasks, comments, attachments)
+- [x] Project service implementation (CRUD operations)
+- [x] Kanban board support with columns
+- [x] Task management with priorities and due dates
+- [x] Subtask/checklist support
+- [x] Task comments and attachments
+- [x] RLS policies for multi-tenant security
+- [ ] Kanban board UI
+- [ ] Drag-and-drop (dnd-kit) integration
 
 ### CRM Module
-- [ ] Contact management
-- [ ] Deal pipeline
-- [ ] Activity logging
+- [x] CRM database schema (companies, contacts, pipeline stages, deals, activities, follow-ups)
+- [x] CRM service implementation (CRUD operations)
+- [x] Company management
+- [x] Contact management with tags and custom fields
+- [x] Pipeline stage management with reordering
+- [x] Deal management with value tracking
+- [x] Activity timeline tracking
+- [x] Follow-up reminder system
+- [x] RLS policies for multi-tenant security
+- [ ] CRM UI components
+- [ ] Pipeline visualization
+- [ ] Activity timeline UI
 
 ### Email Module
+- [x] Email database schema (accounts, emails, templates)
+- [x] Email service implementation (CRUD operations)
+- [x] Email account management with encrypted credentials
+- [x] Email synchronization support with sync state
+- [x] Email thread/conversation grouping
+- [x] Email linking to contacts and deals
+- [x] Automatic CRM activity creation from emails
+- [x] Email template system with variable substitution
+- [x] RLS policies for multi-tenant security
 - [ ] OAuth integration (Microsoft/Apple)
 - [ ] IMAP abstraction layer
-- [ ] Email synchronization
-- [ ] Email templates
+- [ ] Email synchronization worker/edge function
 
 ## Important Notes
 

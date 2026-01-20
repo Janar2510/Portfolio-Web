@@ -23,3 +23,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Protected admin routes with authentication
 - Dashboard page with gradient border cards
 - Environment variable templates
+- Database migration for profiles and user_settings tables
+- RLS policies for multi-tenant security
+- Automatic profile creation trigger on user signup
+- Profile service for managing user profiles and settings
+- Portfolio module database migration (sites, pages, blocks, styles, templates)
+- Comprehensive RLS policies for portfolio module (public read access for published content)
+- Portfolio service with full CRUD operations for sites, pages, blocks, and styles
+- Template system with apply functionality
+- Block reordering support
+- Project management module database migration (projects, columns, tasks, subtasks, comments, attachments)
+- RLS policies for project management module
+- Project service with full CRUD operations for projects, columns, tasks, subtasks, comments, and attachments
+- Kanban board support with column and task reordering
+- Automatic task completion when moved to done column
+- Default column creation on project creation
+- CRM module database migration (companies, contacts, pipeline stages, deals, activities, follow-ups)
+- RLS policies for CRM module
+- CRM service with full CRUD operations for all CRM entities
+- Pipeline management with customizable stages
+- Activity timeline tracking
+- Follow-up reminder system
+- Automatic contact last_contacted_at updates
+- Automatic deal close date when moved to won stage
+- Email integration module database migration (accounts, emails, templates)
+- RLS policies for email module
+- Email service with full CRUD operations for accounts, emails, and templates
+- Email account management with encrypted credentials
+- Email synchronization support with sync state tracking
+- Email thread/conversation grouping
+- Email linking to contacts and deals
+- Automatic CRM activity creation from emails
+- Email template system with variable substitution
+- Analytics and A/B testing module database migration (events, experiments, variants, daily rollups)
+- RLS policies for analytics module (public can insert events for published sites)
+- Analytics service with event tracking and A/B testing support
+- Event tracking with UTM parameters, device, browser, and country data
+- A/B experiment management with variant tracking
+- Automatic conversion tracking for A/B tests
+- Daily analytics aggregation support
+- Site analytics summary with key metrics
+- Standardized RLS policy patterns across all migrations
+- Updated portfolio_sites policy to combine public/owner access in single policy
+- Updated analytics_events policy to allow anonymous inserts (WITH CHECK TRUE)
+- Created RLS patterns documentation for consistency
+- Added high-priority database indexes for common queries
+- Optimized combined indexes for analytics_events, emails, and portfolio_blocks
+- Comprehensive API contracts documentation with all endpoints
+- API versioning with `/api/v1/` prefix
+- Consistent response envelope format across all endpoints
+- Detailed API request/response examples document
+- JSON examples for common endpoints (tasks, contacts, deals, emails, analytics)
+- Error response examples with different error scenarios
+- Realtime subscriptions documentation with Supabase Realtime examples
+- Reusable React hook for managing realtime subscriptions (useRealtimeSubscription)
+- Channel examples for tasks, deals, CRM activities, and emails
+- Best practices and performance considerations for realtime

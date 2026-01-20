@@ -29,6 +29,9 @@ pop3_port = 54326
 enabled = true
 file_size_limit = "50MiB"
 
+[realtime]
+enabled = true
+
 [auth]
 enabled = true
 site_url = "http://localhost:3000"
