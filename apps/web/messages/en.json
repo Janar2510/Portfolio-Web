@@ -1,0 +1,36 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "sites": "Sites",
+    "createSite": "Create Site",
+    "templates": "Templates"
+  },
+  "projects": {
+    "title": "Projects",
+    "createProject": "Create Project",
+    "board": "Board"
+  },
+  "crm": {
+    "title": "CRM",
+    "contacts": "Contacts",
+    "deals": "Deals",
+    "pipeline": "Pipeline"
+  }
+}

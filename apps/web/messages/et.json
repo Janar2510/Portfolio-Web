@@ -1,0 +1,36 @@
+{
+  "common": {
+    "welcome": "Tere tulemast",
+    "loading": "Laadimine...",
+    "error": "Tekkis viga",
+    "save": "Salvesta",
+    "cancel": "Tühista",
+    "delete": "Kustuta",
+    "edit": "Muuda",
+    "create": "Loo"
+  },
+  "auth": {
+    "login": "Logi sisse",
+    "logout": "Logi välja",
+    "register": "Registreeru",
+    "email": "E-post",
+    "password": "Parool"
+  },
+  "portfolio": {
+    "title": "Portfoolio",
+    "sites": "Saidid",
+    "createSite": "Loo sait",
+    "templates": "Mallid"
+  },
+  "projects": {
+    "title": "Projektid",
+    "createProject": "Loo projekt",
+    "board": "Tahvel"
+  },
+  "crm": {
+    "title": "CRM",
+    "contacts": "Kontaktid",
+    "deals": "Tehingud",
+    "pipeline": "Torustik"
+  }
+}
