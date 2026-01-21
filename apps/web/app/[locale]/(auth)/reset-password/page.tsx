@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { Link, useRouter } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/client';
 import { getAuthErrorMessage, validatePassword } from '@/lib/auth/utils';
 import { Button } from '@/components/ui/button';
@@ -133,7 +132,7 @@ export default function ResetPasswordPage() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? t('common.loading') : t('resetPassword')}
+              {loading ? 'Loading...' : t('resetPassword')}
             </Button>
             <Link href="/sign-in" className="text-sm text-primary hover:underline">
               {t('backToSignIn')}

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export interface Profile {
   id: string;
@@ -24,12 +24,14 @@ export interface UserSettings {
 }
 
 export class ProfileService {
-  private async getSupabase() {
-    return await createClient();
+  private supabase: SupabaseClient;
+
+  constructor(supabase: SupabaseClient) {
+    this.supabase = supabase;
   }
 
   async getProfile(): Promise<Profile | null> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -53,7 +55,7 @@ export class ProfileService {
     timezone?: string;
     onboarding_completed?: boolean;
   }): Promise<Profile> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -72,7 +74,7 @@ export class ProfileService {
   }
 
   async getSettings(): Promise<UserSettings | null> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -97,7 +99,7 @@ export class ProfileService {
     plan_tier?: 'free' | 'pro' | 'business';
     settings_json?: Record<string, unknown>;
   }): Promise<UserSettings> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -116,7 +118,7 @@ export class ProfileService {
   }
 
   async checkSubdomainAvailability(subdomain: string): Promise<boolean> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('user_settings')
       .select('user_id')

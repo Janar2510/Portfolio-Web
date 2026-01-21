@@ -94,10 +94,12 @@ export default function CalendarPage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="text-center">
-          <CalendarIcon className="mx-auto h-12 w-12 text-muted-foreground animate-spin" />
-          <p className="mt-4 text-muted-foreground">Loading calendar...</p>
+      <div className="flex h-[calc(100vh-4rem)] items-center justify-center bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
+        <div className="text-center animate-scale-in">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+            <CalendarIcon className="w-8 h-8 text-white animate-pulse" />
+          </div>
+          <p className="mt-4 text-foreground font-medium">Loading calendar...</p>
         </div>
       </div>
     );

@@ -358,6 +358,17 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
             </div>
           )}
 
+          {/* Email Threads Link */}
+          <div className="mb-4">
+            <Button
+              variant="outline"
+              onClick={() => router.push(`/crm/contacts/${contact.id}/emails`)}
+            >
+              <Mail className="mr-2 h-4 w-4" />
+              View Email Threads
+            </Button>
+          </div>
+
           {/* Activity Timeline */}
           <ActivityTimeline
             activities={activities}

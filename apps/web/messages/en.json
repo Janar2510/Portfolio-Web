@@ -7,7 +7,13 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "create": "Create"
+    "create": "Create",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "toggle": "Toggle theme"
+    }
   },
   "auth": {
     "login": "Login",
@@ -75,5 +81,203 @@
     "contacts": "Contacts",
     "deals": "Deals",
     "pipeline": "Pipeline"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "portfolio": "Portfolio",
+    "projects": "Projects",
+    "projectsBoard": "Board",
+    "calendar": "Calendar",
+    "crm": "CRM",
+    "contacts": "Contacts",
+    "companies": "Companies",
+    "pipeline": "Pipeline",
+    "activities": "Activities",
+    "analytics": "Analytics",
+    "portfolioAnalytics": "Portfolio",
+    "crmAnalytics": "CRM",
+    "abTesting": "A/B Testing",
+    "email": "Email",
+    "quickActions": "Quick Actions",
+    "newContact": "New Contact",
+    "newProject": "New Project",
+    "status": "Status",
+    "tasksToday": "tasks today"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "sites": "Sites",
+    "createSite": "Create Site",
+    "templates": "Templates",
+    "noSite": "You don't have a portfolio site yet. Create one to get started!",
+    "manageSite": "Manage your site",
+    "siteName": "Site Name",
+    "subdomain": "Subdomain",
+    "selectTemplate": "Select Template",
+    "templateOptional": "Choose a template to get started quickly, or start from scratch.",
+    "subdomainPlaceholder": "myportfolio",
+    "subdomainHint": "Only lowercase letters, numbers, and hyphens are allowed. Must be at least 3 characters.",
+    "subdomainTaken": "This subdomain is already taken",
+    "subdomainRequired": "Subdomain is required",
+    "subdomainMinLength": "Subdomain must be at least 3 characters",
+    "subdomainInvalid": "Subdomain can only contain lowercase letters, numbers, and hyphens",
+    "siteNameRequired": "Site name is required",
+    "alreadyHasSite": "You already have a portfolio site"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome!",
+      "subtitle": "Let's set up your account in a few minutes",
+      "userType": {
+        "label": "What best describes you?",
+        "freelancer": "Freelancer",
+        "freelancerDesc": "I work independently with clients",
+        "agency": "Agency",
+        "agencyDesc": "I manage a team or agency",
+        "business": "Small Business",
+        "businessDesc": "I run a business",
+        "creative": "Creative Professional",
+        "creativeDesc": "Designer, artist, photographer, etc."
+      },
+      "goal": {
+        "label": "What's your main goal?",
+        "portfolio": "Build a portfolio",
+        "portfolioDesc": "Showcase my work to the world",
+        "clients": "Manage clients",
+        "clientsDesc": "Track contacts and deals",
+        "both": "Both",
+        "bothDesc": "Portfolio + client management"
+      }
+    },
+    "profile": {
+      "title": "Set up your profile",
+      "subtitle": "Add your name and photo",
+      "displayName": "Display name",
+      "displayNamePlaceholder": "Your name",
+      "tagline": "Title / Role",
+      "taglinePlaceholder": "e.g. Graphic Designer",
+      "avatar": "Profile photo",
+      "avatarHint": "Drag an image here or click to upload"
+    },
+    "template": {
+      "title": "Choose a template",
+      "subtitle": "Start with a professional design",
+      "categories": {
+        "all": "All",
+        "minimal": "Minimal",
+        "creative": "Creative",
+        "professional": "Professional"
+      },
+      "preview": "Preview",
+      "select": "Select this template",
+      "scratch": "Start from scratch",
+      "scratchDesc": "Build your site from the ground up"
+    },
+    "customize": {
+      "title": "Customize your site",
+      "subtitle": "Pick colors and fonts",
+      "siteName": "Site name",
+      "siteNamePlaceholder": "My Portfolio",
+      "subdomain": "Subdomain",
+      "subdomainSuffix": ".ourplatform.com",
+      "subdomainAvailable": "Available!",
+      "subdomainTaken": "Sorry, that's taken",
+      "colorPalette": "Color palette",
+      "typography": "Typography"
+    },
+    "content": {
+      "title": "Add your first content",
+      "subtitle": "Make it personal",
+      "heroTitle": "Your name",
+      "heroTitlePlaceholder": "Jane Smith",
+      "heroSubtitle": "Your role",
+      "heroSubtitlePlaceholder": "Graphic Designer",
+      "bio": "Short intro",
+      "bioPlaceholder": "Write a few sentences about yourself...",
+      "usePlaceholder": "Use placeholder content for now"
+    },
+    "tour": {
+      "title": "Discover the platform",
+      "subtitle": "A quick look at key features",
+      "skip": "Skip tour",
+      "next": "Next",
+      "previous": "Previous",
+      "finish": "Finish tour",
+      "tryIt": "Try it"
+    },
+    "publish": {
+      "title": "Your portfolio is ready!",
+      "subtitle": "Review and publish",
+      "preview": "Preview",
+      "devices": {
+        "desktop": "Desktop",
+        "tablet": "Tablet",
+        "mobile": "Mobile"
+      },
+      "checklist": {
+        "title": "What's included:",
+        "profile": "Your profile",
+        "template": "Template applied",
+        "styles": "Custom colors & fonts",
+        "content": "First content added"
+      },
+      "publishNow": "Publish now",
+      "publishLater": "I'll do this later",
+      "sharePreview": "Share preview link"
+    },
+    "complete": {
+      "title": "Congratulations! 🎉",
+      "subtitle": "Your portfolio is now live!",
+      "viewSite": "View your site",
+      "goToDashboard": "Go to dashboard",
+      "nextSteps": "Next steps",
+      "tips": {
+        "addPages": "Add more pages to your portfolio",
+        "createProject": "Create your first project",
+        "addContact": "Add your first client",
+        "connectEmail": "Connect your email"
+      }
+    },
+    "navigation": {
+      "back": "Back",
+      "continue": "Continue",
+      "skip": "Skip",
+      "skipAll": "Skip onboarding",
+      "finish": "Finish"
+    },
+    "progress": {
+      "step": "Step",
+      "of": "of",
+      "complete": "complete"
+    }
+  },
+  "checklist": {
+    "title": "Getting Started",
+    "portfolio": {
+      "title": "Portfolio",
+      "createSite": "Create your site",
+      "addPage": "Add first page",
+      "addBlock": "Add content block",
+      "customizeStyles": "Customize design",
+      "publish": "Publish portfolio"
+    },
+    "projects": {
+      "title": "Projects",
+      "createProject": "Create first project",
+      "addTask": "Add a task",
+      "completeTask": "Complete a task"
+    },
+    "crm": {
+      "title": "Client Management",
+      "addContact": "Add first contact",
+      "createDeal": "Create a deal",
+      "moveDeal": "Move a deal"
+    },
+    "email": {
+      "title": "Email",
+      "connect": "Connect email account",
+      "send": "Send first email"
+    },
+    "viewAll": "View all tasks"
   }
 }

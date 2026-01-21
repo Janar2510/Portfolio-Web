@@ -8,6 +8,7 @@ import type {
   PublicPortfolioStyle,
 } from '@/lib/portfolio/public';
 import { SEOMetadata } from '@/components/portfolio/public/SEOMetadata';
+import { AnalyticsScript } from '@/components/portfolio/public/AnalyticsScript';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { useEffect } from 'react';
 
@@ -91,6 +92,7 @@ export function PublicPortfolioPage({
   return (
     <>
       <SEOMetadata site={site} page={page} metadata={metadata} />
+      <AnalyticsScript siteId={site.id} pageId={page?.id} />
       <div
         className="min-h-screen"
         style={{

@@ -80,7 +80,12 @@ Recommended settings in **Authentication → Settings**:
   - `https://yourdomain.com/**` (production)
 - **JWT expiry:** 3600 seconds (1 hour)
 - **Enable signup:** Yes
-- **Email confirmations:** Disabled for development, enabled for production
+- **Email confirmations:** 
+  - **IMPORTANT:** Enable this in **Authentication → Providers → Email** settings
+  - Go to Supabase Dashboard → Authentication → Providers → Email
+  - Toggle **"Enable email confirmations"** to ON
+  - Users will receive verification emails after signup
+  - For local development with Supabase CLI, emails are captured in Inbucket at `http://localhost:54324`
 
 ## RLS Policies
 

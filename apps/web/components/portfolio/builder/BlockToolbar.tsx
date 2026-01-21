@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Sparkles, FileText, Images, Briefcase, Mail, Image, Video } from 'lucide-react';
+import { Plus, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -11,17 +11,6 @@ import {
 import { cn } from '@/lib/utils';
 import { blockRegistry, type BlockType } from '@/lib/blocks/schema';
 import { iconMap } from '@/lib/blocks/icons';
-
-// Icon mapping
-const iconMap: Record<BlockType, typeof Sparkles> = {
-  hero: Sparkles,
-  text: FileText,
-  gallery: Images,
-  projects: Briefcase,
-  form: Mail,
-  image: Image,
-  video: Video,
-};
 
 interface BlockToolbarProps {
   onBlockAdd: (blockType: BlockType) => void;

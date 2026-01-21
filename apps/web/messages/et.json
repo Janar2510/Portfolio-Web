@@ -7,7 +7,13 @@
     "cancel": "Tühista",
     "delete": "Kustuta",
     "edit": "Muuda",
-    "create": "Loo"
+    "create": "Loo",
+    "theme": {
+      "light": "Hele",
+      "dark": "Tume",
+      "system": "Süsteem",
+      "toggle": "Vaheta teemat"
+    }
   },
   "auth": {
     "login": "Logi sisse",
@@ -75,5 +81,203 @@
     "contacts": "Kontaktid",
     "deals": "Tehingud",
     "pipeline": "Torustik"
+  },
+  "nav": {
+    "dashboard": "Avaleht",
+    "portfolio": "Portfoolio",
+    "projects": "Projektid",
+    "projectsBoard": "Tahvel",
+    "calendar": "Kalender",
+    "crm": "CRM",
+    "contacts": "Kontaktid",
+    "companies": "Ettevõtted",
+    "pipeline": "Torustik",
+    "activities": "Tegevused",
+    "analytics": "Analüütika",
+    "portfolioAnalytics": "Portfoolio",
+    "crmAnalytics": "CRM",
+    "abTesting": "A/B testid",
+    "email": "E-post",
+    "quickActions": "Kiirtoimingud",
+    "newContact": "Uus kontakt",
+    "newProject": "Uus projekt",
+    "status": "Seisund",
+    "tasksToday": "ülesannet täna"
+  },
+  "portfolio": {
+    "title": "Portfoolio",
+    "sites": "Saidid",
+    "createSite": "Loo sait",
+    "templates": "Mallid",
+    "noSite": "Sul pole veel portfoolio saiti. Loo üks, et alustada!",
+    "manageSite": "Halda oma saiti",
+    "siteName": "Saidi nimi",
+    "subdomain": "Alamdomeen",
+    "selectTemplate": "Vali mall",
+    "templateOptional": "Vali mall, et kiiresti alustada, või alusta nullist.",
+    "subdomainPlaceholder": "minuportfoolio",
+    "subdomainHint": "Lubatud on ainult väikesed tähed, numbrid ja sidekriipsud. Peab olema vähemalt 3 tähemärki.",
+    "subdomainTaken": "See alamdomeen on juba võetud",
+    "subdomainRequired": "Alamdomeen on kohustuslik",
+    "subdomainMinLength": "Alamdomeen peab olema vähemalt 3 tähemärki",
+    "subdomainInvalid": "Alamdomeen võib sisaldada ainult väikeseid tähti, numbreid ja sidekriipsusid",
+    "siteNameRequired": "Saidi nimi on kohustuslik",
+    "alreadyHasSite": "Sul on juba portfoolio sait"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Tere tulemast!",
+      "subtitle": "Seadistame su konto mõne minutiga",
+      "userType": {
+        "label": "Mis sind kõige paremini kirjeldab?",
+        "freelancer": "Vabakutseline",
+        "freelancerDesc": "Töötan iseseisvalt klientidega",
+        "agency": "Agentuur",
+        "agencyDesc": "Juhin meeskonda või agentuuri",
+        "business": "Väikeettevõte",
+        "businessDesc": "Juhin ettevõtet",
+        "creative": "Loovtöötaja",
+        "creativeDesc": "Disainer, kunstnik, fotograaf jne"
+      },
+      "goal": {
+        "label": "Mis on su peamine eesmärk?",
+        "portfolio": "Ehitada portfoolio",
+        "portfolioDesc": "Näidata oma tööd maailmale",
+        "clients": "Hallata kliente",
+        "clientsDesc": "Jälgida kontakte ja tehinguid",
+        "both": "Mõlemad",
+        "bothDesc": "Portfoolio + kliendihaldus"
+      }
+    },
+    "profile": {
+      "title": "Seadista oma profiil",
+      "subtitle": "Lisa oma nimi ja pilt",
+      "displayName": "Kuvatav nimi",
+      "displayNamePlaceholder": "Sinu nimi",
+      "tagline": "Pealkiri / Amet",
+      "taglinePlaceholder": "nt. Graafiline disainer",
+      "avatar": "Profiilipilt",
+      "avatarHint": "Lohista pilt siia või klõpsa üleslaadimiseks"
+    },
+    "template": {
+      "title": "Vali mall",
+      "subtitle": "Alusta professionaalse disainiga",
+      "categories": {
+        "all": "Kõik",
+        "minimal": "Minimaalne",
+        "creative": "Loominguline",
+        "professional": "Professionaalne"
+      },
+      "preview": "Eelvaade",
+      "select": "Vali see mall",
+      "scratch": "Alusta tühjalt",
+      "scratchDesc": "Ehita oma saidi nullist"
+    },
+    "customize": {
+      "title": "Kohanda oma saiti",
+      "subtitle": "Vali värvid ja fondid",
+      "siteName": "Saidi nimi",
+      "siteNamePlaceholder": "Minu Portfoolio",
+      "subdomain": "Alamdomeen",
+      "subdomainSuffix": ".meieplatvorm.ee",
+      "subdomainAvailable": "Saadaval!",
+      "subdomainTaken": "Kahjuks on see juba võetud",
+      "colorPalette": "Värvipalett",
+      "typography": "Kirjatüüp"
+    },
+    "content": {
+      "title": "Lisa oma esimene sisu",
+      "subtitle": "Tee see isiklikuks",
+      "heroTitle": "Sinu nimi",
+      "heroTitlePlaceholder": "Mari Maasikas",
+      "heroSubtitle": "Sinu amet",
+      "heroSubtitlePlaceholder": "Graafiline disainer",
+      "bio": "Lühike tutvustus",
+      "bioPlaceholder": "Kirjuta paar lauset endast...",
+      "usePlaceholder": "Kasuta esialgu näidissisu"
+    },
+    "tour": {
+      "title": "Tutvu platvormiga",
+      "subtitle": "Kiire ülevaade põhifunktsioonidest",
+      "skip": "Jäta tutvustus vahele",
+      "next": "Järgmine",
+      "previous": "Eelmine",
+      "finish": "Lõpeta tutvustus",
+      "tryIt": "Proovi"
+    },
+    "publish": {
+      "title": "Sinu portfoolio on valmis!",
+      "subtitle": "Vaata üle ja avalda",
+      "preview": "Eelvaade",
+      "devices": {
+        "desktop": "Arvuti",
+        "tablet": "Tahvel",
+        "mobile": "Telefon"
+      },
+      "checklist": {
+        "title": "Mis on kaasatud:",
+        "profile": "Sinu profiil",
+        "template": "Mall rakendatud",
+        "styles": "Kohandatud värvid ja fondid",
+        "content": "Esimene sisu lisatud"
+      },
+      "publishNow": "Avalda kohe",
+      "publishLater": "Teen seda hiljem",
+      "sharePreview": "Jaga eelvaate linki"
+    },
+    "complete": {
+      "title": "Palju õnne! 🎉",
+      "subtitle": "Sinu portfoolio on nüüd live!",
+      "viewSite": "Vaata oma saiti",
+      "goToDashboard": "Mine töölaudale",
+      "nextSteps": "Järgmised sammud",
+      "tips": {
+        "addPages": "Lisa rohkem lehti oma portfooliosse",
+        "createProject": "Loo oma esimene projekt",
+        "addContact": "Lisa oma esimene klient",
+        "connectEmail": "Ühenda oma e-post"
+      }
+    },
+    "navigation": {
+      "back": "Tagasi",
+      "continue": "Jätka",
+      "skip": "Jäta vahele",
+      "skipAll": "Jäta sisseelamine vahele",
+      "finish": "Lõpeta"
+    },
+    "progress": {
+      "step": "Samm",
+      "of": "/",
+      "complete": "lõpetatud"
+    }
+  },
+  "checklist": {
+    "title": "Alustamine",
+    "portfolio": {
+      "title": "Portfoolio",
+      "createSite": "Loo oma sait",
+      "addPage": "Lisa esimene leht",
+      "addBlock": "Lisa sisuplokk",
+      "customizeStyles": "Kohanda disaini",
+      "publish": "Avalda portfoolio"
+    },
+    "projects": {
+      "title": "Projektid",
+      "createProject": "Loo esimene projekt",
+      "addTask": "Lisa ülesanne",
+      "completeTask": "Märgi ülesanne tehtuks"
+    },
+    "crm": {
+      "title": "Kliendihaldus",
+      "addContact": "Lisa esimene kontakt",
+      "createDeal": "Loo tehing",
+      "moveDeal": "Liiguta tehingut"
+    },
+    "email": {
+      "title": "E-post",
+      "connect": "Ühenda e-posti konto",
+      "send": "Saada esimene e-kiri"
+    },
+    "viewAll": "Vaata kõiki ülesandeid"
   }
 }

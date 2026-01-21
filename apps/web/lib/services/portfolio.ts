@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export interface PortfolioSite {
   id: string;
@@ -73,20 +73,21 @@ export interface PortfolioTemplate {
 }
 
 export class PortfolioService {
-  private async getSupabase() {
-    return await createClient();
+  private supabase: SupabaseClient;
+
+  constructor(supabase: SupabaseClient) {
+    this.supabase = supabase;
   }
 
   // Site methods
   async getSite(): Promise<PortfolioSite | null> {
-    const supabase = await this.getSupabase();
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await this.supabase.auth.getUser();
 
     if (!user) return null;
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_sites')
       .select('*')
       .eq('user_id', user.id)
@@ -98,8 +99,7 @@ export class PortfolioService {
   }
 
   async getSiteBySubdomain(subdomain: string): Promise<PortfolioSite | null> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_sites')
       .select('*')
       .eq('subdomain', subdomain)
@@ -112,8 +112,7 @@ export class PortfolioService {
   }
 
   async getSiteById(id: string): Promise<PortfolioSite | null> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_sites')
       .select('*')
       .eq('id', id)
@@ -129,10 +128,9 @@ export class PortfolioService {
     subdomain: string;
     templateId?: string;
   }): Promise<PortfolioSite> {
-    const supabase = await this.getSupabase();
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await this.supabase.auth.getUser();
 
     if (!user) throw new Error('Not authenticated');
 
@@ -142,11 +140,12 @@ export class PortfolioService {
       throw new Error('User already has a portfolio site');
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_sites')
       .insert({
         name: site.name,
         subdomain: site.subdomain,
+        user_id: user.id,
       })
       .select()
       .single();
@@ -174,8 +173,7 @@ export class PortfolioService {
       analytics_id?: string;
     }
   ): Promise<PortfolioSite> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_sites')
       .update(updates)
       .eq('id', id)
@@ -187,8 +185,7 @@ export class PortfolioService {
   }
 
   async deleteSite(id: string): Promise<void> {
-    const supabase = await this.getSupabase();
-    const { error } = await supabase
+    const { error } = await this.supabase
       .from('portfolio_sites')
       .delete()
       .eq('id', id);
@@ -198,8 +195,7 @@ export class PortfolioService {
 
   // Page methods
   async getPages(siteId: string): Promise<PortfolioPage[]> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_pages')
       .select('*')
       .eq('site_id', siteId)
@@ -210,8 +206,7 @@ export class PortfolioService {
   }
 
   async getPageById(id: string): Promise<PortfolioPage | null> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_pages')
       .select('*')
       .eq('id', id)
@@ -223,8 +218,7 @@ export class PortfolioService {
   }
 
   async getPageBySlug(siteId: string, slug: string): Promise<PortfolioPage | null> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_pages')
       .select('*')
       .eq('site_id', siteId)
@@ -246,18 +240,16 @@ export class PortfolioService {
       seo_description?: string;
     }
   ): Promise<PortfolioPage> {
-    const supabase = await this.getSupabase();
-
     // If this is the homepage, unset other homepages
     if (page.is_homepage) {
-      await supabase
+      await this.supabase
         .from('portfolio_pages')
         .update({ is_homepage: false })
         .eq('site_id', siteId)
         .eq('is_homepage', true);
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_pages')
       .insert({
         site_id: siteId,
@@ -282,13 +274,11 @@ export class PortfolioService {
       seo_description?: string;
     }
   ): Promise<PortfolioPage> {
-    const supabase = await this.getSupabase();
-
     // If setting as homepage, unset others
     if (updates.is_homepage === true) {
       const page = await this.getPageById(id);
       if (page) {
-        await supabase
+        await this.supabase
           .from('portfolio_pages')
           .update({ is_homepage: false })
           .eq('site_id', page.site_id)
@@ -309,8 +299,7 @@ export class PortfolioService {
   }
 
   async deletePage(id: string): Promise<void> {
-    const supabase = await this.getSupabase();
-    const { error } = await supabase
+    const { error } = await this.supabase
       .from('portfolio_pages')
       .delete()
       .eq('id', id);
@@ -320,8 +309,7 @@ export class PortfolioService {
 
   // Block methods
   async getBlocks(pageId: string): Promise<PortfolioBlock[]> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_blocks')
       .select('*')
       .eq('page_id', pageId)
@@ -340,8 +328,7 @@ export class PortfolioService {
       sort_order?: number;
     }
   ): Promise<PortfolioBlock> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_blocks')
       .insert({
         page_id: pageId,
@@ -363,8 +350,7 @@ export class PortfolioService {
       sort_order?: number;
     }
   ): Promise<PortfolioBlock> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_blocks')
       .update(updates)
       .eq('id', id)
@@ -376,8 +362,7 @@ export class PortfolioService {
   }
 
   async deleteBlock(id: string): Promise<void> {
-    const supabase = await this.getSupabase();
-    const { error } = await supabase
+    const { error } = await this.supabase
       .from('portfolio_blocks')
       .delete()
       .eq('id', id);
@@ -386,9 +371,8 @@ export class PortfolioService {
   }
 
   async reorderBlocks(blockIds: string[]): Promise<void> {
-    const supabase = await this.getSupabase();
     const updates = blockIds.map((id, index) =>
-      supabase
+      this.supabase
         .from('portfolio_blocks')
         .update({ sort_order: index })
         .eq('id', id)
@@ -399,8 +383,7 @@ export class PortfolioService {
 
   // Style methods
   async getStyles(siteId: string): Promise<PortfolioStyle | null> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_styles')
       .select('*')
       .eq('site_id', siteId)
@@ -420,8 +403,7 @@ export class PortfolioService {
       custom_css?: string;
     }
   ): Promise<PortfolioStyle> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_styles')
       .upsert(
         {
@@ -441,8 +423,7 @@ export class PortfolioService {
 
   // Template methods
   async getTemplates(category?: string): Promise<PortfolioTemplate[]> {
-    const supabase = await this.getSupabase();
-    let query = supabase
+    let query = this.supabase
       .from('portfolio_templates')
       .select('*')
       .eq('is_active', true)
@@ -458,8 +439,7 @@ export class PortfolioService {
   }
 
   async getTemplateById(id: string): Promise<PortfolioTemplate | null> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_templates')
       .select('*')
       .eq('id', id)

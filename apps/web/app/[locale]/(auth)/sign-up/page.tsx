@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { Link, useRouter } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/client';
 import {
   getAuthErrorMessage,
@@ -25,6 +25,9 @@ import {
 export default function SignUpPage() {
   const t = useTranslations('auth');
   const router = useRouter();
+  const params = useParams();
+  // Get locale from route params
+  const currentLocale = (params?.locale as string) || 'en';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -62,7 +65,7 @@ export default function SignUpPage() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/${currentLocale}/auth/callback`,
         },
       });
 
@@ -139,13 +142,19 @@ export default function SignUpPage() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? t('common.loading') : t('createAccount')}
+              {loading ? 'Loading...' : t('createAccount')}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               {t('alreadyHaveAccount')}{' '}
-              <Link href="/sign-in" className="text-primary hover:underline">
+              <button
+                type="button"
+                onClick={() => {
+                  router.push('/sign-in');
+                }}
+                className="text-primary hover:underline bg-transparent border-none p-0 cursor-pointer"
+              >
                 {t('signIn')}
-              </Link>
+              </button>
             </p>
           </CardFooter>
         </form>

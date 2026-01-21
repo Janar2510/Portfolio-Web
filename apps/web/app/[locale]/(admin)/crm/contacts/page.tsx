@@ -87,8 +87,8 @@ export default function ContactsPage() {
   });
 
   return (
-    <div className="flex h-[calc(100vh-4rem)]">
-      <div className="w-96 shrink-0 border-r">
+    <div className="flex h-[calc(100vh-4rem)] bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
+      <div className="w-96 shrink-0 border-r border-border bg-card animate-slide-down">
         <ContactList
           contacts={contacts}
           companies={companies}
@@ -106,9 +106,14 @@ export default function ContactsPage() {
           }}
         />
       </div>
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg font-semibold">Select a contact to view details</p>
+      <div className="flex-1 flex items-center justify-center animate-fade-in">
+        <div className="text-center animate-scale-in">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <p className="text-lg font-semibold text-foreground">Select a contact to view details</p>
           <p className="mt-2 text-sm text-muted-foreground">
             Choose a contact from the sidebar or create a new one
           </p>

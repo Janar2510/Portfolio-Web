@@ -347,9 +347,9 @@ export default function ProjectsPage() {
   const projects = projectsData?.projects || [];
 
   return (
-    <div className="flex h-[calc(100vh-4rem)]">
+    <div className="flex h-[calc(100vh-4rem)] bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
       {/* Project List Sidebar */}
-      <div className="w-64 shrink-0">
+      <div className="w-64 shrink-0 bg-card border-r border-border animate-slide-down">
         <ProjectList
           projects={projects}
           currentProjectId={selectedProjectId || undefined}
@@ -388,9 +388,14 @@ export default function ProjectsPage() {
             onTaskClick={handleTaskClick}
           />
         ) : (
-          <div className="flex h-full items-center justify-center">
-            <div className="text-center">
-              <p className="text-lg font-semibold">Select a project to get started</p>
+          <div className="flex h-full items-center justify-center animate-fade-in">
+            <div className="text-center animate-scale-in">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-foreground">Select a project to get started</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Choose a project from the sidebar or create a new one
               </p>
@@ -411,9 +416,14 @@ export default function ProjectsPage() {
           onUpdate={async (taskId, updates) => {
             await updateTaskMutation.mutateAsync({ taskId, updates });
             // Refresh task data
-            const updatedTask = await projectService.getTaskById(taskId);
-            if (updatedTask) {
-              setSelectedTask(updatedTask);
+            const supabase = createClient();
+            const { data: updatedTask, error } = await supabase
+              .from('tasks')
+              .select('*')
+              .eq('id', taskId)
+              .single();
+            if (!error && updatedTask) {
+              setSelectedTask(updatedTask as Task);
             }
           }}
           onDelete={async (taskId) => {

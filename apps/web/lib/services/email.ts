@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export type EmailProvider = 'outlook' | 'apple';
 export type EmailDirection = 'inbound' | 'outbound';
@@ -57,13 +57,15 @@ export interface OAuthCredentials {
 }
 
 export class EmailService {
-  private async getSupabase() {
-    return await createClient();
+  private supabase: SupabaseClient;
+
+  constructor(supabase: SupabaseClient) {
+    this.supabase = supabase;
   }
 
   // Account methods
   async getAccounts(): Promise<EmailAccount[]> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('email_accounts')
       .select('*')
@@ -74,7 +76,7 @@ export class EmailService {
   }
 
   async getAccountById(id: string): Promise<EmailAccount | null> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('email_accounts')
       .select('*')
@@ -92,7 +94,7 @@ export class EmailService {
     displayName: string | null,
     credentialsEncrypted: string
   ): Promise<EmailAccount> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('email_accounts')
       .insert({
@@ -118,7 +120,7 @@ export class EmailService {
       sync_state?: Record<string, unknown>;
     }
   ): Promise<EmailAccount> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('email_accounts')
       .update(updates)
@@ -131,7 +133,7 @@ export class EmailService {
   }
 
   async deleteAccount(id: string): Promise<void> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { error } = await supabase
       .from('email_accounts')
       .delete()
@@ -150,7 +152,7 @@ export class EmailService {
     limit?: number;
     offset?: number;
   }): Promise<{ emails: Email[]; total: number }> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     let query = supabase
       .from('emails')
       .select('*', { count: 'exact' })
@@ -196,7 +198,7 @@ export class EmailService {
   }
 
   async getEmailById(id: string): Promise<Email | null> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('emails')
       .select('*')
@@ -209,7 +211,7 @@ export class EmailService {
   }
 
   async getEmailThread(threadId: string): Promise<Email[]> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('emails')
       .select('*')
@@ -238,7 +240,7 @@ export class EmailService {
     received_at?: string;
     is_read?: boolean;
   }): Promise<Email> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('emails')
       .insert(email)
@@ -257,7 +259,7 @@ export class EmailService {
       is_read?: boolean;
     }
   ): Promise<Email> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('emails')
       .update(updates)
@@ -286,7 +288,7 @@ export class EmailService {
   }
 
   async deleteEmail(id: string): Promise<void> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { error } = await supabase.from('emails').delete().eq('id', id);
 
     if (error) throw error;
@@ -297,7 +299,7 @@ export class EmailService {
     category?: string;
     search?: string;
   }): Promise<EmailTemplate[]> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     let query = supabase.from('email_templates').select('*');
 
     if (filters?.category) {
@@ -317,7 +319,7 @@ export class EmailService {
   }
 
   async getTemplateById(id: string): Promise<EmailTemplate | null> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('email_templates')
       .select('*')
@@ -336,7 +338,7 @@ export class EmailService {
     variables?: string[];
     category?: string;
   }): Promise<EmailTemplate> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('email_templates')
       .insert(template)
@@ -357,7 +359,7 @@ export class EmailService {
       category?: string;
     }
   ): Promise<EmailTemplate> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { data, error } = await supabase
       .from('email_templates')
       .update(updates)
@@ -370,7 +372,7 @@ export class EmailService {
   }
 
   async deleteTemplate(id: string): Promise<void> {
-    const supabase = await this.getSupabase();
+    const supabase = this.supabase;
     const { error } = await supabase
       .from('email_templates')
       .delete()
@@ -397,5 +399,42 @@ export class EmailService {
     }
 
     return { subject, body_html };
+  }
+
+  // Sync methods
+  async triggerSync(accountId?: string, forceFullSync: boolean = false): Promise<{
+    message: string;
+    results: Array<{
+      account_id: string;
+      email_address: string;
+      emails_synced?: number;
+      contacts_matched?: number;
+      threads_created?: number;
+      error?: string;
+    }>;
+  }> {
+    const response = await fetch('/api/email/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        account_id: accountId,
+        force_full_sync: forceFullSync,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to trigger sync');
+    }
+
+    return response.json();
+  }
+
+  async syncAccount(accountId: string): Promise<void> {
+    await this.triggerSync(accountId, false);
+  }
+
+  async syncAllAccounts(): Promise<void> {
+    await this.triggerSync(undefined, false);
   }
 }

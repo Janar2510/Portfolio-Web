@@ -19,7 +19,7 @@ import {
   DialogContent as CreateDealDialogContent,
   DialogDescription as CreateDealDialogDescription,
   DialogFooter,
-  DialogHeader,
+  DialogHeader as CreateDealDialogHeader,
   DialogTitle as CreateDealDialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -260,8 +260,8 @@ export default function PipelinePage() {
     await createDealMutation.mutateAsync({
       stage_id: createDealStageId,
       title: formData.get('title') as string,
-      contact_id: formData.get('contact_id')?.toString() || undefined,
-      company_id: formData.get('company_id')?.toString() || undefined,
+      contact_id: formData.get('contact_id')?.toString() === '__none__' ? undefined : formData.get('contact_id')?.toString() || undefined,
+      company_id: formData.get('company_id')?.toString() === '__none__' ? undefined : formData.get('company_id')?.toString() || undefined,
       value: formData.get('value') ? parseFloat(formData.get('value') as string) : undefined,
       currency: formData.get('currency')?.toString() || 'EUR',
       expected_close_date: formData.get('expected_close_date')?.toString() || undefined,
@@ -276,17 +276,18 @@ export default function PipelinePage() {
   const defaultStage = stages.find((s) => !s.is_won && !s.is_lost) || stages[0];
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col">
+    <div className="flex h-[calc(100vh-4rem)] flex-col bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between border-b p-4">
+      <div className="flex items-center justify-between border-b border-border bg-card/50 backdrop-blur-sm p-4 animate-slide-down">
         <div>
-          <h1 className="text-2xl font-bold">Sales Pipeline</h1>
+          <h1 className="text-2xl font-bold text-foreground">Sales Pipeline</h1>
           <p className="text-sm text-muted-foreground">
             Manage your deals and pipeline stages
           </p>
         </div>
         <Button
           variant="outline"
+          className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white"
           onClick={() => setIsStageSettingsOpen(true)}
         >
           <Settings className="mr-2 h-4 w-4" />
@@ -297,14 +298,19 @@ export default function PipelinePage() {
       {/* Pipeline Board */}
       <div className="flex-1 overflow-hidden">
         {stages.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
-            <div className="text-center">
-              <p className="text-lg font-semibold">No pipeline stages</p>
+          <div className="flex h-full items-center justify-center animate-fade-in">
+            <div className="text-center animate-scale-in">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-foreground">No pipeline stages</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Create your first pipeline stage to get started
               </p>
               <Button
-                className="mt-4"
+                className="mt-4 bg-green-600 hover:bg-green-700"
                 onClick={() => setIsStageSettingsOpen(true)}
               >
                 Create Stage
@@ -399,12 +405,12 @@ export default function PipelinePage() {
       <CreateDealDialog open={isCreateDealOpen} onOpenChange={setIsCreateDealOpen}>
         <CreateDealDialogContent>
           <form onSubmit={handleCreateDeal}>
-            <DialogHeader>
+            <CreateDealDialogHeader>
               <CreateDealDialogTitle>Create New Deal</CreateDealDialogTitle>
               <CreateDealDialogDescription>
                 Add a new deal to your pipeline.
               </CreateDealDialogDescription>
-            </DialogHeader>
+            </CreateDealDialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="title">Deal Title *</Label>
@@ -453,7 +459,7 @@ export default function PipelinePage() {
                       <SelectValue placeholder="Select contact" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="__none__">None</SelectItem>
                       {contacts.map((contact) => (
                         <SelectItem key={contact.id} value={contact.id}>
                           {contact.first_name} {contact.last_name}
@@ -469,7 +475,7 @@ export default function PipelinePage() {
                       <SelectValue placeholder="Select company" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="__none__">None</SelectItem>
                       {companies.map((company) => (
                         <SelectItem key={company.id} value={company.id}>
                           {company.name}

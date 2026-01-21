@@ -45,7 +45,7 @@ export async function middleware(request: NextRequest) {
 
   // Extract locale from pathname
   const pathname = request.nextUrl.pathname;
-  const locale = pathname.split('/')[1];
+  const locale = pathname.split('/')[1] || 'en'; // Default to 'en' if no locale in path
   const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
 
   // Check if this is a public auth route
@@ -54,7 +54,18 @@ export async function middleware(request: NextRequest) {
   );
 
   // Update Supabase session (this handles auth state)
-  const supabaseResponse = await updateSession(request);
+  // Skip Supabase for subdomain routes (public portfolio sites)
+  let supabaseResponse;
+  try {
+    supabaseResponse = await updateSession(request);
+  } catch (error) {
+    // If Supabase fails due to missing env vars, allow public routes to continue
+    if (isPublicAuthRoute || pathWithoutLocale === '/') {
+      return response;
+    }
+    // For other routes, rethrow the error
+    throw error;
+  }
 
   // If it's a public auth route, allow access
   if (isPublicAuthRoute) {

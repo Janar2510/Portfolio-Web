@@ -179,16 +179,16 @@ export function DealDetailModal({
               <div className="space-y-2">
                 <Label htmlFor="contact_id">Contact</Label>
                 <Select
-                  value={editFormData.contact_id || ''}
+                  value={editFormData.contact_id || '__none__'}
                   onValueChange={(value) =>
-                    setEditFormData({ ...editFormData, contact_id: value || undefined })
+                    setEditFormData({ ...editFormData, contact_id: value === '__none__' ? undefined : value })
                   }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select contact" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="__none__">None</SelectItem>
                     {contacts.map((contact) => (
                       <SelectItem key={contact.id} value={contact.id}>
                         {contact.first_name} {contact.last_name}
@@ -201,16 +201,16 @@ export function DealDetailModal({
               <div className="space-y-2">
                 <Label htmlFor="company_id">Company</Label>
                 <Select
-                  value={editFormData.company_id || ''}
+                  value={editFormData.company_id || '__none__'}
                   onValueChange={(value) =>
-                    setEditFormData({ ...editFormData, company_id: value || undefined })
+                    setEditFormData({ ...editFormData, company_id: value === '__none__' ? undefined : value })
                   }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select company" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="__none__">None</SelectItem>
                     {companies.map((company) => (
                       <SelectItem key={company.id} value={company.id}>
                         {company.name}

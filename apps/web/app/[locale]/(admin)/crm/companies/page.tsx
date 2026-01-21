@@ -152,9 +152,9 @@ export default function CompaniesPage() {
   });
 
   return (
-    <div className="flex h-[calc(100vh-4rem)]">
+    <div className="flex h-[calc(100vh-4rem)] bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
       {/* Companies List */}
-      <div className="w-80 shrink-0">
+      <div className="w-80 shrink-0 bg-card border-r border-border animate-slide-down">
         <CompanyList
           companies={companies}
           currentCompanyId={selectedCompanyId || undefined}
@@ -173,7 +173,7 @@ export default function CompaniesPage() {
       </div>
 
       {/* Contacts List for Selected Company */}
-      <div className="w-96 shrink-0 border-r">
+      <div className="w-96 shrink-0 border-r border-border bg-card">
         {selectedCompanyId ? (
           <ContactList
             contacts={filteredContacts}
@@ -195,9 +195,14 @@ export default function CompaniesPage() {
             }}
           />
         ) : (
-          <div className="flex h-full items-center justify-center">
-            <div className="text-center">
-              <p className="text-lg font-semibold">Select a company</p>
+          <div className="flex h-full items-center justify-center animate-fade-in">
+            <div className="text-center animate-scale-in">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-foreground">Select a company</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Choose a company from the sidebar to view its contacts
               </p>
@@ -207,17 +212,27 @@ export default function CompaniesPage() {
       </div>
 
       {/* Company Details */}
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
         {selectedCompanyId ? (
-          <div className="text-center">
-            <p className="text-lg font-semibold">Company Details</p>
+          <div className="text-center animate-scale-in">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <p className="text-lg font-semibold text-foreground">Company Details</p>
             <p className="mt-2 text-sm text-muted-foreground">
               Company detail view coming soon
             </p>
           </div>
         ) : (
-          <div className="text-center">
-            <p className="text-lg font-semibold">Select a company</p>
+          <div className="text-center animate-scale-in">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <p className="text-lg font-semibold text-foreground">Select a company</p>
             <p className="mt-2 text-sm text-muted-foreground">
               Choose a company from the sidebar to view details
             </p>

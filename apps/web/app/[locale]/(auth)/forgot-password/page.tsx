@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/client';
 import { getAuthErrorMessage, validateEmail } from '@/lib/auth/utils';
 import { Button } from '@/components/ui/button';
@@ -113,7 +113,7 @@ export default function ForgotPasswordPage() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? t('common.loading') : t('sendResetLink')}
+              {loading ? 'Loading...' : t('sendResetLink')}
             </Button>
             <Link href="/sign-in" className="text-sm text-primary hover:underline">
               {t('backToSignIn')}

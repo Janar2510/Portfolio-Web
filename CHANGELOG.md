@@ -8,6 +8,168 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Pipedrive-style CRM system upgrade
+  - Enhanced CRM service layer (CRMEnhancedService) with full Pipedrive-style API
+  - LabelPicker component for managing and applying labels
+  - CustomFieldRenderer component for rendering custom fields dynamically
+  - ProductsList component for product catalog management
+  - LeadsList component for lead management and conversion
+  - NotesList component with pinning and editing support
+  - Custom fields system for all entities (persons, organizations, deals, activities, products)
+  - Multiple pipelines support (users can create and manage multiple sales pipelines)
+  - Enhanced pipeline stages with rotten days tracking and stage types (normal/won/lost)
+  - Products catalog with pricing, tax, and categories
+  - Deal products linking (products added to deals with quantity, discount, tax)
+  - Leads management system with conversion tracking
+  - Labels system for tagging entities (persons, organizations, deals, leads)
+  - Notes system with pinning and mentions
+  - Files attachment system for all entities
+  - Advanced filters and saved views
+  - Goals tracking (revenue, deals won, activities, etc.)
+  - Workflows/automations system with triggers and actions
+  - Changelog tracking for all entity changes
+  - Enhanced activities with duration, location, participants, reminders
+  - Organizations (upgrade from companies) with enhanced fields
+  - Persons (upgrade from contacts) with multiple emails/phones support
+  - Enhanced deals with owner assignment, visibility settings, label support
+  - Database migration functions for migrating existing data
+- Comprehensive onboarding system (Copyfolio-style)
+  - Multi-step onboarding flow (7 steps: Welcome, Profile, Template, Customize, Content, Tour, Publish)
+  - Onboarding progress tracking with database persistence
+  - Step-by-step progress indicator with visual stepper
+  - User type selection (Freelancer, Agency, Business, Creative)
+  - Primary goal selection (Portfolio, Clients, Both)
+  - Template selection with preview
+  - Site customization (name, subdomain, colors, fonts)
+  - Content addition guidance
+  - Feature tour with highlights
+  - Publish flow with preview
+  - Completion celebration page
+  - Onboarding state management with Zustand
+  - Onboarding events tracking for analytics
+  - Feature checklist system for post-onboarding guidance
+  - Tooltip dismissal tracking
+  - Route guard to redirect incomplete users to onboarding
+  - Full bilingual support (Estonian/English)
+  - Skip functionality for optional steps
+  - Resume capability (users can return to incomplete onboarding)
+- Database tables for onboarding system
+  - `onboarding_progress` - Tracks user progress through onboarding
+  - `onboarding_events` - Analytics events during onboarding
+  - `tooltip_dismissals` - Tracks dismissed contextual tooltips
+  - `feature_checklist` - Tracks feature discovery progress
+- Onboarding components
+  - `OnboardingFlow` - Main flow controller
+  - `OnboardingLayout` - Full-screen layout wrapper
+  - `OnboardingProgress` - Visual progress stepper
+  - `OnboardingNavigation` - Navigation buttons (Back/Continue/Skip)
+  - Step components: `WelcomeStep`, `ProfileStep`, `TemplateStep`, `CustomizeStep`, `ContentStep`, `TourStep`, `PublishStep`
+- Theme system (dark/light mode)
+  - Custom ThemeProvider (no external dependencies)
+  - ThemeToggle component with dropdown (Light/Dark/System)
+  - Theme persistence in localStorage
+  - System theme detection
+  - Full dark mode support across all components
+- Estonian as primary language
+  - Default locale changed from 'en' to 'et'
+  - Estonian first in locale list
+- Missing UI components
+  - DataTable component with sub-components (Container, Header, Body, Footer, Row, Cell, etc.)
+  - StatCard component with trend indicators
+  - ContactAvatar component with size variants (sm, md, lg)
+- Portfolio site creation flow
+  - CreateSiteDialog component with form validation
+  - TemplateChooser component with category filtering
+  - NoSiteView component for empty state
+  - Site creation with template application
+  - Subdomain validation and availability checking
+- API implementation guide documenting all required API routes
+- Component CSS updated to match exact specifications (pixel values)
+- Contact avatar size variants (sm, md, lg)
+- Complete navigation system for admin interface
+  - TopNav component with logo, notifications, locale switcher, and user menu
+  - Sidebar component with hierarchical navigation (dashboard, portfolio, projects, CRM, analytics, email)
+  - Responsive navigation with mobile support
+  - Quick actions section in sidebar (new contact, new project)
+  - Status indicator in sidebar
+  - Active route highlighting
+  - Expandable navigation groups for nested routes
+  - Dropdown menu component (Radix UI)
+- Portfolio management page at `/portfolio` route
+- Navigation translations for English and Estonian
+- Admin layout wrapper with integrated TopNav and Sidebar
+- Comprehensive frontend design system implementation
+  - Brand color palette (Deep Teal primary, Warm Amber secondary)
+  - Complete neutral gray scale
+  - Semantic status colors (success, warning, error, info)
+  - Module accent colors (portfolio, projects, CRM, analytics, email)
+  - Dark mode color system with proper contrast
+  - Typography system with Inter font stack and type scale (1.25 ratio)
+  - Spacing system based on 4px base unit
+  - Component utility classes (buttons, inputs, cards, tables, modals)
+  - Typography patterns (headings, body, labels, captions)
+  - Layout system with breakpoints and container max-widths
+  - Complete border radius scale (none, sm, md, lg, xl, 2xl, 3xl, full)
+  - Shadow scale (sm, md, lg, xl, 2xl, inner, primary, danger)
+  - Animation system with timing functions and duration scale
+  - Iconography system with size scale (xs, sm, md, lg, xl, 2xl)
+  - Kanban board component utilities (columns, cards, drag states)
+  - Portfolio editor component utilities (blocks, toolbar, preview frames)
+  - Module-specific styles (CRM pipeline stages, deal values, contact avatars)
+  - Analytics dashboard styles (stat cards, trend indicators)
+  - Accessibility utilities (focus rings, skip links)
+  - Extended Tailwind config with all design system tokens
+  - Full dark mode support for all components and modules
+- A/B testing system with experiment creation, variant management, and results visualization
+- Experiment creation flow with target selection (page, block, style) and goal configuration
+- Variant management interface for creating and editing test variants
+- Experiment results dashboard with conversion rate comparison and statistical insights
+- A/B testing page at `/analytics/ab-testing` with experiment lifecycle management
+- Experiment status management (draft, running, paused, completed)
+- Traffic split configuration for variant distribution
+- Conversion goal tracking (pageview, click, form_submit)
+- Variant performance comparison with improvement percentages
+- Portfolio analytics dashboard at `/analytics/portfolio` with comprehensive metrics
+- CRM analytics dashboard at `/analytics/crm` with performance insights
+- MetricCard component for displaying key performance indicators
+- SimpleChart component for visualizing time-series data
+- Site selection and time period filtering for portfolio analytics
+- Portfolio metrics: pageviews, unique visitors, form submissions, session duration
+- Portfolio breakdowns: top pages, device types, referrers
+- CRM metrics: contacts, companies, deals, pipeline value
+- CRM breakdowns: deals by stage, activity types, top companies
+- Activity and deal value charts over time
+- Analytics tracking infrastructure with client-side event tracking
+- Analytics event tracking script with visitor and session management
+- Public tracking endpoint at `/api/analytics/track` with CORS support
+- Daily aggregation edge function for analytics rollups
+- AnalyticsScript component for embedding in public portfolio pages
+- Automatic pageview, click, and form submission tracking
+- Device type and browser detection
+- UTM parameter tracking
+- Session duration and bounce rate calculation
+- Top pages, referrers, devices, and countries aggregation
+- Email compose component with template support and variable substitution
+- Email thread view component for CRM with reply/forward functionality
+- Enhanced connected accounts management with sync button and status indicators
+- Email threads page for contacts at `/crm/contacts/[id]/emails`
+- Template variable editor in compose dialog
+- Thread grouping UI with expandable email messages
+- Email sync engine with edge function for automated synchronization
+- Thread grouping algorithm for conversation organization
+- Contact matching with confidence scoring (exact, domain, name, fuzzy)
+- Email sync API route for manual and scheduled syncs
+- Sync utilities for thread ID generation and email processing
+- Deal association via contact matching
+- Email sync engine documentation
+- Email provider integrations with Microsoft Graph OAuth and Apple Mail IMAP
+- Credential encryption utilities using AES-GCM
+- Microsoft Graph OAuth flow with automatic token refresh
+- Apple Mail IMAP connection with credential storage
+- Provider abstraction layer for unified email provider interface
+- OAuth callback API routes for Microsoft authentication
+- Email accounts management page at `/email/accounts`
+- Server-side IMAP/SMTP API routes (placeholders for implementation)
 - Activities & Follow-ups system with comprehensive activity logging
 - FollowUpReminders component for managing follow-up reminders
 - NotificationsPanel component for centralized notification display

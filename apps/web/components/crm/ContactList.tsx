@@ -108,7 +108,7 @@ export function ContactList({
     const tags = formData.get('tags')?.toString().split(',').filter(Boolean) || [];
 
     await onContactUpdate(editingContact.id, {
-      company_id: formData.get('company_id')?.toString() || null,
+      company_id: formData.get('company_id')?.toString() === '__none__' ? null : formData.get('company_id')?.toString() || null,
       first_name: formData.get('first_name') as string,
       last_name: formData.get('last_name')?.toString() || undefined,
       email: formData.get('email')?.toString() || undefined,
@@ -187,7 +187,7 @@ export function ContactList({
                         <SelectValue placeholder="Select company" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="__none__">None</SelectItem>
                         {companies.map((company) => (
                           <SelectItem key={company.id} value={company.id}>
                             {company.name}
@@ -446,7 +446,7 @@ export function ContactList({
                         <SelectValue placeholder="Select company" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="__none__">None</SelectItem>
                         {companies.map((company) => (
                           <SelectItem key={company.id} value={company.id}>
                             {company.name}

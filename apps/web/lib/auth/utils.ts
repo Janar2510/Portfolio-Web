@@ -7,6 +7,18 @@ export function getAuthErrorMessage(error: AuthError | Error | null): string {
   // Handle Supabase auth errors
   if ('message' in error) {
     const message = error.message.toLowerCase();
+    const status = 'status' in error ? error.status : null;
+
+    // Handle 401 Unauthorized specifically
+    if (status === 401) {
+      if (message.includes('signup') || message.includes('sign up')) {
+        return 'Unable to create account. Please check your email and password, or try signing in if you already have an account.';
+      }
+      if (message.includes('login') || message.includes('sign in')) {
+        return 'Invalid email or password. Please check your credentials and try again.';
+      }
+      return 'Authentication failed. Please check your credentials.';
+    }
 
     if (message.includes('email') && message.includes('already registered')) {
       return 'This email is already registered. Please sign in instead.';
@@ -34,6 +46,12 @@ export function getAuthErrorMessage(error: AuthError | Error | null): string {
   }
 
   return error.message || 'An error occurred';
+}
+
+export function isEmailNotConfirmedError(error: AuthError | Error | null): boolean {
+  if (!error || !('message' in error)) return false;
+  const message = error.message.toLowerCase();
+  return message.includes('email not confirmed') || message.includes('email_not_confirmed');
 }
 
 export function validateEmail(email: string): boolean {

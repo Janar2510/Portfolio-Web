@@ -58,8 +58,8 @@ export function FollowUpReminders({
       : `${dueDate}T09:00:00`;
 
     await onFollowUpCreate({
-      contact_id: formData.get('contact_id')?.toString() || undefined,
-      deal_id: formData.get('deal_id')?.toString() || undefined,
+      contact_id: formData.get('contact_id')?.toString() === '__none__' ? undefined : formData.get('contact_id')?.toString() || undefined,
+      deal_id: formData.get('deal_id')?.toString() === '__none__' ? undefined : formData.get('deal_id')?.toString() || undefined,
       title: formData.get('title') as string,
       due_date: dueDateTime,
     });
@@ -144,7 +144,7 @@ export function FollowUpReminders({
                         <SelectValue placeholder="Select contact" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="__none__">None</SelectItem>
                         {contacts.map((contact) => (
                           <SelectItem key={contact.id} value={contact.id}>
                             {contact.first_name} {contact.last_name}
@@ -160,7 +160,7 @@ export function FollowUpReminders({
                         <SelectValue placeholder="Select deal" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="__none__">None</SelectItem>
                         {deals.map((deal) => (
                           <SelectItem key={deal.id} value={deal.id}>
                             {deal.title}

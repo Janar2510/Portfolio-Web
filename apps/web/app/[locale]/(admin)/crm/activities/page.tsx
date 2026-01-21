@@ -178,17 +178,17 @@ export default function ActivitiesPage() {
   });
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col">
+    <div className="flex h-[calc(100vh-4rem)] flex-col bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
       {/* Header */}
-      <div className="border-b p-4">
-        <h1 className="text-2xl font-bold">Activities & Follow-ups</h1>
+      <div className="border-b border-border bg-card/50 backdrop-blur-sm p-4 animate-slide-down">
+        <h1 className="text-2xl font-bold text-foreground">Activities & Follow-ups</h1>
         <p className="text-sm text-muted-foreground">
           Manage your CRM activities and follow-up reminders
         </p>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-4 animate-fade-in">
         <Tabs defaultValue="notifications" className="space-y-4">
           <TabsList>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>

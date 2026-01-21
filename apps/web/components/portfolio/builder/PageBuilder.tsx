@@ -14,6 +14,7 @@ import { getDefaultBlockContent, getDefaultBlockSettings } from '@/lib/blocks/sc
 import { Button } from '@/components/ui/button';
 import { Palette, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
 
 interface PageBuilderProps {
   siteId: string;
@@ -26,7 +27,8 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
   const [isStylePanelOpen, setIsStylePanelOpen] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
-  const portfolioService = new PortfolioService();
+  const supabase = createClient();
+  const portfolioService = new PortfolioService(supabase);
   const queryClient = useQueryClient();
 
   // Fetch pages
