@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import type { PortfolioBlock } from '@/lib/services/portfolio';
 import type { FormBlockContent, FormBlockSettings } from '@/lib/blocks/schema';
+import { useEditorStore } from '@/stores/portfolio';
 
 interface FormBlockProps {
   block: PortfolioBlock;
@@ -17,6 +18,7 @@ interface FormBlockProps {
   onDelete?: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
+  siteId?: string; // Optional site_id for public pages
 }
 
 export function FormBlock({
@@ -26,23 +28,66 @@ export function FormBlock({
   onDelete,
   onAddAfter,
   onEdit,
+  siteId: propSiteId,
 }: FormBlockProps) {
   const content = block.content as FormBlockContent;
   const settings = block.settings as FormBlockSettings;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { currentPage } = useEditorStore();
 
   const fields = content.fields || ['name', 'email', 'message'];
+  // Use prop siteId (for public pages) or currentPage site_id (for editor)
+  const siteId = propSiteId || currentPage?.site_id;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isEditing) return;
+    if (isEditing || !siteId) return;
 
     setIsSubmitting(true);
-    // TODO: Implement form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    setSubmitError(null);
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const data: Record<string, unknown> = {};
+
+      // Collect form data
+      fields.forEach((field) => {
+        const value = formData.get(field);
+        if (value) {
+          data[field] = value.toString();
+        }
+      });
+
+      // Submit to public API
+      const response = await fetch('/api/portfolio/public/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          site_id: siteId,
+          form_type: content.form_type || 'contact',
+          form_id: block.id,
+          data: data,
+          page_url: typeof window !== 'undefined' ? window.location.href : undefined,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error?.message || 'Failed to submit form');
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitError(error instanceof Error ? error.message : 'Failed to submit form. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -147,6 +192,15 @@ export function FormBlock({
             </div>
           )}
 
+          {submitError && (
+            <div className={cn(
+              'rounded-lg border border-error-main bg-error-light p-3 text-sm text-error-main',
+              settings.layout === 'two-column' && 'md:col-span-2'
+            )}>
+              {submitError}
+            </div>
+          )}
+
           <div
             className={cn(
               'flex',
@@ -164,7 +218,7 @@ export function FormBlock({
                     ? 'outline'
                     : 'default'
               }
-              disabled={isEditing || isSubmitting}
+              disabled={isEditing || isSubmitting || !siteId}
             >
               {isSubmitting ? 'Submitting...' : content.submit_text || 'Submit'}
             </Button>

@@ -103,10 +103,15 @@ export default function ProjectsPage() {
   const createProjectMutation = useMutation({
     mutationFn: async (data: { name: string; description?: string; color?: string }) => {
       const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) throw new Error('User not found');
+
       const { data: project, error } = await supabase
         .from('projects')
         .insert({
           ...data,
+          user_id: user.id,
           status: 'active',
         })
         .select()
@@ -158,9 +163,9 @@ export default function ProjectsPage() {
       const { error } = await supabase.from('projects').delete().eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, deletedProjectId) => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
-      if (selectedProjectId === id) {
+      if (selectedProjectId === deletedProjectId) {
         setSelectedProjectId(null);
       }
     },
@@ -231,6 +236,42 @@ export default function ProjectsPage() {
       queryClient.invalidateQueries({ queryKey: ['project-tasks', selectedProjectId] });
       setIsTaskModalOpen(false);
       setSelectedTask(null);
+    },
+  });
+
+  // Create task mutation
+  const createTaskMutation = useMutation({
+    mutationFn: async ({ projectId, columnId, title }: { projectId: string; columnId: string; title: string }) => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Get current max sort order
+      const { data: existingTasks } = await supabase
+        .from('tasks')
+        .select('sort_order')
+        .eq('column_id', columnId)
+        .order('sort_order', { ascending: false })
+        .limit(1);
+
+      const newSortOrder = existingTasks?.[0]?.sort_order !== undefined ? existingTasks[0].sort_order + 1 : 0;
+
+      const { data, error } = await supabase
+        .from('tasks')
+        .insert({
+          project_id: projectId,
+          column_id: columnId,
+          title,
+          sort_order: newSortOrder,
+          assignee_id: user.id, // Assign to creator by default
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['project-tasks', selectedProjectId] });
     },
   });
 
@@ -386,6 +427,15 @@ export default function ProjectsPage() {
               await moveTaskMutation.mutateAsync({ taskId, columnId, sortOrder });
             }}
             onTaskClick={handleTaskClick}
+            onTaskCreate={async (columnId, title) => {
+              if (selectedProjectId) {
+                await createTaskMutation.mutateAsync({
+                  projectId: selectedProjectId,
+                  columnId,
+                  title,
+                });
+              }
+            }}
           />
         ) : (
           <div className="flex h-full items-center justify-center animate-fade-in">

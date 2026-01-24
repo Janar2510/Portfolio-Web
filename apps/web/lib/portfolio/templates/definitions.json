@@ -1,0 +1,339 @@
+[
+  {
+    "templateId": "minimal",
+    "title": "Minimal",
+    "description": "Clean, minimal portfolio focused on typography and whitespace",
+    "targetPersona": "Writers, designers, and content-focused creators",
+    "styleKeywords": ["clean", "minimal", "typography", "whitespace", "elegant"],
+    "colorPalette": {
+      "primary": "#000000",
+      "secondary": "#666666",
+      "background": "#FFFFFF",
+      "text": "#1A1A1A",
+      "surface": "#FAFAFA",
+      "border": "#E5E5E5",
+      "textSecondary": "#666666"
+    },
+    "fontPreset": {
+      "heading": "Inter",
+      "body": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "sections": {
+      "hero": {
+        "headline": "Welcome to My Portfolio",
+        "subtitle": "A curated collection of my work and thoughts",
+        "backgroundStyle": "solid",
+        "alignment": "center",
+        "height": "medium"
+      },
+      "about": {
+        "bioText": "I'm a creative professional passionate about crafting meaningful experiences through design and content. With a focus on clarity and purpose, I bring ideas to life with thoughtful attention to detail.",
+        "imagePlaceholder": true
+      },
+      "projects": [
+        {
+          "title": "Project One",
+          "image": "placeholder.jpg",
+          "description": "A showcase of innovative design solutions that solve real-world problems with elegant simplicity."
+        },
+        {
+          "title": "Project Two",
+          "image": "placeholder.jpg",
+          "description": "Exploring the intersection of form and function through thoughtful user experience design."
+        },
+        {
+          "title": "Project Three",
+          "image": "placeholder.jpg",
+          "description": "Creating compelling narratives through visual storytelling and strategic content design."
+        }
+      ],
+      "contact": {
+        "ctaText": "Let's Work Together",
+        "formFields": ["name", "email", "message"]
+      }
+    }
+  },
+  {
+    "templateId": "creative",
+    "title": "Creative",
+    "description": "Bold colors, asymmetric layouts, large visuals",
+    "targetPersona": "Designers, illustrators, and brand creatives",
+    "styleKeywords": ["bold", "vibrant", "asymmetric", "dynamic", "expressive"],
+    "colorPalette": {
+      "primary": "#FF6B6B",
+      "secondary": "#4ECDC4",
+      "background": "#FFFFFF",
+      "text": "#2C3E50",
+      "surface": "#F8F9FA",
+      "border": "#E1E8ED",
+      "textSecondary": "#7F8C8D"
+    },
+    "fontPreset": {
+      "heading": "Plus Jakarta Sans",
+      "body": "Plus Jakarta Sans",
+      "mono": "Fira Code"
+    },
+    "sections": {
+      "hero": {
+        "headline": "Creative Visionary",
+        "subtitle": "Transforming ideas into bold visual experiences",
+        "backgroundStyle": "gradient",
+        "alignment": "left",
+        "height": "large"
+      },
+      "about": {
+        "bioText": "I'm a visual storyteller who believes in the power of bold design. My work combines vibrant colors, dynamic layouts, and expressive typography to create memorable brand experiences that stand out in a crowded digital landscape.",
+        "imagePlaceholder": true
+      },
+      "projects": [
+        {
+          "title": "Brand Identity Design",
+          "image": "placeholder.jpg",
+          "description": "Complete brand transformation for a tech startup, featuring bold color palettes and distinctive visual language."
+        },
+        {
+          "title": "Illustration Series",
+          "image": "placeholder.jpg",
+          "description": "A collection of expressive illustrations exploring themes of creativity, innovation, and human connection."
+        },
+        {
+          "title": "Digital Campaign",
+          "image": "placeholder.jpg",
+          "description": "Multi-platform campaign design that brought a brand's personality to life through dynamic visuals and engaging content."
+        },
+        {
+          "title": "Web Experience",
+          "image": "placeholder.jpg",
+          "description": "Immersive web design that breaks conventional layouts to create a truly unique user experience."
+        }
+      ],
+      "services": [
+        {
+          "title": "Brand Design",
+          "description": "Complete brand identity systems from concept to execution"
+        },
+        {
+          "title": "Visual Design",
+          "description": "Stunning visuals for digital and print media"
+        },
+        {
+          "title": "Creative Direction",
+          "description": "Strategic creative guidance for brands and campaigns"
+        }
+      ],
+      "contact": {
+        "ctaText": "Start Your Project",
+        "formFields": ["name", "email", "message"]
+      }
+    }
+  },
+  {
+    "templateId": "professional",
+    "title": "Professional",
+    "description": "Conservative layout, serif fonts, clear structure",
+    "targetPersona": "Consultants, business professionals, and speakers",
+    "styleKeywords": ["conservative", "structured", "trustworthy", "refined", "authoritative"],
+    "colorPalette": {
+      "primary": "#1E3A5F",
+      "secondary": "#C9A961",
+      "background": "#FFFFFF",
+      "text": "#2C2C2C",
+      "surface": "#F5F5F5",
+      "border": "#D4D4D4",
+      "textSecondary": "#6B6B6B"
+    },
+    "fontPreset": {
+      "heading": "Playfair Display",
+      "body": "Lora",
+      "mono": "JetBrains Mono"
+    },
+    "sections": {
+      "hero": {
+        "headline": "Expert Consulting & Strategic Guidance",
+        "subtitle": "Helping businesses achieve their goals through proven methodologies and strategic insight",
+        "backgroundStyle": "solid",
+        "alignment": "center",
+        "height": "medium"
+      },
+      "about": {
+        "bioText": "With over 15 years of experience in business strategy and consulting, I help organizations navigate complex challenges and unlock their potential. My approach combines analytical rigor with practical solutions, delivering measurable results for clients across industries.",
+        "imagePlaceholder": true
+      },
+      "projects": [
+        {
+          "title": "Strategic Transformation",
+          "image": "placeholder.jpg",
+          "description": "Led a comprehensive organizational transformation that increased operational efficiency by 40% and improved employee satisfaction scores."
+        },
+        {
+          "title": "Market Expansion",
+          "image": "placeholder.jpg",
+          "description": "Developed and executed market entry strategy for a Fortune 500 company, resulting in successful expansion into three new regions."
+        },
+        {
+          "title": "Digital Innovation",
+          "image": "placeholder.jpg",
+          "description": "Designed and implemented digital transformation roadmap that modernized operations and improved customer experience metrics."
+        }
+      ],
+      "services": [
+        {
+          "title": "Business Strategy",
+          "description": "Strategic planning and organizational development consulting"
+        },
+        {
+          "title": "Executive Coaching",
+          "description": "Leadership development and executive coaching services"
+        },
+        {
+          "title": "Speaking Engagements",
+          "description": "Keynote speaking and workshop facilitation"
+        }
+      ],
+      "contact": {
+        "ctaText": "Schedule a Consultation",
+        "formFields": ["name", "email", "company", "message"]
+      }
+    }
+  },
+  {
+    "templateId": "developer",
+    "title": "Developer",
+    "description": "Monospaced fonts, dark/light toggle, grid layout",
+    "targetPersona": "Developers, engineers, and tech freelancers",
+    "styleKeywords": ["technical", "grid-based", "code-focused", "modern", "precise"],
+    "colorPalette": {
+      "primary": "#3B82F6",
+      "secondary": "#10B981",
+      "background": "#0F172A",
+      "text": "#F1F5F9",
+      "surface": "#1E293B",
+      "border": "#334155",
+      "textSecondary": "#94A3B8"
+    },
+    "fontPreset": {
+      "heading": "JetBrains Mono",
+      "body": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "sections": {
+      "hero": {
+        "headline": "Full-Stack Developer",
+        "subtitle": "Building scalable solutions with modern technologies",
+        "backgroundStyle": "solid",
+        "alignment": "left",
+        "height": "medium"
+      },
+      "about": {
+        "bioText": "I'm a software engineer passionate about building robust, scalable applications. With expertise in modern web technologies, cloud infrastructure, and system architecture, I turn complex problems into elegant solutions. Always learning, always building.",
+        "imagePlaceholder": true
+      },
+      "projects": [
+        {
+          "title": "E-Commerce Platform",
+          "image": "placeholder.jpg",
+          "description": "High-performance e-commerce platform built with Next.js and PostgreSQL, handling 10K+ concurrent users with sub-200ms response times."
+        },
+        {
+          "title": "API Gateway System",
+          "image": "placeholder.jpg",
+          "description": "Microservices architecture with API gateway, implementing rate limiting, authentication, and real-time monitoring."
+        },
+        {
+          "title": "Mobile Application",
+          "image": "placeholder.jpg",
+          "description": "Cross-platform mobile app with React Native, featuring offline-first architecture and real-time synchronization."
+        },
+        {
+          "title": "DevOps Automation",
+          "image": "placeholder.jpg",
+          "description": "CI/CD pipeline implementation reducing deployment time by 80% and improving system reliability."
+        }
+      ],
+      "services": [
+        {
+          "title": "Web Development",
+          "description": "Full-stack web applications with modern frameworks"
+        },
+        {
+          "title": "System Architecture",
+          "description": "Scalable system design and cloud infrastructure"
+        },
+        {
+          "title": "Technical Consulting",
+          "description": "Code reviews, architecture guidance, and team mentoring"
+        }
+      ],
+      "contact": {
+        "ctaText": "Let's Build Something",
+        "formFields": ["name", "email", "message"]
+      }
+    }
+  },
+  {
+    "templateId": "artist",
+    "title": "Artist",
+    "description": "Gallery-style layout, emphasis on visuals, minimal text",
+    "targetPersona": "Photographers, visual artists, and illustrators",
+    "styleKeywords": ["visual", "gallery-focused", "aesthetic", "immersive", "artistic"],
+    "colorPalette": {
+      "primary": "#8B5CF6",
+      "secondary": "#EC4899",
+      "background": "#FFFFFF",
+      "text": "#1F2937",
+      "surface": "#F9FAFB",
+      "border": "#E5E7EB",
+      "textSecondary": "#6B7280"
+    },
+    "fontPreset": {
+      "heading": "Playfair Display",
+      "body": "Open Sans",
+      "mono": "JetBrains Mono"
+    },
+    "sections": {
+      "hero": {
+        "headline": "Visual Artist",
+        "subtitle": "Capturing moments and creating visual narratives",
+        "backgroundStyle": "image",
+        "alignment": "center",
+        "height": "full"
+      },
+      "about": {
+        "bioText": "I'm a visual artist exploring the boundaries between reality and imagination. Through photography, illustration, and digital art, I create visual stories that evoke emotion and inspire connection. Each piece is a journey, a moment frozen in time, a story waiting to be told.",
+        "imagePlaceholder": true
+      },
+      "projects": [
+        {
+          "title": "Urban Landscapes",
+          "image": "placeholder.jpg",
+          "description": "A series exploring the intersection of architecture and nature in urban environments, capturing the beauty of everyday spaces."
+        },
+        {
+          "title": "Portrait Collection",
+          "image": "placeholder.jpg",
+          "description": "Intimate portraits that reveal the depth and complexity of human emotion through careful composition and lighting."
+        },
+        {
+          "title": "Abstract Expressions",
+          "image": "placeholder.jpg",
+          "description": "Digital art series experimenting with color, form, and movement to create abstract visual experiences."
+        },
+        {
+          "title": "Nature Photography",
+          "image": "placeholder.jpg",
+          "description": "Wildlife and landscape photography celebrating the natural world's diversity and beauty."
+        },
+        {
+          "title": "Conceptual Series",
+          "image": "placeholder.jpg",
+          "description": "Themed visual narratives exploring social and personal themes through symbolic imagery and composition."
+        }
+      ],
+      "contact": {
+        "ctaText": "Get in Touch",
+        "formFields": ["name", "email", "message"]
+      }
+    }
+  }
+]

@@ -7,7 +7,171 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Portfolio site creation authentication issue - fixed async createClient() calls in API routes
+- Missing `/portfolio/settings` route - created settings page with general, projects, submissions, and domain tabs
+- Missing `/api/portfolio/forms/submissions` API route - implemented with pagination and filtering
+- Form block submission handler - now submits to public API endpoint
+- Projects block data fetching - now fetches actual projects from database with filtering
+- FormSubmissionsManager API response parsing - fixed to correctly extract data from response
+- BlockRenderer now passes siteId to blocks for public page rendering
+- Public form submission API - fixed async createClient() call
+
 ### Added
+- Copyfolio-style Template & Editor System (Part 1)
+  - Comprehensive database schema upgrade for portfolio module
+  - Extended portfolio_sites table with tagline, template tracking, SEO fields, and settings
+  - Extended portfolio_templates table with slug, i18n fields, tags, preview images, features, industries, premium flags
+  - Extended portfolio_pages table with page types, navigation settings, parent hierarchy, and page-level settings
+  - Extended portfolio_blocks table with styles, layout, visibility, animation, and variant support
+  - Renamed portfolio_styles to portfolio_site_styles with enhanced structure
+  - New portfolio_sections table for reusable section library
+  - New portfolio_media table for media library management
+  - New portfolio_projects table (separate from projects module) for portfolio showcase items
+  - New portfolio_edit_history table for undo/redo and change tracking
+  - New portfolio_versions table for named snapshots and version history
+  - New portfolio_form_submissions table for contact form and newsletter submissions
+  - Comprehensive TypeScript types for all new schema structures
+  - Block registry system with type-safe block registration
+  - Block schema system with Zod validation for all block types
+  - Support for block variants, animations, visibility controls, and layout settings
+  - Enhanced style system with color palettes (including dark mode), typography, spacing, effects, and layout settings
+  - Style presets system for saving and reusing style combinations
+  - Media library with image optimization, thumbnails, and blurhash support
+  - Portfolio projects with case study structure, gallery support, and featured images
+  - Edit history tracking with operation-based undo/redo support
+  - Version snapshots for full site state preservation
+  - Form submission tracking with spam detection and status management
+  - Database migration: `20240110000000_upgrade_portfolio_to_copyfolio_style.sql`
+  - Comprehensive RLS policies for all new tables
+  - Indexes optimized for common queries
+  - Triggers for auto-creating site styles and tracking template usage
+- Portfolio TypeScript types system
+  - Complete type definitions in `/lib/portfolio/types.ts`
+  - Type-safe interfaces for sites, templates, sections, pages, blocks, styles, media, projects, history, versions, and form submissions
+  - Support for all new schema fields and structures
+- Block registry and schema system
+  - Centralized block registry with metadata, schemas, and component registration
+  - Zod schemas for validating block content and settings
+  - Support for block categories (layout, content, media, interactive, portfolio)
+  - Block variant system for multiple layout options
+  - Helper functions for creating and validating blocks
+  - Type-safe block creation and updates
+- Copyfolio-style Template & Editor System (Part 2)
+  - Complete API routes for portfolio system
+    - Templates API (list, get, apply)
+    - Site API (CRUD, publish/unpublish)
+    - Styles API (get, update)
+    - Pages API (CRUD, get with blocks)
+    - Blocks API (CRUD, reorder)
+    - Sections API (list, get by category)
+    - Public form submission endpoint with CORS
+  - Editor state management with Zustand stores
+    - Editor store (current page, selected block, preview mode, sidebar state)
+    - Blocks store (block operations, clipboard, selection)
+    - Styles store (color, typography, spacing, effects, presets)
+    - History store (undo/redo, version management)
+  - Template Gallery UI components
+    - TemplateGallery with search and category filters
+    - TemplateCard with hover effects and preview/use buttons
+    - TemplatePreview modal with device frames (desktop/tablet/mobile)
+    - Featured and premium template badges
+  - Visual Editor core components
+    - EditorLayout with responsive sidebar, canvas, and settings panel
+    - EditorCanvas with drag-and-drop block reordering (dnd-kit)
+    - EditorToolbar with undo/redo, save, publish, preview modes
+    - EditorSidebar with tabs (blocks, pages, styles, settings)
+    - EditorSettingsPanel for block and page settings
+    - BlockPlaceholder for empty state
+    - BlocksPanel with searchable block library
+    - AddBlockModal for selecting new blocks
+  - Editor hooks and functionality
+    - useSavePage hook for saving page changes
+    - useAddBlock hook for adding new blocks
+    - useUpdateBlock hook for updating blocks
+    - useDeleteBlock hook for deleting blocks
+    - usePublishSite hook for publishing sites
+    - Automatic history tracking for all operations
+  - Portfolio service extensions
+    - Media methods (get, upload, delete)
+    - Portfolio projects methods (CRUD operations)
+    - History methods (get, add entry)
+    - Versions methods (get, create, get by id, delete)
+    - Supabase Storage integration for media uploads
+- Copyfolio-style Template & Editor System (Part 2 - UI Components)
+  - Complete styles editor panels
+    - ColorsPanel with color picker, palette editor, and preset system
+    - TypographyPanel with font selection, size controls, weight settings, and live preview
+    - SpacingPanel with spacing scale, section padding, container width, and border radius controls
+    - EffectsPanel for animations, shadows, hover effects, and scroll animations
+    - Integrated StylesPanel with tabbed interface for all style categories
+  - Complete PagesPanel with page management
+    - Page list with homepage indicator
+    - Create new pages with title and slug
+    - Delete pages (with homepage protection)
+    - Navigate to pages
+    - Page selection highlighting
+  - Complete BlockSettingsPanel with comprehensive block editing
+    - Tabbed interface (Content, Settings, Layout, Visibility)
+    - Block-specific content fields (hero, text, image)
+    - Block-specific settings (alignment, background, height, etc.)
+    - Layout controls (width, padding, alignment)
+    - Visibility controls (desktop/tablet/mobile)
+    - Form integration with React Hook Form
+  - Media Library component
+    - Media grid with thumbnails
+    - Upload functionality with Supabase Storage
+    - Search and filter media
+    - Media selection (single and multiple)
+    - Delete media functionality
+    - File type icons and metadata display
+  - UI component additions
+    - Slider component (Radix UI) for numeric inputs
+    - Enhanced color picker with hex input
+    - Font preview cards
+    - Preset management UI
+- Copyfolio-style Template & Editor System (Part 3 - Advanced Features)
+  - Additional block implementations
+    - ProjectGridBlock: Display portfolio projects in grid/masonry/list layouts with filtering
+    - SkillsBlock: Visual skills display with bars, badges, grid, or circular layouts
+    - StatsBlock: Animated statistics display with customizable layouts
+    - All blocks integrated with BlockRenderer and block registry
+  - Enhanced BlockSettingsPanel
+    - Support for project-grid, skills, stats, gallery, video, and contact-form blocks
+    - Advanced settings for all block types (layout, columns, visibility, etc.)
+    - Tabbed interface (Content, Settings, Layout, Visibility)
+    - Form integration with React Hook Form for all block types
+  - Project Management UI
+    - ProjectsManager component with full CRUD operations
+    - Create, edit, and delete projects
+    - Project cards with thumbnails, categories, and tags
+    - Tag management with add/remove functionality
+    - Category filtering and organization
+    - Integration with PortfolioService for data persistence
+  - Form Submissions Management
+    - FormSubmissionsManager component to view all form submissions
+    - Search and filter submissions
+    - Detailed submission view with all form data
+    - Export submissions to CSV
+    - Mark submissions as read/unread
+    - Reply to submissions via email
+    - Integration with portfolio_form_submissions table
+  - Custom Domain Configuration
+    - DomainSettings component for managing custom domains
+    - Add/remove custom domains
+    - Domain verification status display
+    - DNS configuration instructions (CNAME and A records)
+    - SSL certificate status
+    - Domain verification workflow
+  - UI Component Additions
+    - Progress component (Radix UI) for skill levels and progress bars
+    - Alert component for notifications and warnings
+    - Table component for data display (form submissions, etc.)
+    - Enhanced SettingsPanel with tabs for Projects, Submissions, and Domain
+  - Integration Updates
+    - BlockRenderer updated to support all new block types
+    - SettingsPanel integrated with ProjectsManager, FormSubmissionsManager, and DomainSettings
+    - All components integrated with Zustand stores and React Query
 - Pipedrive-style CRM system upgrade
   - Enhanced CRM service layer (CRMEnhancedService) with full Pipedrive-style API
   - LabelPicker component for managing and applying labels

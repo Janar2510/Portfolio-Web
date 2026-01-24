@@ -62,7 +62,8 @@ export function ProjectList({
 
   const handleCreateProject = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
     const color = formData.get('color') as string;
@@ -73,7 +74,7 @@ export function ProjectList({
       color: color || undefined,
     });
     setIsCreateDialogOpen(false);
-    e.currentTarget.reset();
+    form.reset();
   };
 
   const handleEditProject = async (e: React.FormEvent<HTMLFormElement>) => {

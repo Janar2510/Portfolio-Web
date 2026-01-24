@@ -24,6 +24,13 @@
     - [ ] `migrate_deals_to_crm_deals()`
   - [ ] Verify all new CRM tables created (crm_organizations, crm_persons, crm_pipelines, crm_deals, crm_products, crm_leads, crm_labels, crm_notes, crm_files, crm_filters, crm_goals, crm_workflows, etc.)
   - [ ] Verify data migration completed successfully
+  - [ ] **IMPORTANT: Run Portfolio upgrade migration (20240110000000_upgrade_portfolio_to_copyfolio_style.sql)**
+  - [ ] Verify portfolio_site_styles table renamed and extended (from portfolio_styles)
+  - [ ] Verify all new portfolio tables created (portfolio_sections, portfolio_media, portfolio_projects, portfolio_edit_history, portfolio_versions, portfolio_form_submissions)
+  - [ ] Verify extended tables have new columns (portfolio_sites, portfolio_templates, portfolio_pages, portfolio_blocks)
+  - [ ] Verify data migration for portfolio_site_styles completed (colors and typography migrated)
+  - [ ] Verify triggers for auto-creating site styles and template usage tracking
+  - [ ] Verify all RLS policies for new tables are active
 - [ ] Verify RLS policies are enabled
 - [ ] Set up database backups
 - [ ] Test database connection
@@ -33,6 +40,11 @@
 - [ ] Run linter: `npm run lint`
 - [ ] Run build: `npm run build`
 - [ ] Test all API endpoints
+- [ ] Test portfolio site creation flow
+- [ ] Test portfolio settings page navigation
+- [ ] Test form submissions API and management UI
+- [ ] Test form block submission on public pages
+- [ ] Test projects block data display
 - [ ] Test Kanban board drag-and-drop functionality
 - [ ] Test task creation and editing
 - [ ] Test subtasks and comments

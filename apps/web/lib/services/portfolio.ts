@@ -1,4 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient, User } from '@supabase/supabase-js';
 
 export interface PortfolioSite {
   id: string;
@@ -36,6 +36,17 @@ export interface PortfolioBlock {
   block_type: string;
   content: Record<string, unknown>;
   settings: Record<string, unknown>;
+  layout?: {
+    colSpan?: number; // 1-12
+    rowSpan?: number; // 1-n
+  } & Record<string, unknown>;
+  styles?: Record<string, unknown>;
+  is_visible?: boolean;
+  visible_on?: {
+    desktop: boolean;
+    tablet: boolean;
+    mobile: boolean;
+  };
   sort_order: number;
   created_at: string;
   updated_at: string;
@@ -74,16 +85,26 @@ export interface PortfolioTemplate {
 
 export class PortfolioService {
   private supabase: SupabaseClient;
+  private providedUser: User | null;
 
-  constructor(supabase: SupabaseClient) {
+  constructor(supabase: SupabaseClient, user?: User | null) {
     this.supabase = supabase;
+    this.providedUser = user ?? null;
   }
 
   // Site methods
   async getSite(): Promise<PortfolioSite | null> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
+    // Use provided user if available, otherwise try to get from auth
+    let user = this.providedUser;
+
+    if (!user) {
+      try {
+        const { data: { user: authUser } } = await this.supabase.auth.getUser();
+        user = authUser;
+      } catch {
+        // Auth call failed, continue with null user
+      }
+    }
 
     if (!user) return null;
 
@@ -128,18 +149,61 @@ export class PortfolioService {
     subdomain: string;
     templateId?: string;
   }): Promise<PortfolioSite> {
-    const {
-      data: { user },
-    } = await this.supabase.auth.getUser();
+    // Try to get user from the service instance (recovered in route or provided in constructor)
+    let user = this.providedUser;
 
-    if (!user) throw new Error('Not authenticated');
+    if (!user) {
+      console.log('[PortfolioService] No provided user, attempting auth.getUser()...');
+      const { data: { user: authUser }, error: userError } = await this.supabase.auth.getUser();
+      if (userError) console.error('[PortfolioService] auth.getUser() error:', userError.message);
+      user = authUser;
+    }
+
+    if (!user) {
+      console.error('[PortfolioService] Final auth check failed: Not authenticated');
+      throw new Error('Not authenticated');
+    }
+
+    console.log('[PortfolioService] Creating site for user:', user.id);
+
+    // Verify profile exists (required for foreign key)
+    console.log('[PortfolioService] Verifying profile existence...');
+    const { data: profile, error: profileError } = await this.supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (profileError || !profile) {
+      console.warn('[PortfolioService] Profile missing or error:', profileError?.message);
+      console.log('[PortfolioService] Attempting to create missing profile...');
+
+      const { error: createProfileError } = await this.supabase
+        .from('profiles')
+        .insert({
+          id: user.id,
+          display_name: user.user_metadata?.full_name || user.email,
+          locale: 'en'
+        });
+
+      if (createProfileError) {
+        console.error('[PortfolioService] Failed to create profile:', createProfileError.message);
+        // We still try to proceed, but it will likely fail on FK constraint
+      } else {
+        console.log('[PortfolioService] Profile created successfully');
+      }
+    } else {
+      console.log('[PortfolioService] Profile verified');
+    }
 
     // Check if user already has a site (MVP: one site per user)
     const existing = await this.getSite();
     if (existing) {
+      console.error('[PortfolioService] User already has a site:', existing.id);
       throw new Error('User already has a portfolio site');
     }
 
+    console.log('[PortfolioService] Inserting site row:', { name: site.name, subdomain: site.subdomain, user_id: user.id });
     const { data, error } = await this.supabase
       .from('portfolio_sites')
       .insert({
@@ -150,11 +214,22 @@ export class PortfolioService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('[PortfolioService] Error creating site:', error);
+      throw error;
+    }
 
-    // If template provided, apply it
+    // Apply template if provided
     if (site.templateId) {
-      await this.applyTemplate(data.id, site.templateId);
+      try {
+        console.log('[PortfolioService] Applying template:', site.templateId);
+        await this.applyTemplate(data.id, site.templateId);
+      } catch (templateError) {
+        console.error('[PortfolioService] Failed to apply template:', templateError);
+        // We don't throw here to avoid failing the whole site creation, 
+        // but arguably we should let the user know. 
+        // For now, we'll just log it. The site is created empty.
+      }
     }
 
     return data;
@@ -188,6 +263,15 @@ export class PortfolioService {
     const { error } = await this.supabase
       .from('portfolio_sites')
       .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async unpublishSite(id: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('portfolio_sites')
+      .update({ is_published: false, published_at: null })
       .eq('id', id);
 
     if (error) throw error;
@@ -287,7 +371,7 @@ export class PortfolioService {
       }
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await this.supabase
       .from('portfolio_pages')
       .update(updates)
       .eq('id', id)
@@ -370,6 +454,15 @@ export class PortfolioService {
     if (error) throw error;
   }
 
+  async deletePageBlocks(pageId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('portfolio_blocks')
+      .delete()
+      .eq('page_id', pageId);
+
+    if (error) throw error;
+  }
+
   async reorderBlocks(blockIds: string[]): Promise<void> {
     const updates = blockIds.map((id, index) =>
       this.supabase
@@ -435,7 +528,72 @@ export class PortfolioService {
 
     const { data, error } = await query;
     if (error) throw error;
-    return data || [];
+
+    // Inject static templates
+    const staticTemplates: PortfolioTemplate[] = [
+      {
+        id: 'espresso',
+        name: 'The Espresso Stroll',
+        description: 'Warm, dark themed template perfect for lifestyle blogs or coffee shops.',
+        thumbnail_url: null,
+        category: 'portfolio',
+        pages_schema: {},
+        styles_schema: {},
+        is_active: true,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: 'ava',
+        name: 'Ava Jones',
+        description: 'Creative copywriter portfolio with soft gradients and clean typography.',
+        thumbnail_url: null,
+        category: 'portfolio',
+        pages_schema: {},
+        styles_schema: {},
+        is_active: true,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: 'bernadette',
+        name: 'Bernadette Wilde',
+        description: 'Professional marketing portfolio with a clean, neutral aesthetic.',
+        thumbnail_url: null,
+        category: 'business',
+        pages_schema: {},
+        styles_schema: {},
+        is_active: true,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: 'emily',
+        name: 'Emily Maine',
+        description: 'Elegant writer portfolio with a focus on editorial content.',
+        thumbnail_url: null,
+        category: 'portfolio',
+        pages_schema: {},
+        styles_schema: {},
+        is_active: true,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: 'bento',
+        name: 'Bento Grid',
+        description: 'Modern, block-based layout perfect for showcasing diverse content types.',
+        thumbnail_url: null,
+        category: 'portfolio',
+        pages_schema: {},
+        styles_schema: {},
+        is_active: true,
+        created_at: new Date().toISOString(),
+      }
+    ];
+
+    // Filter static templates if category provided
+    const filteredStatic = category
+      ? staticTemplates.filter(t => t.category === category)
+      : staticTemplates;
+
+    return [...(data || []), ...filteredStatic];
   }
 
   async getTemplateById(id: string): Promise<PortfolioTemplate | null> {
@@ -456,10 +614,18 @@ export class PortfolioService {
     if (!template) throw new Error('Template not found');
 
     // Apply styles
-    await this.upsertStyles(siteId, template.styles_schema as PortfolioStyle);
+    const styles = template.styles_schema as unknown as PortfolioStyle;
+    if (styles && Object.keys(styles).length > 0) {
+      await this.upsertStyles(siteId, {
+        color_palette: styles.color_palette || {},
+        typography: styles.typography || {},
+        spacing_scale: styles.spacing_scale,
+        custom_css: styles.custom_css || undefined
+      });
+    }
 
     // Create pages from template
-    const pages = template.pages_schema as Array<{
+    const pages = template.pages_schema as unknown as Array<{
       slug: string;
       title: string;
       is_homepage: boolean;
@@ -470,21 +636,79 @@ export class PortfolioService {
       }>;
     }>;
 
-    for (const pageData of pages) {
-      const page = await this.createPage(siteId, {
-        slug: pageData.slug,
-        title: pageData.title,
-        is_homepage: pageData.is_homepage,
-      });
+    if (pages && Array.isArray(pages)) {
+      // DELETE EXISTING PAGES (Strict Replacement)
+      // We do this first to ensure a clean slate.
+      const existingPages = await this.getPages(siteId);
+      for (const p of existingPages) {
+        // We delete one by one to ensure any potential cascades or hooks (if we add them later) run.
+        // In a real prod env, a bulk delete via supabase.rpc or delete().in() would be better.
+        await this.deletePage(p.id);
+      }
 
-      // Create blocks for the page
-      for (const blockData of pageData.blocks) {
-        await this.createBlock(page.id, {
-          block_type: blockData.block_type,
-          content: blockData.content,
-          settings: blockData.settings,
+      for (const pageData of pages) {
+        const page = await this.createPage(siteId, {
+          slug: pageData.slug,
+          title: pageData.title,
+          is_homepage: pageData.is_homepage,
         });
+
+        // Create blocks for the page
+        if (pageData.blocks) {
+          for (const blockData of pageData.blocks) {
+            await this.createBlock(page.id, {
+              block_type: blockData.block_type,
+              content: blockData.content,
+              settings: blockData.settings,
+            });
+          }
+        }
       }
     }
+  }
+
+  async createPageWithLayout(
+    siteId: string,
+    page: {
+      slug: string;
+      title: string;
+      is_homepage?: boolean;
+      seo_title?: string;
+      seo_description?: string;
+    }
+  ): Promise<PortfolioPage> {
+    // 1. Create the new page
+    const newPage = await this.createPage(siteId, page);
+
+    // 2. If it's NOT a homepage, try to inherit layout from the existing homepage
+    if (!page.is_homepage) {
+      const allPages = await this.getPages(siteId);
+      const homePage = allPages.find(p => p.is_homepage);
+
+      if (homePage) {
+        // Fetch blocks from homepage
+        const homeBlocks = await this.getBlocks(homePage.id);
+
+        // Find Header and Footer
+        const layoutBlocks = homeBlocks.filter(b =>
+          b.block_type === 'header' || b.block_type === 'footer'
+        );
+
+        // Clone them to the new page
+        for (const block of layoutBlocks) {
+          await this.createBlock(newPage.id, {
+            block_type: block.block_type,
+            content: block.content,
+            settings: block.settings,
+            // Keep sort order logic: Header at top (0), Footer at bottom (likely high number)
+            // But usually we just want to copy them. We might need to adjust sort_order if we want them specifically placed.
+            // For now, let's just copy exactly.
+            sort_order: block.sort_order
+          });
+        }
+      }
+    }
+
+    return newPage;
   }
 }

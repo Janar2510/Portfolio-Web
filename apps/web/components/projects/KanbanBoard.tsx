@@ -58,6 +58,7 @@ interface KanbanBoardProps {
   onTasksReorder: (tasks: ProjectTask[]) => void;
   onTaskMove: (taskId: string, newColumnId: string, newSortOrder: number) => void;
   onTaskClick: (task: ProjectTask) => void;
+  onTaskCreate: (columnId: string, title: string) => void;
 }
 
 function getColumnDragId(columnId: string): string {
@@ -84,6 +85,7 @@ export function KanbanBoard({
   onTasksReorder,
   onTaskMove,
   onTaskClick,
+  onTaskCreate,
 }: KanbanBoardProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [activeTask, setActiveTask] = useState<ProjectTask | null>(null);
@@ -98,7 +100,7 @@ export function KanbanBoard({
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
     const dragId = event.active.id as string;
-    
+
     if (dragId.startsWith('task-')) {
       const taskId = getTaskIdFromDragId(dragId);
       const task = tasks.find((t) => t.id === taskId);
@@ -165,7 +167,7 @@ export function KanbanBoard({
         const tasksInColumn = tasks
           .filter((t) => t.column_id === newColumnId && t.id !== taskId)
           .sort((a, b) => a.sort_order - b.sort_order);
-        
+
         const overIndex = tasksInColumn.findIndex((t) => t.id === overTaskId);
         const newSortOrder = overIndex >= 0 ? overIndex + 1 : tasksInColumn.length;
 
@@ -209,6 +211,10 @@ export function KanbanBoard({
               column={column}
               tasks={tasksByColumn[column.id] || []}
               onTaskClick={onTaskClick}
+              onAddTask={(columnId) => {
+                const title = prompt('Enter task title:');
+                if (title) onTaskCreate(columnId, title);
+              }}
             />
           ))}
         </SortableContext>

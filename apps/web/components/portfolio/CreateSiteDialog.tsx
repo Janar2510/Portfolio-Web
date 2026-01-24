@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@/i18n/routing';
+import { useParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { PortfolioService } from '@/lib/services/portfolio';
 import {
   Dialog,
   DialogContent,
@@ -28,38 +28,86 @@ interface CreateSiteDialogProps {
 export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) {
   const t = useTranslations('portfolio');
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
   const queryClient = useQueryClient();
   const [siteName, setSiteName] = useState('');
   const [subdomain, setSubdomain] = useState('');
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ name?: string; subdomain?: string }>({});
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const supabase = createClient();
-  const portfolioService = new PortfolioService(supabase);
+  // Check authentication status on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const supabase = createClient();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Auth check error:', error);
+          setIsAuthenticated(false);
+        } else {
+          setIsAuthenticated(!!session?.user);
+        }
+      } catch (err) {
+        console.error('Failed to check auth:', err);
+        setIsAuthenticated(false);
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+    checkAuth();
+  }, []);
 
   const createSiteMutation = useMutation({
     mutationFn: async (data: { name: string; subdomain: string; templateId?: string }) => {
-      const site = await portfolioService.createSite({
-        name: data.name,
-        subdomain: data.subdomain,
-        templateId: data.templateId || undefined,
+      // Use API route instead of direct service call for better error handling
+      const response = await fetch('/api/portfolio/site', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include cookies for authentication
+        body: JSON.stringify(data),
       });
-      return site;
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error?.message || 'Failed to create site');
+      }
+
+      return result.data;
     },
-    onSuccess: () => {
+    onSuccess: async (site) => {
+      console.log('Site created successfully:', site);
       queryClient.invalidateQueries({ queryKey: ['portfolio-site'] });
       queryClient.invalidateQueries({ queryKey: ['portfolio-pages'] });
       onOpenChange(false);
-      router.refresh();
+      // Reset form
+      setSiteName('');
+      setSubdomain('');
+      setSelectedTemplateId(null);
+      setErrors({});
+      // Force a hard refresh to ensure server component re-renders
+      window.location.href = `/${locale}/portfolio`;
     },
     onError: (error: Error) => {
-      if (error.message.includes('subdomain')) {
-        setErrors({ subdomain: t('subdomainTaken') });
-      } else if (error.message.includes('already has')) {
-        setErrors({ name: t('alreadyHasSite') });
+      console.error('Error creating site:', error);
+      const errorMessage = error.message || 'Failed to create site';
+      
+      if (errorMessage.includes('subdomain') || errorMessage.includes('taken')) {
+        setErrors({ subdomain: errorMessage });
+      } else if (errorMessage.includes('already has') || errorMessage.includes('exists')) {
+        setErrors({ name: 'You already have a site. Please refresh the page.' });
+      } else if (errorMessage.includes('validation') || errorMessage.includes('invalid')) {
+        setErrors({ subdomain: 'Invalid subdomain format' });
       } else {
-        setErrors({ name: error.message });
+        setErrors({ name: errorMessage });
       }
+      
+      // Keep dialog open on error so user can see the error
     },
   });
 
@@ -74,6 +122,12 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Verify authentication before submitting
+    if (!isAuthenticated) {
+      setErrors({ name: 'You must be logged in to create a site. Please refresh the page and try again.' });
+      return;
+    }
     setErrors({});
 
     // Validation
@@ -183,22 +237,42 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
             </div>
           </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              disabled={createSiteMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={createSiteMutation.isPending}>
-              {createSiteMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Create Site
-            </Button>
-          </DialogFooter>
+          {(errors.name || errors.subdomain) && (
+            <div className="rounded-lg border border-error-main bg-error-light p-4">
+              <p className="text-sm font-medium text-error-main">
+                {errors.name || errors.subdomain}
+              </p>
+            </div>
+          )}
+
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleClose}
+                      disabled={createSiteMutation.isPending || isCheckingAuth}
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      disabled={createSiteMutation.isPending || isCheckingAuth || !isAuthenticated}
+                    >
+                      {isCheckingAuth ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Checking...
+                        </>
+                      ) : createSiteMutation.isPending ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Creating...
+                        </>
+                      ) : (
+                        'Create Site'
+                      )}
+                    </Button>
+                  </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

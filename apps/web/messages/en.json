@@ -69,7 +69,9 @@
     "title": "Portfolio",
     "sites": "Sites",
     "createSite": "Create Site",
-    "templates": "Templates"
+    "templates": "Templates",
+    "noSite": "You don't have a portfolio site yet. Create one to get started!",
+    "manageSite": "Manage Site"
   },
   "projects": {
     "title": "Projects",

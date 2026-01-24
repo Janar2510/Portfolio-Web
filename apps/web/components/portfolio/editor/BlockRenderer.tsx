@@ -9,6 +9,9 @@ import { ProjectsBlock } from '../blocks/ProjectsBlock';
 import { FormBlock } from '../blocks/FormBlock';
 import { ImageBlock } from '../blocks/ImageBlock';
 import { VideoBlock } from '../blocks/VideoBlock';
+import { ProjectGridBlock } from '../blocks/ProjectGridBlock';
+import { SkillsBlock } from '../blocks/SkillsBlock';
+import { StatsBlock } from '../blocks/StatsBlock';
 
 interface BlockRendererProps {
   block: PortfolioBlock;
@@ -17,6 +20,7 @@ interface BlockRendererProps {
   onDelete: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
+  siteId?: string; // Optional site_id for public pages
 }
 
 export function BlockRenderer({
@@ -26,6 +30,7 @@ export function BlockRenderer({
   onDelete,
   onAddAfter,
   onEdit,
+  siteId,
 }: BlockRendererProps) {
   const blockProps = {
     block,
@@ -39,6 +44,7 @@ export function BlockRenderer({
     onDelete,
     onAddAfter,
     onEdit,
+    siteId, // Pass siteId to blocks that need it
   };
 
   switch (block.block_type) {
@@ -56,6 +62,12 @@ export function BlockRenderer({
       return <ImageBlock {...blockProps} />;
     case 'video':
       return <VideoBlock {...blockProps} />;
+    case 'project-grid':
+      return <ProjectGridBlock {...blockProps} />;
+    case 'skills':
+      return <SkillsBlock {...blockProps} />;
+    case 'stats':
+      return <StatsBlock {...blockProps} />;
     default:
       return (
         <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">

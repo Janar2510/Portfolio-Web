@@ -119,6 +119,7 @@ export function PublicPortfolioPage({
               isEditing={false}
               onUpdate={() => {}}
               onDelete={() => {}}
+              siteId={site.id}
             />
           ))}
         </main>

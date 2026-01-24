@@ -2,6 +2,15 @@
 
 This document tracks important features and changes that affect deployment and maintenance.
 
+## Recent Fixes (2025-01-21)
+- [x] Fixed portfolio site creation authentication (async createClient)
+- [x] Created missing `/portfolio/settings` route and PortfolioSettingsView component
+- [x] Created missing `/api/portfolio/forms/submissions` API route
+- [x] Implemented form block submission handler
+- [x] Fixed projects block to fetch actual data from database
+- [x] Updated BlockRenderer to pass siteId for public page rendering
+- [x] Fixed FormSubmissionsManager API response parsing
+
 ## Completed Features
 
 ### Project Setup

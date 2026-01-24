@@ -18,24 +18,24 @@ const publicAuthRoutes = [
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   const hostname = request.headers.get('host') || '';
-  
+
   // Check if this is a subdomain request (portfolio site)
   // Format: subdomain.domain.com or subdomain.localhost:3000
   const subdomainMatch = hostname.match(/^([^.]+)\./);
   const isSubdomainRoute = subdomainMatch && subdomainMatch[1] !== 'www' && subdomainMatch[1] !== 'app';
-  
+
   // If it's a subdomain route, handle it differently
   if (isSubdomainRoute) {
     const subdomain = subdomainMatch[1];
     const pathname = url.pathname;
-    
+
     // Rewrite to /sites/[subdomain]/[slug] format
     if (pathname === '/' || pathname === '') {
       url.pathname = `/sites/${subdomain}`;
     } else {
       url.pathname = `/sites/${subdomain}${pathname}`;
     }
-    
+
     // Don't apply auth or locale middleware for public portfolio sites
     return NextResponse.rewrite(url);
   }
@@ -45,8 +45,23 @@ export async function middleware(request: NextRequest) {
 
   // Extract locale from pathname
   const pathname = request.nextUrl.pathname;
-  const locale = pathname.split('/')[1] || 'en'; // Default to 'en' if no locale in path
-  const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
+  const pathParts = pathname.split('/').filter(Boolean);
+  const firstPart = pathParts[0];
+
+  // Check if the first part is a valid locale
+  const isLocale = firstPart && routing.locales.includes(firstPart as any);
+  const locale = isLocale ? firstPart : routing.defaultLocale;
+
+  // If it is a locale, remove it to get the path
+  const pathWithoutLocale = isLocale
+    ? '/' + pathParts.slice(1).join('/')
+    : pathname;
+
+  // Normalize empty path
+  if (pathWithoutLocale === '') {
+    // It was just /et or /en
+    // pathWithoutLocale should be /
+  }
 
   // Check if this is a public auth route
   const isPublicAuthRoute = publicAuthRoutes.some((route) =>
@@ -55,7 +70,7 @@ export async function middleware(request: NextRequest) {
 
   // Update Supabase session (this handles auth state)
   // Skip Supabase for subdomain routes (public portfolio sites)
-  let supabaseResponse;
+  let supabaseResponse = response;
   try {
     supabaseResponse = await updateSession(request);
   } catch (error) {
@@ -73,17 +88,16 @@ export async function middleware(request: NextRequest) {
   }
 
   // For protected routes, check authentication
-  // The updateSession function already handles redirects for unauthenticated users
-  // But we need to merge the responses properly
+  // The updateSession function handles redirects for unauthenticated users
   if (supabaseResponse.status === 307 || supabaseResponse.status === 308) {
-    // If redirecting to login, use that response
     return supabaseResponse;
   }
 
-  // Otherwise, return the intl response with Supabase cookies
+  // Merge headers from supabaseResponse into the final response
+  // This ensures cookies are set in the browser
   supabaseResponse.headers.forEach((value, key) => {
     if (key.toLowerCase() === 'set-cookie') {
-      response.headers.set(key, value);
+      response.headers.append(key, value);
     }
   });
 

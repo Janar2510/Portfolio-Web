@@ -25,7 +25,9 @@ export type BlockType =
   | 'projects'
   | 'form'
   | 'image'
-  | 'video';
+  | 'video'
+  | 'header'
+  | 'footer';
 
 // Hero Block
 export const heroBlockContentSchema = z.object({
@@ -319,6 +321,37 @@ export const blockRegistry: Record<BlockType, BlockMetadata> = {
       rounded: false,
     },
   },
+  header: {
+    type: 'header',
+    name: 'Header',
+    description: 'Site navigation header',
+    icon: 'LayoutTemplate',
+    category: 'layout',
+    defaultContent: {
+      logo_text: 'Portfolio',
+      links: [
+        { label: 'Home', url: '/' },
+        { label: 'Projects', url: '#projects' },
+      ],
+    },
+    defaultSettings: {
+      layout: 'simple',
+      sticky: true,
+    },
+  },
+  footer: {
+    type: 'footer',
+    name: 'Footer',
+    description: 'Site footer',
+    icon: 'LayoutTemplate',
+    category: 'layout',
+    defaultContent: {
+      copyright_text: '© 2024 Portfolio. All rights reserved.',
+    },
+    defaultSettings: {
+      layout: 'simple',
+    },
+  },
 };
 
 // Validation helpers
@@ -348,6 +381,10 @@ export function validateBlockContent(
         return true;
       case 'video':
         videoBlockContentSchema.parse(content);
+        return true;
+      case 'header':
+        return true;
+      case 'footer':
         return true;
       default:
         return false;
@@ -383,6 +420,10 @@ export function validateBlockSettings(
         return true;
       case 'video':
         videoBlockSettingsSchema.parse(settings);
+        return true;
+      case 'header':
+        return true;
+      case 'footer':
         return true;
       default:
         return false;

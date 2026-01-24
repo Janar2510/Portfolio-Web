@@ -36,6 +36,8 @@ export function TopNav({ locale }: TopNavProps) {
   const [notifications, setNotifications] = useState(0);
 
   useEffect(() => {
+    let isMounted = true;
+
     async function loadUser() {
       try {
         const supabase = createClient();
@@ -43,16 +45,32 @@ export function TopNav({ locale }: TopNavProps) {
           data: { user },
           error,
         } = await supabase.auth.getUser();
+        
+        // Only update state if component is still mounted
+        if (!isMounted) return;
+        
         if (error) {
           console.error('Error loading user:', error);
           return;
         }
         setUser(user);
       } catch (error) {
-        console.error('Error in loadUser:', error);
+        // Ignore abort errors (they're expected on unmount or navigation)
+        if (error instanceof Error && error.name === 'AbortError') {
+          return;
+        }
+        // Only log errors if component is still mounted
+        if (isMounted) {
+          console.error('Error in loadUser:', error);
+        }
       }
     }
+    
     loadUser();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleLogout = async () => {
