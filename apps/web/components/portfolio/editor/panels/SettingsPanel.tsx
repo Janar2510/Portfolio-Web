@@ -8,7 +8,13 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { ProjectsManager } from '../../projects/ProjectsManager';
 import { FormSubmissionsManager } from '../../forms/FormSubmissionsManager';
 import { DomainSettings } from '../../domain/DomainSettings';
@@ -18,17 +24,30 @@ export function SettingsPanel() {
   const [activeTab, setActiveTab] = useState('general');
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+    <Tabs
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="h-full flex flex-col"
+    >
       <TabsList className="grid grid-cols-4 w-full rounded-none border-b">
-        <TabsTrigger value="general" className="flex items-center gap-2 text-xs">
+        <TabsTrigger
+          value="general"
+          className="flex items-center gap-2 text-xs"
+        >
           <Settings className="h-3 w-3" />
           General
         </TabsTrigger>
-        <TabsTrigger value="projects" className="flex items-center gap-2 text-xs">
+        <TabsTrigger
+          value="projects"
+          className="flex items-center gap-2 text-xs"
+        >
           <FolderKanban className="h-3 w-3" />
           Projects
         </TabsTrigger>
-        <TabsTrigger value="submissions" className="flex items-center gap-2 text-xs">
+        <TabsTrigger
+          value="submissions"
+          className="flex items-center gap-2 text-xs"
+        >
           <Mail className="h-3 w-3" />
           Submissions
         </TabsTrigger>

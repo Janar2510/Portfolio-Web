@@ -5,7 +5,11 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { Link, useRouter } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/client';
-import { getAuthErrorMessage, validateEmail, isEmailNotConfirmedError } from '@/lib/auth/utils';
+import {
+  getAuthErrorMessage,
+  validateEmail,
+  isEmailNotConfirmedError,
+} from '@/lib/auth/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,14 +30,17 @@ export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [errorDetails, setErrorDetails] = useState<{ message: string; isUnconfirmed: boolean } | null>(null);
+  const [errorDetails, setErrorDetails] = useState<{
+    message: string;
+    isUnconfirmed: boolean;
+  } | null>(null);
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // Check Supabase configuration on mount
   const [configError, setConfigError] = useState<string | null>(null);
-  
+
   // Initialize Supabase client - use a function to get it safely
   const getSupabaseClient = () => {
     try {
@@ -43,14 +50,16 @@ export default function SignInPage() {
       return null;
     }
   };
-  
+
   // Check configuration on component mount
   useEffect(() => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    
+
     if (!url || !key) {
-      setConfigError('Supabase is not configured. Please check your environment variables.');
+      setConfigError(
+        'Supabase is not configured. Please check your environment variables.'
+      );
     } else if (key.length < 100) {
       setConfigError('Supabase API key appears to be invalid or incomplete.');
     }
@@ -104,11 +113,16 @@ export default function SignInPage() {
     // Check Supabase configuration first
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    
+
     if (!supabaseUrl || !supabaseKey) {
-      setError('Configuration error: Supabase credentials are missing. Please check your environment variables.');
+      setError(
+        'Configuration error: Supabase credentials are missing. Please check your environment variables.'
+      );
       setLoading(false);
-      console.error('Missing Supabase config:', { hasUrl: !!supabaseUrl, hasKey: !!supabaseKey });
+      console.error('Missing Supabase config:', {
+        hasUrl: !!supabaseUrl,
+        hasKey: !!supabaseKey,
+      });
       return;
     }
 
@@ -128,7 +142,9 @@ export default function SignInPage() {
     const supabase = getSupabaseClient();
     if (!supabase) {
       console.error('Supabase client is not initialized');
-      setError('Configuration error. Please refresh the page and try again. If the problem persists, check your Supabase environment variables.');
+      setError(
+        'Configuration error. Please refresh the page and try again. If the problem persists, check your Supabase environment variables.'
+      );
       setLoading(false);
       return;
     }
@@ -136,14 +152,16 @@ export default function SignInPage() {
     // Set a timeout to prevent infinite loading
     timeoutRef.current = setTimeout(() => {
       console.error('Sign in request timed out after 30 seconds');
-      setError('Request timed out. Please check your internet connection and try again.');
+      setError(
+        'Request timed out. Please check your internet connection and try again.'
+      );
       setLoading(false);
     }, 30000);
 
     try {
       console.log('Attempting sign in for:', email);
       console.log('Supabase URL:', supabaseUrl?.substring(0, 50) || 'MISSING');
-      
+
       const signInPromise = supabase.auth.signInWithPassword({
         email,
         password,
@@ -157,12 +175,16 @@ export default function SignInPage() {
         timeoutRef.current = null;
       }
 
-      console.log('Sign in response received:', { 
-        hasData: !!data, 
+      console.log('Sign in response received:', {
+        hasData: !!data,
         hasError: !!signInError,
         hasSession: !!data?.session,
         errorMessage: signInError?.message,
-        errorStatus: signInError ? ('status' in signInError ? signInError.status : 'unknown') : null
+        errorStatus: signInError
+          ? 'status' in signInError
+            ? signInError.status
+            : 'unknown'
+          : null,
       });
 
       if (signInError) {
@@ -179,70 +201,88 @@ export default function SignInPage() {
         console.log('Session created successfully:', {
           userId: data.session.user.id,
           expiresAt: data.session.expires_at,
-          accessToken: data.session.access_token ? 'present' : 'missing'
+          accessToken: data.session.access_token ? 'present' : 'missing',
         });
-        
+
         // Verify session is stored
-        const { data: { session: verifySession } } = await supabase.auth.getSession();
+        const {
+          data: { session: verifySession },
+        } = await supabase.auth.getSession();
         if (!verifySession) {
           console.error('WARNING: Session was created but not stored!');
-          setError('Session was created but could not be stored. Please try again.');
+          setError(
+            'Session was created but could not be stored. Please try again.'
+          );
           setLoading(false);
           return;
         }
-        
-        console.log('Session verified, ensuring cookies are set before redirect...');
-        
+
+        console.log(
+          'Session verified, ensuring cookies are set before redirect...'
+        );
+
         // Give Supabase time to set cookies (createBrowserClient handles this automatically)
         // Wait a bit longer to ensure cookies are written to the browser
         await new Promise(resolve => setTimeout(resolve, 300));
-        
+
         // Double-check session is still available
-        const { data: { session: finalCheck } } = await supabase.auth.getSession();
+        const {
+          data: { session: finalCheck },
+        } = await supabase.auth.getSession();
         if (!finalCheck) {
           console.error('Session lost after wait!');
           setError('Session was lost. Please try again.');
           setLoading(false);
           return;
         }
-        
+
         console.log('Final session check passed, redirecting...');
-        
+
         const redirectUrl = `/${locale}/dashboard`;
         const fullUrl = `${window.location.origin}${redirectUrl}`;
-        
+
         console.log('Redirecting to:', redirectUrl);
         console.log('Full URL:', fullUrl);
-        console.log('Cookies confirmed:', document.cookie.includes('sb-pcltfprbgwqmymmveloj'));
-        
+        console.log(
+          'Cookies confirmed:',
+          document.cookie.includes('sb-pcltfprbgwqmymmveloj')
+        );
+
         // Wait a bit longer to ensure cookies are fully written and available
         await new Promise(resolve => setTimeout(resolve, 500));
-        
+
         // Verify cookies one more time
         const finalCookies = document.cookie;
-        const hasAuthCookie = finalCookies.includes('sb-pcltfprbgwqmymmveloj-auth-token');
-        console.log('Final cookie check:', { hasAuthCookie, cookieLength: finalCookies.length });
-        
+        const hasAuthCookie = finalCookies.includes(
+          'sb-pcltfprbgwqmymmveloj-auth-token'
+        );
+        console.log('Final cookie check:', {
+          hasAuthCookie,
+          cookieLength: finalCookies.length,
+        });
+
         if (!hasAuthCookie) {
           console.error('Auth cookie missing after wait!');
           setError('Session cookie was not set. Please try again.');
           setLoading(false);
           return;
         }
-        
+
         // Reset loading state
         setLoading(false);
-        
+
         // Redirect - cookies should now be available for middleware
         console.log('Executing final redirect to:', fullUrl);
         window.location.href = fullUrl;
-        
+
         // Return immediately
         return;
       } else {
         // No session but no error - this shouldn't happen, but handle it
         console.error('Sign in succeeded but no session was returned', data);
-        setError('Sign in succeeded but no session was created. Please try again.');
+        setError(
+          'Sign in succeeded but no session was created. Please try again.'
+        );
         setLoading(false);
       }
     } catch (err) {
@@ -302,7 +342,7 @@ export default function SignInPage() {
                 type="email"
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 required
                 disabled={loading}
                 autoComplete="email"
@@ -322,7 +362,7 @@ export default function SignInPage() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 required
                 disabled={loading}
                 autoComplete="current-password"

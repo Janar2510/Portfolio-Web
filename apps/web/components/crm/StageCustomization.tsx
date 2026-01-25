@@ -14,14 +14,23 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import type { PipelineStage } from '@/lib/services/crm';
 
 interface StageCustomizationProps {
   stages: PipelineStage[];
   onStageCreate: (data: Partial<PipelineStage>) => Promise<void>;
-  onStageUpdate: (stageId: string, data: Partial<PipelineStage>) => Promise<void>;
+  onStageUpdate: (
+    stageId: string,
+    data: Partial<PipelineStage>
+  ) => Promise<void>;
   onStageDelete: (stageId: string) => Promise<void>;
   onStagesReorder: (stages: PipelineStage[]) => void;
 }
@@ -45,7 +54,9 @@ export function StageCustomization({
     await onStageCreate({
       name: formData.get('name') as string,
       color: formData.get('color')?.toString() || undefined,
-      probability: formData.get('probability') ? parseInt(formData.get('probability') as string) : undefined,
+      probability: formData.get('probability')
+        ? parseInt(formData.get('probability') as string)
+        : undefined,
       is_won: formData.get('is_won') === 'true',
       is_lost: formData.get('is_lost') === 'true',
       sort_order: sortOrder,
@@ -74,7 +85,11 @@ export function StageCustomization({
   };
 
   const handleDeleteStage = async (stageId: string) => {
-    if (!confirm('Are you sure you want to delete this stage? Deals in this stage will need to be moved.')) {
+    if (
+      !confirm(
+        'Are you sure you want to delete this stage? Deals in this stage will need to be moved.'
+      )
+    ) {
       return;
     }
     await onStageDelete(stageId);
@@ -118,7 +133,12 @@ export function StageCustomization({
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Stage Name *</Label>
-                  <Input id="name" name="name" required placeholder="e.g., Qualified" />
+                  <Input
+                    id="name"
+                    name="name"
+                    required
+                    placeholder="e.g., Qualified"
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -261,9 +281,7 @@ export function StageCustomization({
             <form onSubmit={handleEditStage}>
               <DialogHeader>
                 <DialogTitle>Edit Stage</DialogTitle>
-                <DialogDescription>
-                  Update stage information.
-                </DialogDescription>
+                <DialogDescription>Update stage information.</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
@@ -295,7 +313,9 @@ export function StageCustomization({
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="edit-probability">Win Probability (%)</Label>
+                    <Label htmlFor="edit-probability">
+                      Win Probability (%)
+                    </Label>
                     <Input
                       id="edit-probability"
                       name="probability"

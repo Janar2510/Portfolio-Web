@@ -8,9 +8,16 @@ import { BlockEditingPanel } from './BlockEditingPanel';
 import { StyleCustomizationPanel } from './StyleCustomizationPanel';
 import { BlockEditor } from '../editor/BlockEditor';
 import { PortfolioService } from '@/lib/services/portfolio';
-import type { PortfolioPage, PortfolioBlock, PortfolioStyle } from '@/lib/services/portfolio';
+import type {
+  PortfolioPage,
+  PortfolioBlock,
+  PortfolioStyle,
+} from '@/lib/services/portfolio';
 import type { BlockType } from '@/lib/blocks/schema';
-import { getDefaultBlockContent, getDefaultBlockSettings } from '@/lib/blocks/schema';
+import {
+  getDefaultBlockContent,
+  getDefaultBlockSettings,
+} from '@/lib/blocks/schema';
 import { Button } from '@/components/ui/button';
 import { Palette, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -66,7 +73,11 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
 
   // Page mutations
   const createPageMutation = useMutation({
-    mutationFn: async (data: { slug: string; title: string; is_homepage?: boolean }) => {
+    mutationFn: async (data: {
+      slug: string;
+      title: string;
+      is_homepage?: boolean;
+    }) => {
       return await portfolioService.createPage(siteId, data);
     },
     onSuccess: () => {
@@ -75,7 +86,13 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
   });
 
   const updatePageMutation = useMutation({
-    mutationFn: async ({ pageId, data }: { pageId: string; data: Partial<PortfolioPage> }) => {
+    mutationFn: async ({
+      pageId,
+      data,
+    }: {
+      pageId: string;
+      data: Partial<PortfolioPage>;
+    }) => {
       return await portfolioService.updatePage(pageId, data);
     },
     onSuccess: () => {
@@ -89,7 +106,7 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['portfolio-pages', siteId] });
-      if (currentPageId === pages.find((p) => p.id === currentPageId)?.id) {
+      if (currentPageId === pages.find(p => p.id === currentPageId)?.id) {
         setCurrentPageId(null);
       }
     },
@@ -107,7 +124,7 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
       afterBlockId?: string;
     }) => {
       const afterIndex = afterBlockId
-        ? blocks.findIndex((b) => b.id === afterBlockId)
+        ? blocks.findIndex(b => b.id === afterBlockId)
         : -1;
       const sortOrder = afterIndex >= 0 ? afterIndex + 1 : blocks.length;
 
@@ -119,7 +136,9 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPageId] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPageId],
+      });
     },
   });
 
@@ -134,7 +153,9 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
       return await portfolioService.updateBlock(blockId, updates);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPageId] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPageId],
+      });
     },
   });
 
@@ -143,7 +164,9 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
       return await portfolioService.deleteBlock(blockId);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPageId] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPageId],
+      });
     },
   });
 
@@ -153,7 +176,10 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
       if (styles) {
         return await portfolioService.updateStyles(siteId, styleData);
       } else {
-        return await portfolioService.createStyles(siteId, styleData as PortfolioStyle);
+        return await portfolioService.createStyles(
+          siteId,
+          styleData as PortfolioStyle
+        );
       }
     },
     onSuccess: () => {
@@ -163,10 +189,17 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
 
   const handleBlockAdd = (blockType: BlockType, afterBlockId?: string) => {
     if (!currentPageId) return;
-    createBlockMutation.mutate({ pageId: currentPageId, blockType, afterBlockId });
+    createBlockMutation.mutate({
+      pageId: currentPageId,
+      blockType,
+      afterBlockId,
+    });
   };
 
-  const handleBlockUpdate = (blockId: string, updates: Partial<PortfolioBlock>) => {
+  const handleBlockUpdate = (
+    blockId: string,
+    updates: Partial<PortfolioBlock>
+  ) => {
     updateBlockMutation.mutate({ blockId, updates });
   };
 
@@ -214,7 +247,7 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
           pages={pages}
           currentPageId={currentPageId || undefined}
           onPageSelect={setCurrentPageId}
-          onPageCreate={async (data) => {
+          onPageCreate={async data => {
             await createPageMutation.mutateAsync(data);
             const updatedPages = await portfolioService.getPages(siteId);
             if (updatedPages.length > 0) {
@@ -224,7 +257,7 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
           onPageUpdate={async (pageId, data) => {
             await updatePageMutation.mutateAsync({ pageId, data });
           }}
-          onPageDelete={async (pageId) => {
+          onPageDelete={async pageId => {
             await deletePageMutation.mutateAsync(pageId);
           }}
         />
@@ -236,7 +269,7 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
         <div className="flex items-center justify-between border-b bg-background px-4 py-2">
           <div className="flex items-center gap-2">
             <BlockToolbar
-              onBlockAdd={(blockType) => handleBlockAdd(blockType)}
+              onBlockAdd={blockType => handleBlockAdd(blockType)}
               disabled={!currentPageId || isPreviewMode}
             />
           </div>
@@ -276,7 +309,9 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
               <div className="flex h-full items-center justify-center">
                 <div className="text-center text-muted-foreground">
                   <p className="text-lg font-medium">No page selected</p>
-                  <p className="text-sm">Select a page from the sidebar to start editing</p>
+                  <p className="text-sm">
+                    Select a page from the sidebar to start editing
+                  </p>
                 </div>
               </div>
             ) : blocksLoading ? (
@@ -289,7 +324,7 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
                   blocks={blocks}
                   onBlocksChange={handleBlocksReorder}
                   onBlockUpdate={handleBlockUpdate}
-                  onBlockDelete={(blockId) => deleteBlockMutation.mutate(blockId)}
+                  onBlockDelete={blockId => deleteBlockMutation.mutate(blockId)}
                   onBlockAdd={(blockType, afterBlockId) =>
                     handleBlockAdd(blockType, afterBlockId)
                   }
@@ -305,7 +340,7 @@ export function PageBuilder({ siteId }: PageBuilderProps) {
             <div className="w-80 flex-shrink-0">
               <StyleCustomizationPanel
                 style={styles || null}
-                onSave={async (styleData) => {
+                onSave={async styleData => {
                   await updateStyleMutation.mutateAsync(styleData);
                 }}
                 isOpen={isStylePanelOpen}

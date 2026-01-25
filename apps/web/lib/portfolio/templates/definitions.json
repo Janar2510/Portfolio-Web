@@ -1,18 +1,531 @@
 [
   {
-    "templateId": "minimal",
-    "title": "Minimal",
-    "description": "Clean, minimal portfolio focused on typography and whitespace",
-    "targetPersona": "Writers, designers, and content-focused creators",
-    "styleKeywords": ["clean", "minimal", "typography", "whitespace", "elegant"],
+    "templateId": "artisanal-vision",
+    "title": "Artisanal Vision",
+    "description": "A premium, modern portfolio for a digital and traditional artist featuring smooth animations, a curated gallery, and immersive visual storytelling.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=800",
+    "preview_images": [
+      "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=1600"
+    ],
+    "targetPersona": "Digital Artists, Surrealists, Visual Storytellers",
+    "styleKeywords": [
+      "dark",
+      "glass",
+      "premium",
+      "serif",
+      "immersive"
+    ],
     "colorPalette": {
-      "primary": "#000000",
-      "secondary": "#666666",
-      "background": "#FFFFFF",
-      "text": "#1A1A1A",
-      "surface": "#FAFAFA",
-      "border": "#E5E5E5",
-      "textSecondary": "#666666"
+      "primary": "#6366f1",
+      "secondary": "#a855f7",
+      "background": "#020202",
+      "text": "#ffffff",
+      "surface": "#0a0a0a",
+      "border": "rgba(255,255,255,0.08)",
+      "textSecondary": "#94a3b8"
+    },
+    "fontPreset": {
+      "heading": "Playfair Display",
+      "body": "Inter",
+      "mono": "Fira Code"
+    },
+    "sections": {
+      "hero": {
+        "badge": "Digital Surrealism Artist",
+        "headline": "Capturing the Unseen Realm",
+        "subtitle": "Exploring the intersection of human emotion and digital abstraction through immersive visual experiences that challenge perception.",
+        "ctaText": "Explore Gallery",
+        "backgroundStyle": "image",
+        "backgroundImage": "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=2000",
+        "alignment": "center",
+        "height": "full",
+        "settings": {
+          "headline_style": "gradient",
+          "overlay": true
+        }
+      },
+      "about": {
+        "bioText": "Blending traditional techniques with cutting-edge technology to deliver visual excellence across multiple mediums. I am a multidisciplinary designer and 3D artist combining technical precision with artistic intuition.",
+        "imagePlaceholder": true
+      },
+      "projects": {
+        "title": "Selected Works",
+        "settings": {
+          "layout": "grid",
+          "columns": 3,
+          "aspect_ratio": "portrait",
+          "show_category": true
+        },
+        "items": [
+          {
+            "title": "Neon Dreams",
+            "category": "Surrealism",
+            "image": "https://picsum.photos/id/1015/800/1000",
+            "description": "A dive into futuristic cityscapes."
+          },
+          {
+            "title": "Ocean Whisper",
+            "category": "Abstract",
+            "image": "https://picsum.photos/id/1041/800/1000",
+            "description": "Capturing the movement of water."
+          },
+          {
+            "title": "Soul Mirror",
+            "category": "Portrait",
+            "image": "https://picsum.photos/id/1027/800/1000",
+            "description": "Emotions frozen in time."
+          },
+          {
+            "title": "Lunar Path",
+            "category": "Surrealism",
+            "image": "https://picsum.photos/id/1039/800/1000",
+            "description": "Where moonlight meets the forest."
+          },
+          {
+            "title": "Ethereal Flow",
+            "category": "Abstract",
+            "image": "https://picsum.photos/id/1042/800/1000",
+            "description": "Organic shapes and vibrant colors."
+          },
+          {
+            "title": "Urban Echo",
+            "category": "Abstract",
+            "image": "https://picsum.photos/id/1054/800/1000",
+            "description": "The rhythm of the city."
+          }
+        ]
+      },
+      "services": {
+        "title": "Creative Services",
+        "description": "Blending traditional techniques with cutting-edge technology to deliver visual excellence across multiple mediums.",
+        "settings": {
+          "layout": "grid",
+          "columns": 4,
+          "background": "glass"
+        },
+        "items": [
+          {
+            "title": "Digital Art Commissions",
+            "description": "Custom character designs, environmental concept art, and unique digital masterpieces tailored to your vision.",
+            "icon": "Palette"
+          },
+          {
+            "title": "UI/UX Visual Design",
+            "description": "Infusing creative artistic flair into digital products to create memorable and intuitive user experiences.",
+            "icon": "Monitor"
+          },
+          {
+            "title": "Brand Art Direction",
+            "description": "Developing cohesive visual languages for brands that want to stand out with an artistic edge.",
+            "icon": "Layers"
+          },
+          {
+            "title": "Sparkles Collection",
+            "description": "End-to-end creation and curation of unique digital asset collections for the modern collector.",
+            "icon": "Sparkles"
+          }
+        ]
+      },
+      "contact": {
+        "title": "Let's Create \n Something Epic",
+        "description": "Available for collaborations, commissions, and speaking engagements worldwide. Whether you have a specific project in mind or just want to say hello, my inbox is always open.",
+        "ctaText": "Send Message",
+        "formFields": [
+          "name",
+          "email",
+          "message"
+        ],
+        "settings": {
+          "layout": "split-with-info"
+        },
+        "contact_info": {
+          "email": "hello@elenavance.art",
+          "location": "Oslo, Norway (Remote Worldwide)",
+          "phone": "+47 123 45 678"
+        }
+      },
+      "footer": {
+        "logo_text": "ELENA.VANCE",
+        "bio_text": "Exploring the boundaries of visual expression and digital surrealism through a lens of human emotion.",
+        "copyright_text": "© 2024 Elena Vance. All rights reserved. Crafted with passion and code.",
+        "settings": {
+          "layout": "large-minimal"
+        }
+      }
+    }
+  },
+  {
+    "templateId": "neon-noir",
+    "title": "System Root",
+    "description": "A premium, architectural portfolio designed for systems-level thinkers and creative engineers. Features a deep teal and navy palette with holographic interface elements.",
+    "thumbnail_url": "/templates/system-root-hero-v2.png",
+    "preview_images": [
+      "/templates/system-root-hero-v2.png"
+    ],
+    "targetPersona": "Systems Architects, Tech Leads, Creative Engineers",
+    "styleKeywords": [
+      "dark",
+      "architectural",
+      "premium",
+      "holographic",
+      "technical"
+    ],
+    "colorPalette": {
+      "primary": "#0d7666",
+      "secondary": "#60aca3",
+      "background": "#101b33",
+      "text": "#ffffff",
+      "surface": "#202f4f",
+      "border": "rgba(96, 172, 163, 0.2)",
+      "textSecondary": "#60aca3"
+    },
+    "fontPreset": {
+      "heading": "Space Grotesk",
+      "body": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "sections": {
+      "hero": {
+        "badge": "Core Systems v2.4.0",
+        "headline": "Architecting Digital \nInfrastructure.",
+        "subtitle": "Engineering high-performance distributed systems with a focus on systemic integrity and precision-driven scalability.",
+        "ctaText": "Explore Architecture",
+        "backgroundStyle": "image",
+        "backgroundImage": "/templates/system-root-hero-v2.png",
+        "alignment": "left",
+        "height": "full",
+        "settings": {
+          "headline_style": "gradient",
+          "overlay": true
+        }
+      },
+      "about": {
+        "bioText": "With a focus on the structural foundations of the modern web, I build resilient systems that power the next generation of digital experiences. My approach combines rigorous engineering principles with creative architectural vision.",
+        "imagePlaceholder": true
+      },
+      "projects": {
+        "title": "System Deployments",
+        "settings": {
+          "layout": "grid",
+          "columns": 2,
+          "aspect_ratio": "landscape",
+          "show_category": true,
+          "background": "glass"
+        },
+        "items": [
+          {
+            "title": "Astra Mesh",
+            "category": "Networking",
+            "image": "https://picsum.photos/id/1/800/600",
+            "description": "High-performance service mesh for distributed clouds."
+          },
+          {
+            "title": "Nexus Core",
+            "category": "Infrastructure",
+            "image": "https://picsum.photos/id/2/800/600",
+            "description": "Scalable foundation for enterprise-grade applications."
+          }
+        ]
+      },
+      "services": {
+        "title": "Core Capabilities",
+        "description": "Specialized engineering and architectural services for large-scale digital transformation.",
+        "settings": {
+          "layout": "grid",
+          "columns": 3,
+          "background": "glass"
+        },
+        "items": [
+          {
+            "title": "System Architecture",
+            "description": "Designing robust blueprints for complex software ecosystems.",
+            "icon": "Cpu"
+          },
+          {
+            "title": "Infrastucture as Code",
+            "description": "Automating cloud environments with precision and security.",
+            "icon": "Shield"
+          },
+          {
+            "title": "Performance Tuning",
+            "description": "Optimizing low-level systems for maximum throughput.",
+            "icon": "Zap"
+          }
+        ]
+      },
+      "contact": {
+        "title": "Initiate \nProtocol",
+        "description": "Ready to discuss secure infrastructure or distributed systems. Secure channel open for collaboration.",
+        "ctaText": "Send Signal",
+        "formFields": [
+          "email",
+          "message"
+        ],
+        "settings": {
+          "layout": "split-with-info"
+        }
+      },
+      "footer": {
+        "logo_text": "SYSTEM.ROOT",
+        "copyright_text": "© 2026 SYSTEM ROOT. Integrity through code.",
+        "settings": {
+          "layout": "minimal"
+        }
+      }
+    }
+  },
+  {
+    "templateId": "editorial-minimal",
+    "title": "Editorial Minimal",
+    "description": "A sophisticated, travel-journal inspired portfolio with warm sandstone tones, elegant serif typography, and high-impact ancient architecture visuals.",
+    "thumbnail_url": "/templates/editorial-minimal-hero.png",
+    "preview_images": [
+      "/templates/editorial-minimal-hero.png"
+    ],
+    "targetPersona": "Travel Photographers, Architects, Cultural Historians",
+    "styleKeywords": [
+      "editorial",
+      "minimal",
+      "warm",
+      "travel",
+      "serif"
+    ],
+    "colorPalette": {
+      "primary": "#AB6530",
+      "secondary": "#87410F",
+      "background": "#000000",
+      "text": "#EAEAEA",
+      "surface": "#111111",
+      "border": "#BEBEBE",
+      "textSecondary": "#BEBEBE"
+    },
+    "fontPreset": {
+      "heading": "Playfair Display",
+      "body": "Inter",
+      "mono": "Fira Code"
+    },
+    "sections": {
+      "hero": {
+        "badge": "Architectural Narrative",
+        "headline": "Monolith",
+        "subtitle": "Discover the intersection of minimalist form and high-impact materiality. Carving soul into structures that stand the test of time.",
+        "ctaText": "START THE JOURNEY",
+        "backgroundStyle": "image",
+        "backgroundImage": "/templates/editorial-minimal-hero.png",
+        "alignment": "center",
+        "height": "full",
+        "settings": {
+          "headline_style": "script",
+          "overlay": true
+        }
+      },
+      "about": {
+        "bioText": "Documenting the world's most evocative landscapes through a lens of history and architecture. Our work is a testament to the enduring power of human creation.",
+        "imagePlaceholder": true
+      },
+      "projects": {
+        "title": "Natural Wonders",
+        "settings": {
+          "layout": "grid",
+          "columns": 2,
+          "aspect_ratio": "portrait",
+          "show_category": true
+        },
+        "items": [
+          {
+            "title": "Wadi Rum",
+            "category": "Desert Landscapes",
+            "image": "https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&q=80&w=1000",
+            "description": "The valley of the moon, where time stands still."
+          },
+          {
+            "title": "Ancient Echoes",
+            "category": "Architecture",
+            "image": "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=1000",
+            "description": "Timeless structures carved into eternity."
+          }
+        ]
+      },
+      "services": {
+        "title": "Our Craft",
+        "description": "Bespoke visual storytelling for heritage brands and luxury architecture.",
+        "settings": {
+          "layout": "grid",
+          "columns": 2,
+          "background": "solid"
+        },
+        "items": [
+          {
+            "title": "Heritage Documentation",
+            "description": "Preserving the visual soul of ancient sites through high-fidelity photography.",
+            "icon": "Church"
+          },
+          {
+            "title": "Architectural Design",
+            "description": "Modern spaces inspired by the geometry of the ancient world.",
+            "icon": "Compass"
+          }
+        ]
+      },
+      "contact": {
+        "title": "Start Your Journey",
+        "ctaText": "Inquire Today",
+        "formFields": [
+          "name",
+          "email",
+          "message"
+        ],
+        "settings": {
+          "layout": "split-with-info"
+        }
+      },
+      "footer": {
+        "logo_text": "EDITORIAL.MONOLITH",
+        "copyright_text": "© 2024 EDITORIAL PETRA. All rights reserved.",
+        "settings": {
+          "layout": "minimal"
+        }
+      }
+    }
+  },
+  {
+    "templateId": "playful-pop",
+    "title": "Playful Pop",
+    "description": "A vibrant yet sophisticated portfolio featuring bold 3D visuals, organic shapes, and a premium ocean-meets-earth color palette.",
+    "thumbnail_url": "/templates/playful-pop-hero.png",
+    "preview_images": [
+      "/templates/playful-pop-hero.png"
+    ],
+    "targetPersona": "Digital Artists, Creative Agencies, Product Designers",
+    "styleKeywords": [
+      "playful",
+      "premium",
+      "vibrant",
+      "3d",
+      "oceanic"
+    ],
+    "colorPalette": {
+      "primary": "#964734",
+      "secondary": "#0FA4AF",
+      "background": "#003135",
+      "text": "#AFDDE5",
+      "surface": "#024950",
+      "border": "rgba(15, 164, 175, 0.2)",
+      "textSecondary": "rgba(175, 221, 229, 0.7)"
+    },
+    "fontPreset": {
+      "heading": "Outfit",
+      "body": "Outfit",
+      "mono": "Space Mono"
+    },
+    "sections": {
+      "hero": {
+        "badge": "Digital Explorer",
+        "headline": "Infinite \n Imagination.",
+        "subtitle": "Bridging the gap between organic movement and digital precision through high-impact visual storytelling.",
+        "ctaText": "Dive In",
+        "backgroundStyle": "image",
+        "backgroundImage": "/templates/playful-pop-hero.png",
+        "alignment": "center",
+        "height": "full",
+        "settings": {
+          "headline_style": "serif",
+          "overlay": true
+        }
+      },
+      "about": {
+        "bioText": "Designing immersive digital worlds that feel alive. We combine bold color theory with playful 3D forms to create unforgettable brand experiences.",
+        "imagePlaceholder": true
+      },
+      "projects": {
+        "title": "Latest Creations",
+        "settings": {
+          "layout": "grid",
+          "columns": 3,
+          "aspect_ratio": "square",
+          "show_category": true
+        },
+        "items": [
+          {
+            "title": "Oceanic Flow",
+            "category": "3D Design",
+            "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1000",
+            "description": "Fluid simulations in deep water."
+          },
+          {
+            "title": "Rust & Steel",
+            "category": "Branding",
+            "image": "https://images.unsplash.com/photo-1541829081-f3f230745aa9?auto=format&fit=crop&q=80&w=1000",
+            "description": "Tactile textures meeting digital clean lines."
+          }
+        ]
+      },
+      "services": {
+        "title": "Our Magic",
+        "description": "Premium creative solutions for brands that dare to be different.",
+        "settings": {
+          "layout": "grid",
+          "columns": 3,
+          "background": "glass"
+        },
+        "items": [
+          {
+            "title": "3D Art Direction",
+            "description": "Creating depth and volume for modern digital interfaces.",
+            "icon": "Box"
+          },
+          {
+            "title": "Brand Strategy",
+            "description": "Mapping your unique story to a vibrant visual language.",
+            "icon": "Target"
+          }
+        ]
+      },
+      "contact": {
+        "title": "Let's Collaborate",
+        "ctaText": "Start a Project",
+        "formFields": [
+          "name",
+          "email",
+          "message"
+        ],
+        "settings": {
+          "layout": "simple-centered"
+        }
+      },
+      "footer": {
+        "logo_text": "PLAYFUL.POP",
+        "copyright_text": "© 2024 PLAYFUL POP Studio.",
+        "settings": {
+          "layout": "minimal"
+        }
+      }
+    }
+  },
+  {
+    "templateId": "peak-perspective",
+    "title": "Peak Perspective",
+    "description": "A high-contrast, premium portfolio featuring a specialized split-hero layout, bold typography, and vibrant red accents on a deep black canvas.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800",
+    "preview_images": [
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1600"
+    ],
+    "targetPersona": "Adventure Photographers, Outdoor Enthusiasts, Mountain Guides",
+    "styleKeywords": [
+      "dark",
+      "bold",
+      "premium",
+      "split-layout",
+      "adventure"
+    ],
+    "colorPalette": {
+      "primary": "#AB6530",
+      "secondary": "#87410F",
+      "background": "#000000",
+      "text": "#EAEAEA",
+      "surface": "#111111",
+      "border": "#BEBEBE",
+      "textSecondary": "#BEBEBE"
     },
     "fontPreset": {
       "heading": "Inter",
@@ -20,319 +533,345 @@
       "mono": "JetBrains Mono"
     },
     "sections": {
-      "hero": {
-        "headline": "Welcome to My Portfolio",
-        "subtitle": "A curated collection of my work and thoughts",
-        "backgroundStyle": "solid",
+      "infinite_hero": {
+        "headline": "The road dissolves in light,\nthe horizon remains unseen.",
+        "subtitle": "Minimal structures fade into a vast horizon where presence and absence merge. A quiet tension invites the eye to wander without end.",
+        "ctaText": "Learn more",
+        "cta_secondary_text": "View portfolio",
+        "backgroundImage": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000",
         "alignment": "center",
-        "height": "medium"
+        "height": "full",
+        "settings": {
+          "overlay_variant": "vignette"
+        }
       },
       "about": {
-        "bioText": "I'm a creative professional passionate about crafting meaningful experiences through design and content. With a focus on clarity and purpose, I bring ideas to life with thoughtful attention to detail.",
+        "bioText": "With over a decade of experience navigating the world's most challenging peaks, we provide the expertise and community you need to reach your summit.",
         "imagePlaceholder": true
       },
-      "projects": [
-        {
-          "title": "Project One",
-          "image": "placeholder.jpg",
-          "description": "A showcase of innovative design solutions that solve real-world problems with elegant simplicity."
+      "projects": {
+        "title": "Recent Summits",
+        "settings": {
+          "layout": "grid",
+          "columns": 3,
+          "aspect_ratio": "landscape"
         },
-        {
-          "title": "Project Two",
-          "image": "placeholder.jpg",
-          "description": "Exploring the intersection of form and function through thoughtful user experience design."
-        },
-        {
-          "title": "Project Three",
-          "image": "placeholder.jpg",
-          "description": "Creating compelling narratives through visual storytelling and strategic content design."
-        }
-      ],
+        "items": [
+          {
+            "title": "Mount Rainier",
+            "category": "Classic",
+            "image": "https://picsum.photos/id/14/800/600",
+            "description": "A three-day traverse across the glaciers."
+          },
+          {
+            "title": "Denali North Face",
+            "category": "Technical",
+            "image": "https://picsum.photos/id/15/800/600",
+            "description": "Pushing the limits of alpine style."
+          }
+        ]
+      },
       "contact": {
-        "ctaText": "Let's Work Together",
-        "formFields": ["name", "email", "message"]
+        "title": "Begin Your Ascent",
+        "ctaText": "Start Planning",
+        "formFields": [
+          "name",
+          "email",
+          "message"
+        ],
+        "settings": {
+          "layout": "simple-centered"
+        }
+      },
+      "footer": {
+        "logo_text": "PEAK.PERSPECTIVE",
+        "copyright_text": "© 2024 PEAK PERSPECTIVE. All rights reserved.",
+        "settings": {
+          "layout": "minimal"
+        }
       }
     }
   },
   {
-    "templateId": "creative",
-    "title": "Creative",
-    "description": "Bold colors, asymmetric layouts, large visuals",
-    "targetPersona": "Designers, illustrators, and brand creatives",
-    "styleKeywords": ["bold", "vibrant", "asymmetric", "dynamic", "expressive"],
+    "templateId": "cyber-dream",
+    "title": "Cyber Dream",
+    "description": "An ultra-futuristic, WebGPU-powered portfolio with scanning effects, depth-map distortion, and glitchy animations for creative technologists.",
+    "thumbnail_url": "https://i.postimg.cc/XYwvXN8D/img-4.png",
+    "preview_images": [
+      "https://i.postimg.cc/XYwvXN8D/img-4.png"
+    ],
+    "targetPersona": "Creative Technologists, AI Researchers, Web3 Developers",
+    "styleKeywords": [
+      "futuristic",
+      "tech",
+      "webgpu",
+      "glitch",
+      "immersive"
+    ],
     "colorPalette": {
-      "primary": "#FF6B6B",
-      "secondary": "#4ECDC4",
-      "background": "#FFFFFF",
-      "text": "#2C3E50",
-      "surface": "#F8F9FA",
-      "border": "#E1E8ED",
-      "textSecondary": "#7F8C8D"
+      "primary": "#3b82f6",
+      "secondary": "#ef4444",
+      "background": "#000000",
+      "text": "#ffffff",
+      "surface": "#0a0a0a",
+      "border": "rgba(255,255,255,0.1)",
+      "textSecondary": "#888888"
     },
     "fontPreset": {
-      "heading": "Plus Jakarta Sans",
-      "body": "Plus Jakarta Sans",
-      "mono": "Fira Code"
-    },
-    "sections": {
-      "hero": {
-        "headline": "Creative Visionary",
-        "subtitle": "Transforming ideas into bold visual experiences",
-        "backgroundStyle": "gradient",
-        "alignment": "left",
-        "height": "large"
-      },
-      "about": {
-        "bioText": "I'm a visual storyteller who believes in the power of bold design. My work combines vibrant colors, dynamic layouts, and expressive typography to create memorable brand experiences that stand out in a crowded digital landscape.",
-        "imagePlaceholder": true
-      },
-      "projects": [
-        {
-          "title": "Brand Identity Design",
-          "image": "placeholder.jpg",
-          "description": "Complete brand transformation for a tech startup, featuring bold color palettes and distinctive visual language."
-        },
-        {
-          "title": "Illustration Series",
-          "image": "placeholder.jpg",
-          "description": "A collection of expressive illustrations exploring themes of creativity, innovation, and human connection."
-        },
-        {
-          "title": "Digital Campaign",
-          "image": "placeholder.jpg",
-          "description": "Multi-platform campaign design that brought a brand's personality to life through dynamic visuals and engaging content."
-        },
-        {
-          "title": "Web Experience",
-          "image": "placeholder.jpg",
-          "description": "Immersive web design that breaks conventional layouts to create a truly unique user experience."
-        }
-      ],
-      "services": [
-        {
-          "title": "Brand Design",
-          "description": "Complete brand identity systems from concept to execution"
-        },
-        {
-          "title": "Visual Design",
-          "description": "Stunning visuals for digital and print media"
-        },
-        {
-          "title": "Creative Direction",
-          "description": "Strategic creative guidance for brands and campaigns"
-        }
-      ],
-      "contact": {
-        "ctaText": "Start Your Project",
-        "formFields": ["name", "email", "message"]
-      }
-    }
-  },
-  {
-    "templateId": "professional",
-    "title": "Professional",
-    "description": "Conservative layout, serif fonts, clear structure",
-    "targetPersona": "Consultants, business professionals, and speakers",
-    "styleKeywords": ["conservative", "structured", "trustworthy", "refined", "authoritative"],
-    "colorPalette": {
-      "primary": "#1E3A5F",
-      "secondary": "#C9A961",
-      "background": "#FFFFFF",
-      "text": "#2C2C2C",
-      "surface": "#F5F5F5",
-      "border": "#D4D4D4",
-      "textSecondary": "#6B6B6B"
-    },
-    "fontPreset": {
-      "heading": "Playfair Display",
-      "body": "Lora",
-      "mono": "JetBrains Mono"
-    },
-    "sections": {
-      "hero": {
-        "headline": "Expert Consulting & Strategic Guidance",
-        "subtitle": "Helping businesses achieve their goals through proven methodologies and strategic insight",
-        "backgroundStyle": "solid",
-        "alignment": "center",
-        "height": "medium"
-      },
-      "about": {
-        "bioText": "With over 15 years of experience in business strategy and consulting, I help organizations navigate complex challenges and unlock their potential. My approach combines analytical rigor with practical solutions, delivering measurable results for clients across industries.",
-        "imagePlaceholder": true
-      },
-      "projects": [
-        {
-          "title": "Strategic Transformation",
-          "image": "placeholder.jpg",
-          "description": "Led a comprehensive organizational transformation that increased operational efficiency by 40% and improved employee satisfaction scores."
-        },
-        {
-          "title": "Market Expansion",
-          "image": "placeholder.jpg",
-          "description": "Developed and executed market entry strategy for a Fortune 500 company, resulting in successful expansion into three new regions."
-        },
-        {
-          "title": "Digital Innovation",
-          "image": "placeholder.jpg",
-          "description": "Designed and implemented digital transformation roadmap that modernized operations and improved customer experience metrics."
-        }
-      ],
-      "services": [
-        {
-          "title": "Business Strategy",
-          "description": "Strategic planning and organizational development consulting"
-        },
-        {
-          "title": "Executive Coaching",
-          "description": "Leadership development and executive coaching services"
-        },
-        {
-          "title": "Speaking Engagements",
-          "description": "Keynote speaking and workshop facilitation"
-        }
-      ],
-      "contact": {
-        "ctaText": "Schedule a Consultation",
-        "formFields": ["name", "email", "company", "message"]
-      }
-    }
-  },
-  {
-    "templateId": "developer",
-    "title": "Developer",
-    "description": "Monospaced fonts, dark/light toggle, grid layout",
-    "targetPersona": "Developers, engineers, and tech freelancers",
-    "styleKeywords": ["technical", "grid-based", "code-focused", "modern", "precise"],
-    "colorPalette": {
-      "primary": "#3B82F6",
-      "secondary": "#10B981",
-      "background": "#0F172A",
-      "text": "#F1F5F9",
-      "surface": "#1E293B",
-      "border": "#334155",
-      "textSecondary": "#94A3B8"
-    },
-    "fontPreset": {
-      "heading": "JetBrains Mono",
+      "heading": "Space Grotesk",
       "body": "Inter",
       "mono": "JetBrains Mono"
     },
     "sections": {
-      "hero": {
-        "headline": "Full-Stack Developer",
-        "subtitle": "Building scalable solutions with modern technologies",
-        "backgroundStyle": "solid",
-        "alignment": "left",
-        "height": "medium"
+      "cyber_hero": {
+        "headline": "Build Your Dreams",
+        "subtitle": "AI-powered creativity for the next generation.",
+        "ctaText": "Scroll to explore",
+        "image_url": "https://i.postimg.cc/XYwvXN8D/img-4.png",
+        "depth_url": "https://i.postimg.cc/2SHKQh2q/raw-4.webp"
       },
       "about": {
-        "bioText": "I'm a software engineer passionate about building robust, scalable applications. With expertise in modern web technologies, cloud infrastructure, and system architecture, I turn complex problems into elegant solutions. Always learning, always building.",
+        "bioText": "Pushing the boundaries of the digital realm through advanced rendering, artificial intelligence, and human-centric design.",
         "imagePlaceholder": true
       },
-      "projects": [
-        {
-          "title": "E-Commerce Platform",
-          "image": "placeholder.jpg",
-          "description": "High-performance e-commerce platform built with Next.js and PostgreSQL, handling 10K+ concurrent users with sub-200ms response times."
+      "projects": {
+        "title": "Neural Outputs",
+        "settings": {
+          "layout": "grid",
+          "columns": 3,
+          "aspect_ratio": "square"
         },
-        {
-          "title": "API Gateway System",
-          "image": "placeholder.jpg",
-          "description": "Microservices architecture with API gateway, implementing rate limiting, authentication, and real-time monitoring."
-        },
-        {
-          "title": "Mobile Application",
-          "image": "placeholder.jpg",
-          "description": "Cross-platform mobile app with React Native, featuring offline-first architecture and real-time synchronization."
-        },
-        {
-          "title": "DevOps Automation",
-          "image": "placeholder.jpg",
-          "description": "CI/CD pipeline implementation reducing deployment time by 80% and improving system reliability."
-        }
-      ],
-      "services": [
-        {
-          "title": "Web Development",
-          "description": "Full-stack web applications with modern frameworks"
-        },
-        {
-          "title": "System Architecture",
-          "description": "Scalable system design and cloud infrastructure"
-        },
-        {
-          "title": "Technical Consulting",
-          "description": "Code reviews, architecture guidance, and team mentoring"
-        }
-      ],
+        "items": [
+          {
+            "title": "Astra Link",
+            "category": "Interactivity",
+            "image": "https://picsum.photos/id/22/800/800",
+            "description": "Direct neural interface for 3D navigation."
+          }
+        ]
+      },
       "contact": {
-        "ctaText": "Let's Build Something",
-        "formFields": ["name", "email", "message"]
+        "title": "Transmit Message",
+        "ctaText": "Sync Connection",
+        "formFields": [
+          "email",
+          "message"
+        ],
+        "settings": {
+          "layout": "simple-centered"
+        }
+      },
+      "footer": {
+        "logo_text": "CYBER.DREAM",
+        "copyright_text": "© 2024 CYBER DREAM. Transmitted from the future.",
+        "settings": {
+          "layout": "minimal"
+        }
       }
     }
   },
   {
-    "templateId": "artist",
-    "title": "Artist",
-    "description": "Gallery-style layout, emphasis on visuals, minimal text",
-    "targetPersona": "Photographers, visual artists, and illustrators",
-    "styleKeywords": ["visual", "gallery-focused", "aesthetic", "immersive", "artistic"],
+    "templateId": "organic-flow",
+    "title": "Organic Flow",
+    "description": "A serene, nature-inspired portfolio template with fluid animated backgrounds, sophisticated serif typography, and a warm earthy color palette.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800",
+    "preview_images": [
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1600"
+    ],
+    "targetPersona": "Fine Art Photographers, Sustainable Brands, Interior Designers",
+    "styleKeywords": [
+      "organic",
+      "nature",
+      "serene",
+      "warm",
+      "fluid"
+    ],
     "colorPalette": {
-      "primary": "#8B5CF6",
-      "secondary": "#EC4899",
-      "background": "#FFFFFF",
-      "text": "#1F2937",
-      "surface": "#F9FAFB",
-      "border": "#E5E7EB",
-      "textSecondary": "#6B7280"
+      "primary": "#CC8B65",
+      "secondary": "#E3DCD2",
+      "background": "#013328",
+      "text": "#E3DCD2",
+      "surface": "#100C0D",
+      "border": "rgba(227, 220, 210, 0.1)",
+      "textSecondary": "rgba(227, 220, 210, 0.7)"
     },
     "fontPreset": {
       "heading": "Playfair Display",
-      "body": "Open Sans",
+      "body": "Inter",
+      "mono": "Fira Code"
+    },
+    "sections": {
+      "organic_hero": {
+        "slogan": "NATURE IN HARMONY",
+        "headline": "Organic Flow",
+        "subtitle": "A balanced exploration of form and function, inspired by the natural world and its effortless complexities.",
+        "ctaText": "Discover the Flow",
+        "backgroundImage": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2000"
+      },
+      "about": {
+        "bioText": "Capturing the essence of life through a lens that values patience, light, and the organic textures of our environment.",
+        "imagePlaceholder": true
+      },
+      "projects": {
+        "title": "Natural Studies",
+        "settings": {
+          "layout": "grid",
+          "columns": 2,
+          "gap": "large",
+          "aspect_ratio": "portrait"
+        },
+        "items": [
+          {
+            "title": "Silent Forest",
+            "category": "Photography",
+            "image": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1000",
+            "description": "A study of light and shadows within the deep pines."
+          },
+          {
+            "title": "Desert Earth",
+            "category": "Textures",
+            "image": "https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&q=80&w=1000",
+            "description": "Cracked clay and warm horizons."
+          }
+        ]
+      },
+      "contact": {
+        "title": "Grow With Us",
+        "ctaText": "Start a Project",
+        "formFields": [
+          "name",
+          "email",
+          "message"
+        ],
+        "settings": {
+          "layout": "split"
+        }
+      },
+      "footer": {
+        "logo_text": "ORGANIC.FLOW",
+        "copyright_text": "© 2024 ORGANIC FLOW. All rights reserved.",
+        "settings": {
+          "layout": "simple"
+        }
+      }
+    }
+  },
+  {
+    "templateId": "midnight-voyage",
+    "title": "Midnight Voyage",
+    "description": "A sophisticated, branding-focused portfolio template with immersive deep blue gradients and integrated navigation.",
+    "thumbnail_url": "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?auto=format&fit=crop&q=80&w=800",
+    "preview_images": [
+      "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?auto=format&fit=crop&q=80&w=1600"
+    ],
+    "targetPersona": "Product Developers, Brand Designers, Creative Agencies",
+    "styleKeywords": [
+      "dark",
+      "premium",
+      "branded",
+      "blue",
+      "minimal"
+    ],
+    "colorPalette": {
+      "primary": "#3C3FA3",
+      "secondary": "#4E68F0",
+      "background": "#000000",
+      "text": "#FFFFFF",
+      "surface": "#331D66",
+      "border": "#8795FE",
+      "textSecondary": "#8795FE"
+    },
+    "fontPreset": {
+      "heading": "Inter",
+      "body": "Inter",
       "mono": "JetBrains Mono"
     },
     "sections": {
-      "hero": {
-        "headline": "Visual Artist",
-        "subtitle": "Capturing moments and creating visual narratives",
-        "backgroundStyle": "image",
-        "alignment": "center",
-        "height": "full"
+      "brand_hero": {
+        "navLinks": [
+          {
+            "label": "SERVICES",
+            "href": "#services"
+          },
+          {
+            "label": "MY WORK",
+            "href": "#work"
+          },
+          {
+            "label": "CONTACT",
+            "href": "#contact"
+          }
+        ],
+        "versionText": "v1.0.4 - 2024",
+        "title": "Journey into the unknown",
+        "subtitle": "Experience the deep blue elegance of our latest collection. Architecting digital futures through immersive design systems.",
+        "ctaText": "START THE VOYAGE"
       },
       "about": {
-        "bioText": "I'm a visual artist exploring the boundaries between reality and imagination. Through photography, illustration, and digital art, I create visual stories that evoke emotion and inspire connection. Each piece is a journey, a moment frozen in time, a story waiting to be told.",
+        "bioText": "We specialize in creating immersive digital experiences that push the boundaries of modern branding and technology. Every voyage begins with a single bold move.",
         "imagePlaceholder": true
       },
-      "projects": [
-        {
-          "title": "Urban Landscapes",
-          "image": "placeholder.jpg",
-          "description": "A series exploring the intersection of architecture and nature in urban environments, capturing the beauty of everyday spaces."
+      "projects": {
+        "title": "Recent Explorations",
+        "settings": {
+          "layout": "grid",
+          "columns": 2,
+          "aspect_ratio": "landscape"
         },
-        {
-          "title": "Portrait Collection",
-          "image": "placeholder.jpg",
-          "description": "Intimate portraits that reveal the depth and complexity of human emotion through careful composition and lighting."
+        "items": [
+          {
+            "title": "Astra System",
+            "category": "Brand Design",
+            "image": "https://picsum.photos/id/26/800/600",
+            "description": "A unified design language for the future."
+          },
+          {
+            "title": "Nova Interface",
+            "category": "Product Development",
+            "image": "https://picsum.photos/id/27/800/600",
+            "description": "Redefining how we interact with data."
+          }
+        ]
+      },
+      "services": {
+        "title": "Core Capabilities",
+        "description": "Strategic solutions for a complex digital landscape.",
+        "settings": {
+          "layout": "grid",
+          "columns": 3,
+          "background": "glass"
         },
-        {
-          "title": "Abstract Expressions",
-          "image": "placeholder.jpg",
-          "description": "Digital art series experimenting with color, form, and movement to create abstract visual experiences."
-        },
-        {
-          "title": "Nature Photography",
-          "image": "placeholder.jpg",
-          "description": "Wildlife and landscape photography celebrating the natural world's diversity and beauty."
-        },
-        {
-          "title": "Conceptual Series",
-          "image": "placeholder.jpg",
-          "description": "Themed visual narratives exploring social and personal themes through symbolic imagery and composition."
-        }
-      ],
+        "items": [
+          {
+            "title": "Brand Strategy",
+            "description": "Defining your unique voice in a crowded market.",
+            "icon": "Compass"
+          },
+          {
+            "title": "Product Design",
+            "description": "Crafting intuitive interfaces that users love.",
+            "icon": "Layout"
+          }
+        ]
+      },
       "contact": {
-        "ctaText": "Get in Touch",
-        "formFields": ["name", "email", "message"]
+        "title": "Initiate Connection",
+        "ctaText": "Send Message",
+        "formFields": [
+          "name",
+          "email",
+          "message"
+        ],
+        "settings": {
+          "layout": "split-with-info"
+        }
+      },
+      "footer": {
+        "logo_text": "MIDNIGHT.VOYAGE",
+        "copyright_text": "© 2024 MIDNIGHT VOYAGE. All rights reserved.",
+        "settings": {
+          "layout": "minimal"
+        }
       }
     }
   }

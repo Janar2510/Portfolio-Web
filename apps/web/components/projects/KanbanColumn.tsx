@@ -2,7 +2,10 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { Plus, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TaskCard } from './TaskCard';
@@ -42,7 +45,7 @@ export function KanbanColumn({
     transition,
   };
 
-  const taskIds = tasks.map((task) => getTaskDragId(task.id));
+  const taskIds = tasks.map(task => getTaskDragId(task.id));
 
   return (
     <div
@@ -71,7 +74,7 @@ export function KanbanColumn({
       {/* Tasks */}
       <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
         <div className="flex-1 space-y-2 overflow-y-auto p-3">
-          {tasks.map((task) => (
+          {tasks.map(task => (
             <TaskCard
               key={task.id}
               task={task}

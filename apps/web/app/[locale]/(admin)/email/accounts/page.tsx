@@ -2,7 +2,16 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Mail, Plus, Trash2, CheckCircle2, XCircle, Loader2, RefreshCw, Settings } from 'lucide-react';
+import {
+  Mail,
+  Plus,
+  Trash2,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  RefreshCw,
+  Settings,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -27,7 +36,11 @@ export default function EmailAccountsPage() {
   const queryClient = useQueryClient();
 
   // Fetch email accounts
-  const { data: accounts = [], isLoading, error: accountsError } = useQuery({
+  const {
+    data: accounts = [],
+    isLoading,
+    error: accountsError,
+  } = useQuery({
     queryKey: ['email-accounts'],
     queryFn: async () => {
       const supabase = createClient();
@@ -109,7 +122,13 @@ export default function EmailAccountsPage() {
 
   // Toggle account active status
   const toggleAccountMutation = useMutation({
-    mutationFn: async ({ accountId, isActive }: { accountId: string; isActive: boolean }) => {
+    mutationFn: async ({
+      accountId,
+      isActive,
+    }: {
+      accountId: string;
+      isActive: boolean;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('email_accounts')
@@ -154,7 +173,10 @@ export default function EmailAccountsPage() {
           </p>
           {accountsError && (
             <p className="text-sm text-error-main mt-2">
-              Error loading accounts: {accountsError instanceof Error ? accountsError.message : 'Unknown error'}
+              Error loading accounts:{' '}
+              {accountsError instanceof Error
+                ? accountsError.message
+                : 'Unknown error'}
             </p>
           )}
         </div>
@@ -185,7 +207,7 @@ export default function EmailAccountsPage() {
                       id="apple-email"
                       type="email"
                       value={appleEmail}
-                      onChange={(e) => setAppleEmail(e.target.value)}
+                      onChange={e => setAppleEmail(e.target.value)}
                       required
                       placeholder="your.email@icloud.com"
                     />
@@ -196,7 +218,7 @@ export default function EmailAccountsPage() {
                       id="apple-password"
                       type="password"
                       value={applePassword}
-                      onChange={(e) => setApplePassword(e.target.value)}
+                      onChange={e => setApplePassword(e.target.value)}
                       required
                       placeholder="Your iCloud password"
                     />
@@ -205,12 +227,14 @@ export default function EmailAccountsPage() {
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="apple-display-name">Display Name (optional)</Label>
+                    <Label htmlFor="apple-display-name">
+                      Display Name (optional)
+                    </Label>
                     <Input
                       id="apple-display-name"
                       type="text"
                       value={appleDisplayName}
-                      onChange={(e) => setAppleDisplayName(e.target.value)}
+                      onChange={e => setAppleDisplayName(e.target.value)}
                       placeholder="Your Name"
                     />
                   </div>
@@ -269,7 +293,9 @@ export default function EmailAccountsPage() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
                 <Mail className="w-8 h-8 text-white" />
               </div>
-              <p className="mt-4 text-lg font-semibold text-foreground">No email accounts</p>
+              <p className="mt-4 text-lg font-semibold text-foreground">
+                No email accounts
+              </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Connect your first email account to get started
               </p>
@@ -277,7 +303,7 @@ export default function EmailAccountsPage() {
           </div>
         ) : (
           <div className="space-y-4 animate-fade-in">
-            {accounts.map((account) => (
+            {accounts.map(account => (
               <div
                 key={account.id}
                 className="flex items-center justify-between rounded-lg border p-4"
@@ -287,13 +313,16 @@ export default function EmailAccountsPage() {
                     <Mail className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="font-medium">{account.display_name || account.email_address}</div>
+                    <div className="font-medium">
+                      {account.display_name || account.email_address}
+                    </div>
                     <div className="text-sm text-muted-foreground">
                       {account.email_address} • {account.provider}
                     </div>
                     {account.last_sync_at && (
                       <div className="text-xs text-muted-foreground">
-                        Last synced: {new Date(account.last_sync_at).toLocaleString()}
+                        Last synced:{' '}
+                        {new Date(account.last_sync_at).toLocaleString()}
                       </div>
                     )}
                   </div>
@@ -334,7 +363,11 @@ export default function EmailAccountsPage() {
                     size="sm"
                     className="text-destructive"
                     onClick={() => {
-                      if (confirm('Are you sure you want to disconnect this account?')) {
+                      if (
+                        confirm(
+                          'Are you sure you want to disconnect this account?'
+                        )
+                      ) {
                         deleteAccountMutation.mutate(account.id);
                       }
                     }}

@@ -8,7 +8,10 @@ import type { TextBlockContent, TextBlockSettings } from '@/lib/blocks/schema';
 interface TextBlockProps {
   block: PortfolioBlock;
   isEditing?: boolean;
-  onUpdate?: (content: Record<string, unknown>, settings?: Record<string, unknown>) => void;
+  onUpdate?: (
+    content: Record<string, unknown>,
+    settings?: Record<string, unknown>
+  ) => void;
   onDelete?: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;

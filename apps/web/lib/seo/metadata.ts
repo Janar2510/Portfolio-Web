@@ -28,7 +28,9 @@ export function generatePageMetadata(
   page: PortfolioPage | PublicPortfolioPage | null,
   subdomain: string
 ): SEOMetadata {
-  const baseUrl = process.env.NEXT_PUBLIC_PORTFOLIO_BASE_URL || 'https://portfolio.example.com';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_PORTFOLIO_BASE_URL ||
+    'https://portfolio.example.com';
   const siteUrl = `${baseUrl}/${subdomain}`;
   const pageUrl = page ? `${siteUrl}/${page.slug}` : siteUrl;
 
@@ -94,7 +96,9 @@ export function generateStructuredData(
   site: PortfolioSite | PublicPortfolioSite,
   page: PortfolioPage | PublicPortfolioPage | null
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_PORTFOLIO_BASE_URL || 'https://portfolio.example.com';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_PORTFOLIO_BASE_URL ||
+    'https://portfolio.example.com';
   const siteUrl = `${baseUrl}/${site.subdomain}`;
   const pageUrl = page ? `${siteUrl}/${page.slug}` : siteUrl;
 

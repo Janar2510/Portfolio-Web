@@ -8,7 +8,13 @@
 import { useState } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,7 +25,14 @@ import { PortfolioService } from '@/lib/services/portfolio';
 import { ProjectsManager } from './projects/ProjectsManager';
 import { FormSubmissionsManager } from './forms/FormSubmissionsManager';
 import { DomainSettings } from './domain/DomainSettings';
-import { Settings, FolderKanban, Mail, Globe, ArrowLeft, Save } from 'lucide-react';
+import {
+  Settings,
+  FolderKanban,
+  Mail,
+  Globe,
+  ArrowLeft,
+  Save,
+} from 'lucide-react';
 import type { PortfolioSite } from '@/lib/services/portfolio';
 
 interface PortfolioSettingsViewProps {
@@ -27,14 +40,19 @@ interface PortfolioSettingsViewProps {
   locale: string;
 }
 
-export function PortfolioSettingsView({ site, locale }: PortfolioSettingsViewProps) {
+export function PortfolioSettingsView({
+  site,
+  locale,
+}: PortfolioSettingsViewProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('general');
   const [siteName, setSiteName] = useState(site.name);
   const [subdomain, setSubdomain] = useState(site.subdomain);
   const [seoTitle, setSeoTitle] = useState(site.seo_title || '');
-  const [seoDescription, setSeoDescription] = useState(site.seo_description || '');
+  const [seoDescription, setSeoDescription] = useState(
+    site.seo_description || ''
+  );
 
   const supabase = createClient();
   const portfolioService = new PortfolioService(supabase);
@@ -85,7 +103,11 @@ export function PortfolioSettingsView({ site, locale }: PortfolioSettingsViewPro
       </div>
 
       {/* Settings Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
         <TabsList className="grid grid-cols-4 w-full">
           <TabsTrigger value="general" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
@@ -120,7 +142,7 @@ export function PortfolioSettingsView({ site, locale }: PortfolioSettingsViewPro
                   <Input
                     id="site-name"
                     value={siteName}
-                    onChange={(e) => setSiteName(e.target.value)}
+                    onChange={e => setSiteName(e.target.value)}
                     placeholder="My Portfolio"
                     required
                   />
@@ -132,7 +154,13 @@ export function PortfolioSettingsView({ site, locale }: PortfolioSettingsViewPro
                     <Input
                       id="subdomain"
                       value={subdomain}
-                      onChange={(e) => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                      onChange={e =>
+                        setSubdomain(
+                          e.target.value
+                            .toLowerCase()
+                            .replace(/[^a-z0-9-]/g, '')
+                        )
+                      }
                       placeholder="myportfolio"
                       required
                       pattern="[a-z0-9-]+"
@@ -148,7 +176,7 @@ export function PortfolioSettingsView({ site, locale }: PortfolioSettingsViewPro
                   <Input
                     id="seo-title"
                     value={seoTitle}
-                    onChange={(e) => setSeoTitle(e.target.value)}
+                    onChange={e => setSeoTitle(e.target.value)}
                     placeholder="My Portfolio - Web Developer"
                   />
                   <p className="text-xs text-muted-foreground">
@@ -161,7 +189,7 @@ export function PortfolioSettingsView({ site, locale }: PortfolioSettingsViewPro
                   <Textarea
                     id="seo-description"
                     value={seoDescription}
-                    onChange={(e) => setSeoDescription(e.target.value)}
+                    onChange={e => setSeoDescription(e.target.value)}
                     placeholder="A brief description of your portfolio"
                     rows={3}
                   />
@@ -171,10 +199,7 @@ export function PortfolioSettingsView({ site, locale }: PortfolioSettingsViewPro
                 </div>
 
                 <div className="flex justify-end">
-                  <Button
-                    type="submit"
-                    disabled={updateSiteMutation.isPending}
-                  >
+                  <Button type="submit" disabled={updateSiteMutation.isPending}>
                     {updateSiteMutation.isPending ? (
                       'Saving...'
                     ) : (

@@ -18,7 +18,9 @@ interface PublishStepProps {
 export function PublishStep({ onPublish, onSkip }: PublishStepProps) {
   const t = useTranslations('onboarding.publish');
   const router = useRouter();
-  const [deviceView, setDeviceView] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [deviceView, setDeviceView] = useState<'desktop' | 'tablet' | 'mobile'>(
+    'desktop'
+  );
 
   const supabase = createClient();
   const portfolioService = new PortfolioService(supabase);

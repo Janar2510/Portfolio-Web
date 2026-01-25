@@ -9,10 +9,19 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
 import { PortfolioService } from '@/lib/services/portfolio';
-import type { PortfolioTemplate, TemplateCategory } from '@/lib/portfolio/types';
+import type {
+  PortfolioTemplate,
+  TemplateCategory,
+} from '@/lib/portfolio/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Search, Star, Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -44,8 +53,11 @@ export function TemplateGallery({
   const portfolioService = new PortfolioService(supabase);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<TemplateCategory | 'all'>('all');
-  const [previewTemplate, setPreviewTemplate] = useState<PortfolioTemplate | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<
+    TemplateCategory | 'all'
+  >('all');
+  const [previewTemplate, setPreviewTemplate] =
+    useState<PortfolioTemplate | null>(null);
 
   // Fetch templates
   const { data: templates = [], isLoading } = useQuery({
@@ -77,10 +89,10 @@ export function TemplateGallery({
 
     const query = searchQuery.toLowerCase();
     return templates.filter(
-      (template) =>
+      template =>
         template.name.toLowerCase().includes(query) ||
         template.description?.toLowerCase().includes(query) ||
-        template.tags?.some((tag) => tag.toLowerCase().includes(query))
+        template.tags?.some(tag => tag.toLowerCase().includes(query))
     );
   }, [templates, searchQuery]);
 
@@ -109,7 +121,7 @@ export function TemplateGallery({
               <Input
                 placeholder="Search templates..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 className="pl-9 w-64"
               />
             </div>
@@ -126,7 +138,7 @@ export function TemplateGallery({
             >
               All
             </Button>
-            {TEMPLATE_CATEGORIES.map((category) => (
+            {TEMPLATE_CATEGORIES.map(category => (
               <Button
                 key={category}
                 variant={selectedCategory === category ? 'default' : 'outline'}
@@ -144,12 +156,14 @@ export function TemplateGallery({
           <div className="text-center py-12 text-muted-foreground">
             <p>No templates found</p>
             {searchQuery && (
-              <p className="text-sm mt-2">Try adjusting your search or filters</p>
+              <p className="text-sm mt-2">
+                Try adjusting your search or filters
+              </p>
             )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTemplates.map((template) => (
+            {filteredTemplates.map(template => (
               <TemplateCard
                 key={template.id}
                 template={template}
@@ -176,7 +190,10 @@ export function TemplateGallery({
                       Build your portfolio from a blank canvas
                     </p>
                   </div>
-                  <Button variant="outline" onClick={() => onTemplateSelect?.('')}>
+                  <Button
+                    variant="outline"
+                    onClick={() => onTemplateSelect?.('')}
+                  >
                     Start Building
                   </Button>
                 </div>

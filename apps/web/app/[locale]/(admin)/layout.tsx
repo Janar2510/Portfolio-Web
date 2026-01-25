@@ -13,39 +13,48 @@ export default async function AdminLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  
+
   try {
     const supabase = await createClient();
-    
+
     // Try getSession() first - it's more reliable for reading cookies
-    let { data: { session } } = await supabase.auth.getSession();
+    let {
+      data: { session },
+    } = await supabase.auth.getSession();
     let user = session?.user ?? null;
-    
+
     // If no session, try getUser()
     if (!user) {
-      const { data: { user: getUserResult }, error: authError } = await supabase.auth.getUser();
+      const {
+        data: { user: getUserResult },
+        error: authError,
+      } = await supabase.auth.getUser();
       user = getUserResult ?? null;
-      
+
       // If still no user but we have auth cookies, try manual recovery
       if (!user && authError?.message === 'Auth session missing!') {
         const cookieStore = await cookies();
         const allCookies = cookieStore.getAll();
-        const authCookies = allCookies.filter(c => c.name.includes('sb-') && c.name.includes('auth-token'));
-        
+        const authCookies = allCookies.filter(
+          c => c.name.includes('sb-') && c.name.includes('auth-token')
+        );
+
         if (authCookies.length > 0) {
-          const authCookie = authCookies.find(c => c.name.includes('auth-token'));
+          const authCookie = authCookies.find(c =>
+            c.name.includes('auth-token')
+          );
           if (authCookie?.value) {
             try {
               const decoded = decodeURIComponent(authCookie.value);
               const cookieData = JSON.parse(decoded);
-              
+
               if (cookieData.access_token && cookieData.refresh_token) {
                 // Try to recover the session
                 const recoveryResult = await supabase.auth.setSession({
                   access_token: cookieData.access_token,
                   refresh_token: cookieData.refresh_token,
                 });
-                
+
                 if (recoveryResult.data?.session) {
                   user = recoveryResult.data.session.user;
                 } else {
@@ -89,9 +98,7 @@ export default async function AdminLayout({
           <div className="flex">
             <Sidebar locale={locale} />
             <main className="flex-1 ml-64 pt-14 transition-all duration-200">
-              <div className="p-4 md:p-6">
-                {children}
-              </div>
+              <div className="p-4 md:p-6">{children}</div>
             </main>
           </div>
         </div>

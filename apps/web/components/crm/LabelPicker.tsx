@@ -33,12 +33,12 @@ export function LabelPicker({
   const [newLabelColor, setNewLabelColor] = useState('#6B7B8A');
   const [isCreating, setIsCreating] = useState(false);
 
-  const selectedLabels = labels.filter((l) => selectedLabelIds.includes(l.id));
-  const availableLabels = labels.filter((l) => !selectedLabelIds.includes(l.id));
+  const selectedLabels = labels.filter(l => selectedLabelIds.includes(l.id));
+  const availableLabels = labels.filter(l => !selectedLabelIds.includes(l.id));
 
   const handleToggleLabel = (labelId: string) => {
     if (selectedLabelIds.includes(labelId)) {
-      onLabelsChange(selectedLabelIds.filter((id) => id !== labelId));
+      onLabelsChange(selectedLabelIds.filter(id => id !== labelId));
     } else {
       onLabelsChange([...selectedLabelIds, labelId]);
     }
@@ -89,14 +89,19 @@ export function LabelPicker({
             {/* Selected Labels */}
             {selectedLabels.length > 0 && (
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Selected</Label>
+                <Label className="text-xs text-muted-foreground">
+                  Selected
+                </Label>
                 <div className="flex flex-wrap gap-2">
-                  {selectedLabels.map((label) => (
+                  {selectedLabels.map(label => (
                     <Badge
                       key={label.id}
                       variant="secondary"
                       className="cursor-pointer gap-1"
-                      style={{ backgroundColor: `${label.color}20`, color: label.color }}
+                      style={{
+                        backgroundColor: `${label.color}20`,
+                        color: label.color,
+                      }}
                       onClick={() => handleToggleLabel(label.id)}
                     >
                       {label.name}
@@ -110,9 +115,11 @@ export function LabelPicker({
             {/* Available Labels */}
             {availableLabels.length > 0 && (
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Available</Label>
+                <Label className="text-xs text-muted-foreground">
+                  Available
+                </Label>
                 <div className="flex flex-wrap gap-2">
-                  {availableLabels.map((label) => (
+                  {availableLabels.map(label => (
                     <Badge
                       key={label.id}
                       variant="outline"
@@ -133,13 +140,15 @@ export function LabelPicker({
             {/* Create New Label */}
             {onCreateLabel && (
               <div className="space-y-2 border-t pt-4">
-                <Label className="text-xs text-muted-foreground">Create new label</Label>
+                <Label className="text-xs text-muted-foreground">
+                  Create new label
+                </Label>
                 <div className="space-y-2">
                   <Input
                     placeholder="Label name"
                     value={newLabelName}
-                    onChange={(e) => setNewLabelName(e.target.value)}
-                    onKeyDown={(e) => {
+                    onChange={e => setNewLabelName(e.target.value)}
+                    onKeyDown={e => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
                         handleCreateLabel();
@@ -149,7 +158,7 @@ export function LabelPicker({
                   <div className="flex items-center gap-2">
                     <Label className="text-xs">Color:</Label>
                     <div className="flex gap-1">
-                      {colorPresets.map((color) => (
+                      {colorPresets.map(color => (
                         <button
                           key={color}
                           type="button"
@@ -166,7 +175,7 @@ export function LabelPicker({
                     <Input
                       type="color"
                       value={newLabelColor}
-                      onChange={(e) => setNewLabelColor(e.target.value)}
+                      onChange={e => setNewLabelColor(e.target.value)}
                       className="h-6 w-12"
                     />
                   </div>
@@ -189,12 +198,15 @@ export function LabelPicker({
       {/* Selected Labels Display */}
       {selectedLabels.length > 0 && (
         <div className="flex flex-wrap gap-1">
-          {selectedLabels.map((label) => (
+          {selectedLabels.map(label => (
             <Badge
               key={label.id}
               variant="secondary"
               className="gap-1"
-              style={{ backgroundColor: `${label.color}20`, color: label.color }}
+              style={{
+                backgroundColor: `${label.color}20`,
+                color: label.color,
+              }}
             >
               <div
                 className="h-2 w-2 rounded-full"

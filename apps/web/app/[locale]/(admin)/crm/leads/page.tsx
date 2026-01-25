@@ -42,7 +42,7 @@ export default function LeadsPage() {
     mutationFn: async (leadId: string) => {
       // Get default pipeline and first stage
       const pipelines = await crmService.getPipelines();
-      const defaultPipeline = pipelines.find((p) => p.is_default) || pipelines[0];
+      const defaultPipeline = pipelines.find(p => p.is_default) || pipelines[0];
       if (!defaultPipeline) throw new Error('No pipeline found');
 
       const stages = await crmService.getPipelineStages(defaultPipeline.id);
@@ -97,13 +97,13 @@ export default function LeadsPage() {
       <LeadsList
         leads={leads}
         labels={labels}
-        onCreateLead={async (lead) => {
+        onCreateLead={async lead => {
           await createMutation.mutateAsync(lead);
         }}
         onUpdateLead={async (id, updates) => {
           await updateMutation.mutateAsync({ id, updates });
         }}
-        onConvertLead={async (id) => {
+        onConvertLead={async id => {
           await convertMutation.mutateAsync(id);
         }}
         onCreateLabel={async (name, color) => {

@@ -20,15 +20,24 @@ export function StylesPanel() {
           <Palette className="h-3 w-3" />
           Colors
         </TabsTrigger>
-        <TabsTrigger value="typography" className="flex items-center gap-2 text-xs">
+        <TabsTrigger
+          value="typography"
+          className="flex items-center gap-2 text-xs"
+        >
           <Type className="h-3 w-3" />
           Fonts
         </TabsTrigger>
-        <TabsTrigger value="spacing" className="flex items-center gap-2 text-xs">
+        <TabsTrigger
+          value="spacing"
+          className="flex items-center gap-2 text-xs"
+        >
           <Layout className="h-3 w-3" />
           Spacing
         </TabsTrigger>
-        <TabsTrigger value="effects" className="flex items-center gap-2 text-xs">
+        <TabsTrigger
+          value="effects"
+          className="flex items-center gap-2 text-xs"
+        >
           <Sparkles className="h-3 w-3" />
           Effects
         </TabsTrigger>

@@ -1,7 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, FolderKanban, Archive, CheckCircle2, MoreVertical, Edit2, Trash2 } from 'lucide-react';
+import {
+  Plus,
+  FolderKanban,
+  Archive,
+  CheckCircle2,
+  MoreVertical,
+  Edit2,
+  Trash2,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -15,7 +23,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 export interface Project {
@@ -35,7 +49,11 @@ interface ProjectListProps {
   projects: Project[];
   currentProjectId?: string;
   onProjectSelect: (projectId: string) => void;
-  onProjectCreate: (data: { name: string; description?: string; color?: string }) => Promise<void>;
+  onProjectCreate: (data: {
+    name: string;
+    description?: string;
+    color?: string;
+  }) => Promise<void>;
   onProjectUpdate: (projectId: string, data: Partial<Project>) => Promise<void>;
   onProjectDelete: (projectId: string) => Promise<void>;
 }
@@ -98,7 +116,11 @@ export function ProjectList({
   };
 
   const handleDeleteProject = async (projectId: string) => {
-    if (!confirm('Are you sure you want to delete this project? All tasks and data will be deleted.')) {
+    if (
+      !confirm(
+        'Are you sure you want to delete this project? All tasks and data will be deleted.'
+      )
+    ) {
       return;
     }
     await onProjectDelete(projectId);
@@ -196,7 +218,7 @@ export function ProjectList({
           </div>
         ) : (
           <div className="p-2">
-            {sortedProjects.map((project) => (
+            {sortedProjects.map(project => (
               <div
                 key={project.id}
                 className={cn(
@@ -214,7 +236,12 @@ export function ProjectList({
                   />
                   <div className="flex flex-1 flex-col">
                     <div className="flex items-center gap-2">
-                      <span className={cn('text-sm font-medium', getStatusColor(project.status))}>
+                      <span
+                        className={cn(
+                          'text-sm font-medium',
+                          getStatusColor(project.status)
+                        )}
+                      >
                         {project.name}
                       </span>
                       {getStatusIcon(project.status)}
@@ -231,7 +258,7 @@ export function ProjectList({
                     size="icon"
                     variant="ghost"
                     className="h-7 w-7"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       setEditingProject(project);
                       setIsEditDialogOpen(true);
@@ -243,7 +270,7 @@ export function ProjectList({
                     size="icon"
                     variant="ghost"
                     className="h-7 w-7 text-destructive hover:text-destructive"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDeleteProject(project.id);
                     }}
@@ -264,9 +291,7 @@ export function ProjectList({
             <form onSubmit={handleEditProject}>
               <DialogHeader>
                 <DialogTitle>Edit Project</DialogTitle>
-                <DialogDescription>
-                  Update project details.
-                </DialogDescription>
+                <DialogDescription>Update project details.</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
@@ -289,10 +314,7 @@ export function ProjectList({
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="edit-status">Status</Label>
-                  <Select
-                    name="status"
-                    defaultValue={editingProject.status}
-                  >
+                  <Select name="status" defaultValue={editingProject.status}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>

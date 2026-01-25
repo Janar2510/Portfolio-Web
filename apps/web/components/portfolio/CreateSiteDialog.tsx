@@ -25,7 +25,10 @@ interface CreateSiteDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) {
+export function CreateSiteDialog({
+  open,
+  onOpenChange,
+}: CreateSiteDialogProps) {
   const t = useTranslations('portfolio');
   const router = useRouter();
   const params = useParams();
@@ -33,8 +36,12 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
   const queryClient = useQueryClient();
   const [siteName, setSiteName] = useState('');
   const [subdomain, setSubdomain] = useState('');
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
-  const [errors, setErrors] = useState<{ name?: string; subdomain?: string }>({});
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    null
+  );
+  const [errors, setErrors] = useState<{ name?: string; subdomain?: string }>(
+    {}
+  );
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -43,7 +50,10 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
     const checkAuth = async () => {
       try {
         const supabase = createClient();
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
         if (error) {
           console.error('Auth check error:', error);
           setIsAuthenticated(false);
@@ -61,7 +71,11 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
   }, []);
 
   const createSiteMutation = useMutation({
-    mutationFn: async (data: { name: string; subdomain: string; templateId?: string }) => {
+    mutationFn: async (data: {
+      name: string;
+      subdomain: string;
+      templateId?: string;
+    }) => {
       // Use API route instead of direct service call for better error handling
       const response = await fetch('/api/portfolio/site', {
         method: 'POST',
@@ -80,7 +94,7 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
 
       return result.data;
     },
-    onSuccess: async (site) => {
+    onSuccess: async site => {
       console.log('Site created successfully:', site);
       queryClient.invalidateQueries({ queryKey: ['portfolio-site'] });
       queryClient.invalidateQueries({ queryKey: ['portfolio-pages'] });
@@ -96,17 +110,28 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
     onError: (error: Error) => {
       console.error('Error creating site:', error);
       const errorMessage = error.message || 'Failed to create site';
-      
-      if (errorMessage.includes('subdomain') || errorMessage.includes('taken')) {
+
+      if (
+        errorMessage.includes('subdomain') ||
+        errorMessage.includes('taken')
+      ) {
         setErrors({ subdomain: errorMessage });
-      } else if (errorMessage.includes('already has') || errorMessage.includes('exists')) {
-        setErrors({ name: 'You already have a site. Please refresh the page.' });
-      } else if (errorMessage.includes('validation') || errorMessage.includes('invalid')) {
+      } else if (
+        errorMessage.includes('already has') ||
+        errorMessage.includes('exists')
+      ) {
+        setErrors({
+          name: 'You already have a site. Please refresh the page.',
+        });
+      } else if (
+        errorMessage.includes('validation') ||
+        errorMessage.includes('invalid')
+      ) {
         setErrors({ subdomain: 'Invalid subdomain format' });
       } else {
         setErrors({ name: errorMessage });
       }
-      
+
       // Keep dialog open on error so user can see the error
     },
   });
@@ -122,10 +147,12 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Verify authentication before submitting
     if (!isAuthenticated) {
-      setErrors({ name: 'You must be logged in to create a site. Please refresh the page and try again.' });
+      setErrors({
+        name: 'You must be logged in to create a site. Please refresh the page and try again.',
+      });
       return;
     }
     setErrors({});
@@ -172,7 +199,8 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
           <DialogHeader>
             <DialogTitle>{t('createSite')}</DialogTitle>
             <DialogDescription>
-              Create your portfolio site. Choose a name and subdomain, and optionally select a template to get started.
+              Create your portfolio site. Choose a name and subdomain, and
+              optionally select a template to get started.
             </DialogDescription>
           </DialogHeader>
 
@@ -184,7 +212,7 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
                 <Input
                   id="site-name"
                   value={siteName}
-                  onChange={(e) => {
+                  onChange={e => {
                     setSiteName(e.target.value);
                     if (errors.name) {
                       setErrors({ ...errors, name: undefined });
@@ -204,7 +232,7 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
                   <Input
                     id="subdomain"
                     value={subdomain}
-                    onChange={(e) => handleSubdomainChange(e.target.value)}
+                    onChange={e => handleSubdomainChange(e.target.value)}
                     placeholder={t('subdomainPlaceholder')}
                     disabled={createSiteMutation.isPending}
                     className="flex-1"
@@ -245,34 +273,38 @@ export function CreateSiteDialog({ open, onOpenChange }: CreateSiteDialogProps) 
             </div>
           )}
 
-                  <DialogFooter>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleClose}
-                      disabled={createSiteMutation.isPending || isCheckingAuth}
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      disabled={createSiteMutation.isPending || isCheckingAuth || !isAuthenticated}
-                    >
-                      {isCheckingAuth ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Checking...
-                        </>
-                      ) : createSiteMutation.isPending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Creating...
-                        </>
-                      ) : (
-                        'Create Site'
-                      )}
-                    </Button>
-                  </DialogFooter>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              disabled={createSiteMutation.isPending || isCheckingAuth}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={
+                createSiteMutation.isPending ||
+                isCheckingAuth ||
+                !isAuthenticated
+              }
+            >
+              {isCheckingAuth ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Checking...
+                </>
+              ) : createSiteMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                'Create Site'
+              )}
+            </Button>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

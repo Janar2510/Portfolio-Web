@@ -3,13 +3,19 @@
 import { BaseBlock } from './BaseBlock';
 import { cn } from '@/lib/utils';
 import type { PortfolioBlock } from '@/lib/services/portfolio';
-import type { GalleryBlockContent, GalleryBlockSettings } from '@/lib/blocks/schema';
+import type {
+  GalleryBlockContent,
+  GalleryBlockSettings,
+} from '@/lib/blocks/schema';
 import Image from 'next/image';
 
 interface GalleryBlockProps {
   block: PortfolioBlock;
   isEditing?: boolean;
-  onUpdate?: (content: Record<string, unknown>, settings?: Record<string, unknown>) => void;
+  onUpdate?: (
+    content: Record<string, unknown>,
+    settings?: Record<string, unknown>
+  ) => void;
   onDelete?: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
@@ -69,12 +75,13 @@ export function GalleryBlock({
             className={cn(
               'grid gap-4',
               settings.layout === 'grid' && gridCols[settings.columns || 3],
-              settings.layout === 'masonry' && 'columns-1 md:columns-2 lg:columns-3',
+              settings.layout === 'masonry' &&
+                'columns-1 md:columns-2 lg:columns-3',
               settings.layout === 'carousel' && 'flex overflow-x-auto'
             )}
             style={{ gap: settings.gap || '1rem' }}
           >
-            {images.map((image) => (
+            {images.map(image => (
               <div
                 key={image.id}
                 className={cn(

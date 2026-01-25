@@ -21,7 +21,10 @@ import type { Note } from '@/lib/crm/types';
 
 interface NotesListProps {
   notes: Note[];
-  onCreateNote: (note: { content: string; is_pinned?: boolean }) => Promise<void>;
+  onCreateNote: (note: {
+    content: string;
+    is_pinned?: boolean;
+  }) => Promise<void>;
   onUpdateNote: (noteId: string, updates: Partial<Note>) => Promise<void>;
   onDeleteNote: (noteId: string) => Promise<void>;
   entityType?: 'deal' | 'person' | 'organization' | 'lead';
@@ -40,8 +43,8 @@ export function NotesList({
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [newNoteContent, setNewNoteContent] = useState('');
 
-  const pinnedNotes = notes.filter((n) => n.is_pinned);
-  const regularNotes = notes.filter((n) => !n.is_pinned);
+  const pinnedNotes = notes.filter(n => n.is_pinned);
+  const regularNotes = notes.filter(n => !n.is_pinned);
 
   const handleCreate = async () => {
     if (!newNoteContent.trim()) return;
@@ -99,14 +102,18 @@ export function NotesList({
                 <Textarea
                   id="note-content"
                   value={newNoteContent}
-                  onChange={(e) => setNewNoteContent(e.target.value)}
+                  onChange={e => setNewNoteContent(e.target.value)}
                   placeholder="Write your note here..."
                   rows={6}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsCreateOpen(false)}
+              >
                 Cancel
               </Button>
               <Button type="button" onClick={handleCreate}>
@@ -121,7 +128,7 @@ export function NotesList({
       {pinnedNotes.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-muted-foreground">Pinned</h4>
-          {pinnedNotes.map((note) => (
+          {pinnedNotes.map(note => (
             <Card key={note.id}>
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
@@ -174,9 +181,11 @@ export function NotesList({
       {regularNotes.length > 0 && (
         <div className="space-y-2">
           {pinnedNotes.length > 0 && (
-            <h4 className="text-sm font-medium text-muted-foreground">All Notes</h4>
+            <h4 className="text-sm font-medium text-muted-foreground">
+              All Notes
+            </h4>
           )}
-          {regularNotes.map((note) => (
+          {regularNotes.map(note => (
             <Card key={note.id}>
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
@@ -242,13 +251,17 @@ export function NotesList({
                 <Textarea
                   id="edit-note-content"
                   value={newNoteContent}
-                  onChange={(e) => setNewNoteContent(e.target.value)}
+                  onChange={e => setNewNoteContent(e.target.value)}
                   rows={6}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setEditingNote(null)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditingNote(null)}
+              >
                 Cancel
               </Button>
               <Button type="button" onClick={handleUpdate}>

@@ -1,7 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Calendar, User, Flag, CheckCircle2, MessageSquare, Paperclip, Plus, Trash2, Edit2 } from 'lucide-react';
+import {
+  X,
+  Calendar,
+  User,
+  Flag,
+  CheckCircle2,
+  MessageSquare,
+  Paperclip,
+  Plus,
+  Trash2,
+  Edit2,
+} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -13,7 +24,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import type { Task, Subtask, TaskComment } from '@/lib/services/projects';
@@ -27,7 +44,10 @@ interface TaskDetailModalProps {
   subtasks: Subtask[];
   comments: TaskComment[];
   onSubtaskCreate: (taskId: string, title: string) => Promise<void>;
-  onSubtaskUpdate: (subtaskId: string, updates: Partial<Subtask>) => Promise<void>;
+  onSubtaskUpdate: (
+    subtaskId: string,
+    updates: Partial<Subtask>
+  ) => Promise<void>;
   onSubtaskDelete: (subtaskId: string) => Promise<void>;
   onCommentCreate: (taskId: string, content: string) => Promise<void>;
   onCommentUpdate: (commentId: string, content: string) => Promise<void>;
@@ -116,7 +136,7 @@ export function TaskDetailModal({
     urgent: 'bg-red-100 text-red-800 border-red-200',
   };
 
-  const completedSubtasks = subtasks.filter((s) => s.is_completed).length;
+  const completedSubtasks = subtasks.filter(s => s.is_completed).length;
   const totalSubtasks = subtasks.length;
 
   return (
@@ -128,7 +148,9 @@ export function TaskDetailModal({
               {isEditing ? (
                 <Input
                   value={editFormData.title || ''}
-                  onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                  onChange={e =>
+                    setEditFormData({ ...editFormData, title: e.target.value })
+                  }
                   className="mb-2 text-lg font-semibold"
                   placeholder="Task title"
                 />
@@ -153,7 +175,9 @@ export function TaskDetailModal({
                     size="icon"
                     className="text-destructive"
                     onClick={async () => {
-                      if (confirm('Are you sure you want to delete this task?')) {
+                      if (
+                        confirm('Are you sure you want to delete this task?')
+                      ) {
                         await onDelete(task.id);
                         onClose();
                       }
@@ -177,7 +201,12 @@ export function TaskDetailModal({
               <Textarea
                 id="description"
                 value={editFormData.description || ''}
-                onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                onChange={e =>
+                  setEditFormData({
+                    ...editFormData,
+                    description: e.target.value,
+                  })
+                }
                 rows={4}
                 placeholder="Add a description..."
               />
@@ -188,7 +217,12 @@ export function TaskDetailModal({
                 <Label htmlFor="priority">Priority</Label>
                 <Select
                   value={editFormData.priority || 'low'}
-                  onValueChange={(value) => setEditFormData({ ...editFormData, priority: value as Task['priority'] })}
+                  onValueChange={value =>
+                    setEditFormData({
+                      ...editFormData,
+                      priority: value as Task['priority'],
+                    })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -208,7 +242,12 @@ export function TaskDetailModal({
                   id="due_date"
                   type="date"
                   value={editFormData.due_date || ''}
-                  onChange={(e) => setEditFormData({ ...editFormData, due_date: e.target.value })}
+                  onChange={e =>
+                    setEditFormData({
+                      ...editFormData,
+                      due_date: e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -280,7 +319,7 @@ export function TaskDetailModal({
                 </Label>
               </div>
               <div className="space-y-2">
-                {subtasks.map((subtask) => (
+                {subtasks.map(subtask => (
                   <div
                     key={subtask.id}
                     className="flex items-center gap-2 rounded-md border p-2"
@@ -292,7 +331,8 @@ export function TaskDetailModal({
                     <span
                       className={cn(
                         'flex-1 text-sm',
-                        subtask.is_completed && 'line-through text-muted-foreground'
+                        subtask.is_completed &&
+                          'line-through text-muted-foreground'
                       )}
                     >
                       {subtask.title}
@@ -311,8 +351,8 @@ export function TaskDetailModal({
                   <Input
                     placeholder="Add a subtask..."
                     value={newSubtaskTitle}
-                    onChange={(e) => setNewSubtaskTitle(e.target.value)}
-                    onKeyDown={(e) => {
+                    onChange={e => setNewSubtaskTitle(e.target.value)}
+                    onKeyDown={e => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
                         handleSubtaskCreate();
@@ -335,7 +375,7 @@ export function TaskDetailModal({
             <div className="space-y-3">
               <Label className="text-sm font-medium">Comments</Label>
               <div className="space-y-3">
-                {comments.map((comment) => (
+                {comments.map(comment => (
                   <div
                     key={comment.id}
                     className="rounded-md border bg-muted/30 p-3"
@@ -344,7 +384,9 @@ export function TaskDetailModal({
                       <div className="space-y-2">
                         <Textarea
                           value={editingCommentContent}
-                          onChange={(e) => setEditingCommentContent(e.target.value)}
+                          onChange={e =>
+                            setEditingCommentContent(e.target.value)
+                          }
                           rows={3}
                         />
                         <div className="flex justify-end gap-2">
@@ -368,15 +410,20 @@ export function TaskDetailModal({
                       </div>
                     ) : (
                       <div>
-                        <p className="text-sm whitespace-pre-wrap">{comment.content}</p>
+                        <p className="text-sm whitespace-pre-wrap">
+                          {comment.content}
+                        </p>
                         <p className="mt-1 text-xs text-muted-foreground">
-                          {new Date(comment.created_at).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                            hour: 'numeric',
-                            minute: '2-digit',
-                          })}
+                          {new Date(comment.created_at).toLocaleDateString(
+                            'en-US',
+                            {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: 'numeric',
+                              minute: '2-digit',
+                            }
+                          )}
                         </p>
                         {currentUserId === comment.user_id && (
                           <div className="mt-2 flex gap-2">
@@ -411,7 +458,7 @@ export function TaskDetailModal({
                   <Textarea
                     placeholder="Add a comment..."
                     value={newCommentContent}
-                    onChange={(e) => setNewCommentContent(e.target.value)}
+                    onChange={e => setNewCommentContent(e.target.value)}
                     rows={3}
                   />
                   <Button

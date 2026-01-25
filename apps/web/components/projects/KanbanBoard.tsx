@@ -56,7 +56,11 @@ interface KanbanBoardProps {
   tasks: ProjectTask[];
   onColumnsReorder: (columns: ProjectColumn[]) => void;
   onTasksReorder: (tasks: ProjectTask[]) => void;
-  onTaskMove: (taskId: string, newColumnId: string, newSortOrder: number) => void;
+  onTaskMove: (
+    taskId: string,
+    newColumnId: string,
+    newSortOrder: number
+  ) => void;
   onTaskClick: (task: ProjectTask) => void;
   onTaskCreate: (columnId: string, title: string) => void;
 }
@@ -103,7 +107,7 @@ export function KanbanBoard({
 
     if (dragId.startsWith('task-')) {
       const taskId = getTaskIdFromDragId(dragId);
-      const task = tasks.find((t) => t.id === taskId);
+      const task = tasks.find(t => t.id === taskId);
       if (task) {
         setActiveTask(task);
       }
@@ -127,8 +131,8 @@ export function KanbanBoard({
       const activeColumnId = getColumnIdFromDragId(activeIdStr);
       const overColumnId = getColumnIdFromDragId(overIdStr);
 
-      const oldIndex = columns.findIndex((col) => col.id === activeColumnId);
-      const newIndex = columns.findIndex((col) => col.id === overColumnId);
+      const oldIndex = columns.findIndex(col => col.id === activeColumnId);
+      const newIndex = columns.findIndex(col => col.id === overColumnId);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         const newColumns = arrayMove(columns, oldIndex, newIndex).map(
@@ -145,13 +149,13 @@ export function KanbanBoard({
     // Handle task movement between columns
     if (activeIdStr.startsWith('task-')) {
       const taskId = getTaskIdFromDragId(activeIdStr);
-      const task = tasks.find((t) => t.id === taskId);
+      const task = tasks.find(t => t.id === taskId);
       if (!task) return;
 
       // Moving to a column
       if (overIdStr.startsWith('column-')) {
         const newColumnId = getColumnIdFromDragId(overIdStr);
-        const tasksInNewColumn = tasks.filter((t) => t.column_id === newColumnId);
+        const tasksInNewColumn = tasks.filter(t => t.column_id === newColumnId);
         const newSortOrder = tasksInNewColumn.length;
         onTaskMove(taskId, newColumnId, newSortOrder);
         return;
@@ -160,16 +164,17 @@ export function KanbanBoard({
       // Moving within same column or to another task
       if (overIdStr.startsWith('task-')) {
         const overTaskId = getTaskIdFromDragId(overIdStr);
-        const overTask = tasks.find((t) => t.id === overTaskId);
+        const overTask = tasks.find(t => t.id === overTaskId);
         if (!overTask) return;
 
         const newColumnId = overTask.column_id;
         const tasksInColumn = tasks
-          .filter((t) => t.column_id === newColumnId && t.id !== taskId)
+          .filter(t => t.column_id === newColumnId && t.id !== taskId)
           .sort((a, b) => a.sort_order - b.sort_order);
 
-        const overIndex = tasksInColumn.findIndex((t) => t.id === overTaskId);
-        const newSortOrder = overIndex >= 0 ? overIndex + 1 : tasksInColumn.length;
+        const overIndex = tasksInColumn.findIndex(t => t.id === overTaskId);
+        const newSortOrder =
+          overIndex >= 0 ? overIndex + 1 : tasksInColumn.length;
 
         onTaskMove(taskId, newColumnId, newSortOrder);
         return;
@@ -182,15 +187,18 @@ export function KanbanBoard({
     setActiveTask(null);
   };
 
-  const columnIds = columns.map((col) => getColumnDragId(col.id));
+  const columnIds = columns.map(col => getColumnDragId(col.id));
 
   // Group tasks by column
-  const tasksByColumn = columns.reduce((acc, column) => {
-    acc[column.id] = tasks
-      .filter((task) => task.column_id === column.id)
-      .sort((a, b) => a.sort_order - b.sort_order);
-    return acc;
-  }, {} as Record<string, ProjectTask[]>);
+  const tasksByColumn = columns.reduce(
+    (acc, column) => {
+      acc[column.id] = tasks
+        .filter(task => task.column_id === column.id)
+        .sort((a, b) => a.sort_order - b.sort_order);
+      return acc;
+    },
+    {} as Record<string, ProjectTask[]>
+  );
 
   return (
     <DndContext
@@ -205,13 +213,13 @@ export function KanbanBoard({
           items={columnIds}
           strategy={horizontalListSortingStrategy}
         >
-          {columns.map((column) => (
+          {columns.map(column => (
             <KanbanColumn
               key={column.id}
               column={column}
               tasks={tasksByColumn[column.id] || []}
               onTaskClick={onTaskClick}
-              onAddTask={(columnId) => {
+              onAddTask={columnId => {
                 const title = prompt('Enter task title:');
                 if (title) onTaskCreate(columnId, title);
               }}

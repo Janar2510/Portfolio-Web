@@ -15,9 +15,12 @@ export function OnboardingProgress({
 }: OnboardingProgressProps) {
   const t = useTranslations('onboarding.progress');
   // Get locale from next-intl
-  const locale = typeof window !== 'undefined' 
-    ? window.location.pathname.split('/')[1] === 'et' ? 'et' : 'en'
-    : 'en';
+  const locale =
+    typeof window !== 'undefined'
+      ? window.location.pathname.split('/')[1] === 'et'
+        ? 'et'
+        : 'en'
+      : 'en';
 
   const completedSteps = currentStep - 1;
   const percentage = Math.round((completedSteps / totalSteps) * 100);
@@ -40,8 +43,8 @@ export function OnboardingProgress({
                     isCompleted
                       ? 'bg-primary-500 border-primary-500 text-white'
                       : isCurrent
-                      ? 'bg-primary-100 border-primary-500 text-primary-700 animate-pulse'
-                      : 'bg-background border-border text-muted-foreground'
+                        ? 'bg-primary-100 border-primary-500 text-primary-700 animate-pulse'
+                        : 'bg-background border-border text-muted-foreground'
                   )}
                 >
                   {isCompleted ? (
@@ -78,7 +81,7 @@ export function OnboardingProgress({
 
       {/* Step Labels */}
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        {ONBOARDING_STEPS.map((step) => {
+        {ONBOARDING_STEPS.map(step => {
           const stepNumber = step.number;
           const isCurrent = stepNumber === currentStep;
           return (
@@ -97,7 +100,8 @@ export function OnboardingProgress({
 
       {/* Progress Text */}
       <div className="text-center mt-2 text-sm text-muted-foreground">
-        {t('step')} {currentStep} {t('of')} {totalSteps} • {percentage}% {t('complete')}
+        {t('step')} {currentStep} {t('of')} {totalSteps} • {percentage}%{' '}
+        {t('complete')}
       </div>
     </div>
   );

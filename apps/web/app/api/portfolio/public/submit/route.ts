@@ -54,8 +54,10 @@ export async function POST(request: NextRequest) {
     // Get request metadata
     const userAgent = request.headers.get('user-agent') || null;
     const referrer = request.headers.get('referer') || null;
-    const ipAddress = request.headers.get('x-forwarded-for') || 
-                     request.headers.get('x-real-ip') || null;
+    const ipAddress =
+      request.headers.get('x-forwarded-for') ||
+      request.headers.get('x-real-ip') ||
+      null;
 
     // Insert submission
     const { data, error } = await supabase

@@ -1,7 +1,18 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, Plus, Filter, X, Mail, Phone, Building2, Tag, Edit2, Trash2 } from 'lucide-react';
+import {
+  Search,
+  Plus,
+  Filter,
+  X,
+  Mail,
+  Phone,
+  Building2,
+  Tag,
+  Edit2,
+  Trash2,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +26,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import type { Contact, Company } from '@/lib/services/crm';
 
@@ -46,15 +63,15 @@ export function ContactList({
   // Get all unique tags from contacts
   const allTags = useMemo(() => {
     const tags = new Set<string>();
-    contacts.forEach((contact) => {
-      contact.tags.forEach((tag) => tags.add(tag));
+    contacts.forEach(contact => {
+      contact.tags.forEach(tag => tags.add(tag));
     });
     return Array.from(tags).sort();
   }, [contacts]);
 
   // Filter contacts
   const filteredContacts = useMemo(() => {
-    return contacts.filter((contact) => {
+    return contacts.filter(contact => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -73,7 +90,9 @@ export function ContactList({
 
       // Tags filter
       if (selectedTags.length > 0) {
-        const hasAllTags = selectedTags.every((tag) => contact.tags.includes(tag));
+        const hasAllTags = selectedTags.every(tag =>
+          contact.tags.includes(tag)
+        );
         if (!hasAllTags) return false;
       }
 
@@ -84,7 +103,8 @@ export function ContactList({
   const handleCreateContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const tags = formData.get('tags')?.toString().split(',').filter(Boolean) || [];
+    const tags =
+      formData.get('tags')?.toString().split(',').filter(Boolean) || [];
 
     await onContactCreate({
       company_id: formData.get('company_id')?.toString() || undefined,
@@ -105,10 +125,14 @@ export function ContactList({
     if (!editingContact) return;
 
     const formData = new FormData(e.currentTarget);
-    const tags = formData.get('tags')?.toString().split(',').filter(Boolean) || [];
+    const tags =
+      formData.get('tags')?.toString().split(',').filter(Boolean) || [];
 
     await onContactUpdate(editingContact.id, {
-      company_id: formData.get('company_id')?.toString() === '__none__' ? null : formData.get('company_id')?.toString() || null,
+      company_id:
+        formData.get('company_id')?.toString() === '__none__'
+          ? null
+          : formData.get('company_id')?.toString() || null,
       first_name: formData.get('first_name') as string,
       last_name: formData.get('last_name')?.toString() || undefined,
       email: formData.get('email')?.toString() || undefined,
@@ -129,14 +153,14 @@ export function ContactList({
   };
 
   const toggleTag = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    setSelectedTags(prev =>
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
     );
   };
 
   const getCompanyName = (companyId: string | null) => {
     if (!companyId) return null;
-    return companies.find((c) => c.id === companyId)?.name;
+    return companies.find(c => c.id === companyId)?.name;
   };
 
   return (
@@ -188,7 +212,7 @@ export function ContactList({
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="__none__">None</SelectItem>
-                        {companies.map((company) => (
+                        {companies.map(company => (
                           <SelectItem key={company.id} value={company.id}>
                             {company.name}
                           </SelectItem>
@@ -203,11 +227,19 @@ export function ContactList({
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lead_source">Lead Source</Label>
-                  <Input id="lead_source" name="lead_source" placeholder="e.g., website, referral" />
+                  <Input
+                    id="lead_source"
+                    name="lead_source"
+                    placeholder="e.g., website, referral"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="tags">Tags (comma-separated)</Label>
-                  <Input id="tags" name="tags" placeholder="lead, customer, vip" />
+                  <Input
+                    id="tags"
+                    name="tags"
+                    placeholder="lead, customer, vip"
+                  />
                 </div>
               </div>
               <DialogFooter>
@@ -232,7 +264,7 @@ export function ContactList({
           <Input
             placeholder="Search contacts..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="pl-9"
           />
         </div>
@@ -243,7 +275,7 @@ export function ContactList({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Companies</SelectItem>
-              {companies.map((company) => (
+              {companies.map(company => (
                 <SelectItem key={company.id} value={company.id}>
                   {company.name}
                 </SelectItem>
@@ -252,7 +284,7 @@ export function ContactList({
           </Select>
           {allTags.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {allTags.map((tag) => (
+              {allTags.map(tag => (
                 <Badge
                   key={tag}
                   variant={selectedTags.includes(tag) ? 'default' : 'outline'}
@@ -291,7 +323,7 @@ export function ContactList({
           </div>
         ) : (
           <div className="p-2">
-            {filteredContacts.map((contact) => (
+            {filteredContacts.map(contact => (
               <div
                 key={contact.id}
                 className="group relative mb-1 rounded-md border p-3 transition-colors hover:bg-accent"
@@ -347,8 +379,12 @@ export function ContactList({
                     </div>
                     {contact.tags.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
-                        {contact.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-xs">
+                        {contact.tags.map(tag => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             {tag}
                           </Badge>
                         ))}
@@ -361,7 +397,7 @@ export function ContactList({
                     size="icon"
                     variant="ghost"
                     className="h-7 w-7"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       setEditingContact(contact);
                       setIsEditDialogOpen(true);
@@ -373,7 +409,7 @@ export function ContactList({
                     size="icon"
                     variant="ghost"
                     className="h-7 w-7 text-destructive hover:text-destructive"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDeleteContact(contact.id);
                     }}
@@ -441,13 +477,16 @@ export function ContactList({
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="edit-company_id">Company</Label>
-                    <Select name="company_id" defaultValue={editingContact.company_id || ''}>
+                    <Select
+                      name="company_id"
+                      defaultValue={editingContact.company_id || ''}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select company" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="__none__">None</SelectItem>
-                        {companies.map((company) => (
+                        {companies.map(company => (
                           <SelectItem key={company.id} value={company.id}>
                             {company.name}
                           </SelectItem>

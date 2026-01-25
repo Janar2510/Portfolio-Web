@@ -6,7 +6,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { ArrowUp, ArrowDown, Copy, Trash2, Settings, MoreVertical } from 'lucide-react';
+import {
+  ArrowUp,
+  ArrowDown,
+  Copy,
+  Trash2,
+  Settings,
+  MoreVertical,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,

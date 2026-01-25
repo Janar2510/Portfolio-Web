@@ -92,18 +92,25 @@ export default function ContactEmailsPage() {
   });
 
   // Group emails by thread
-  const emailsByThread = emails.reduce((acc, email) => {
-    const threadId = email.thread_id || 'unthreaded';
-    if (!acc[threadId]) {
-      acc[threadId] = [];
-    }
-    acc[threadId].push(email);
-    return acc;
-  }, {} as Record<string, Email[]>);
+  const emailsByThread = emails.reduce(
+    (acc, email) => {
+      const threadId = email.thread_id || 'unthreaded';
+      if (!acc[threadId]) {
+        acc[threadId] = [];
+      }
+      acc[threadId].push(email);
+      return acc;
+    },
+    {} as Record<string, Email[]>
+  );
 
   const threadIds = Object.keys(emailsByThread);
-  const selectedThread = selectedThreadId ? emailsByThread[selectedThreadId] || [] : [];
-  const selectedDeal = deals.find((d) => selectedThread.some((e) => e.deal_id === d.id));
+  const selectedThread = selectedThreadId
+    ? emailsByThread[selectedThreadId] || []
+    : [];
+  const selectedDeal = deals.find(d =>
+    selectedThread.some(e => e.deal_id === d.id)
+  );
 
   // Send email mutation
   const sendEmailMutation = useMutation({
@@ -119,7 +126,7 @@ export default function ContactEmailsPage() {
       // TODO: Implement actual email sending via provider
       // For now, just create a record
       const supabase = createClient();
-      const account = accounts.find((a) => a.id === emailData.account_id);
+      const account = accounts.find(a => a.id === emailData.account_id);
       if (!account) throw new Error('Account not found');
 
       const { data, error } = await supabase
@@ -214,7 +221,7 @@ export default function ContactEmailsPage() {
             </div>
           ) : (
             <div className="divide-y">
-              {threadIds.map((threadId) => {
+              {threadIds.map(threadId => {
                 const threadEmails = emailsByThread[threadId];
                 const latestEmail = threadEmails[0];
                 const isSelected = selectedThreadId === threadId;
@@ -232,7 +239,8 @@ export default function ContactEmailsPage() {
                       {latestEmail.subject || 'No Subject'}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
-                      {threadEmails.length} {threadEmails.length === 1 ? 'message' : 'messages'}
+                      {threadEmails.length}{' '}
+                      {threadEmails.length === 1 ? 'message' : 'messages'}
                       {' • '}
                       {new Date(latestEmail.sent_at).toLocaleDateString()}
                     </div>
@@ -275,13 +283,15 @@ export default function ContactEmailsPage() {
             setIsComposeOpen(false);
             setReplyToEmail(null);
           }}
-          onSend={async (emailData) => {
+          onSend={async emailData => {
             await sendEmailMutation.mutateAsync(emailData);
           }}
           accounts={accounts}
           templates={templates}
           initialTo={contact.email || undefined}
-          initialSubject={replyToEmail ? getReplySubject(replyToEmail) : undefined}
+          initialSubject={
+            replyToEmail ? getReplySubject(replyToEmail) : undefined
+          }
           initialBody={replyToEmail ? getReplyBody(replyToEmail) : undefined}
           contactId={contactId}
           dealId={selectedDeal?.id}

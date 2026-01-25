@@ -1,13 +1,14 @@
 /**
  * Credential Encryption Utilities
- * 
+ *
  * Uses Web Crypto API (browser) or Node.js crypto (server) for encryption/decryption.
  * Credentials are encrypted at rest in the database.
  */
 
 // Encryption key should be stored in environment variable
 // In production, use a key management service (KMS) or Supabase Vault
-const ENCRYPTION_KEY = process.env.EMAIL_ENCRYPTION_KEY || 'default-key-change-in-production';
+const ENCRYPTION_KEY =
+  process.env.EMAIL_ENCRYPTION_KEY || 'default-key-change-in-production';
 
 // Check if we're in Node.js environment
 function isNodeEnv(): boolean {
@@ -29,7 +30,7 @@ async function deriveKey(keyString: string): Promise<CryptoKey> {
   const encoder = new TextEncoder();
   const keyData = encoder.encode(keyString);
   const crypto = await getCrypto();
-  
+
   // Import the key material
   const key = await crypto.subtle.importKey(
     'raw',
@@ -102,17 +103,14 @@ export async function decryptCredentials(
   try {
     const crypto = await getCrypto();
     const key = await deriveKey(ENCRYPTION_KEY);
-    
+
     // Decode from base64
     let combined: Uint8Array;
     if (isNodeEnv()) {
       const { Buffer } = await import('buffer');
       combined = new Uint8Array(Buffer.from(encryptedData, 'base64'));
     } else {
-      combined = Uint8Array.from(
-        atob(encryptedData),
-        (c) => c.charCodeAt(0)
-      );
+      combined = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
     }
 
     // Extract IV and encrypted data

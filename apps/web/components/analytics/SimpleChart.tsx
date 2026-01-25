@@ -16,7 +16,12 @@ interface SimpleChartProps {
   className?: string;
 }
 
-export function SimpleChart({ title, data, valueKey = 'value', className }: SimpleChartProps) {
+export function SimpleChart({
+  title,
+  data,
+  valueKey = 'value',
+  className,
+}: SimpleChartProps) {
   if (data.length === 0) {
     return (
       <Card className={className}>
@@ -32,8 +37,12 @@ export function SimpleChart({ title, data, valueKey = 'value', className }: Simp
     );
   }
 
-  const maxValue = Math.max(...data.map((d) => d[valueKey as keyof ChartDataPoint] as number));
-  const minValue = Math.min(...data.map((d) => d[valueKey as keyof ChartDataPoint] as number));
+  const maxValue = Math.max(
+    ...data.map(d => d[valueKey as keyof ChartDataPoint] as number)
+  );
+  const minValue = Math.min(
+    ...data.map(d => d[valueKey as keyof ChartDataPoint] as number)
+  );
   const range = maxValue - minValue || 1;
 
   return (
@@ -47,16 +56,23 @@ export function SimpleChart({ title, data, valueKey = 'value', className }: Simp
             {data.map((point, index) => {
               const value = point[valueKey as keyof ChartDataPoint] as number;
               const height = ((value - minValue) / range) * 100;
-              
+
               return (
-                <div key={index} className="flex-1 flex flex-col items-center gap-1">
+                <div
+                  key={index}
+                  className="flex-1 flex flex-col items-center gap-1"
+                >
                   <div
                     className="w-full bg-primary rounded-t transition-all hover:bg-primary/80"
                     style={{ height: `${Math.max(height, 5)}%` }}
                     title={`${point.label || point.date}: ${value}`}
                   />
                   <span className="text-xs text-muted-foreground truncate w-full text-center">
-                    {point.label || new Date(point.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    {point.label ||
+                      new Date(point.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
                   </span>
                 </div>
               );

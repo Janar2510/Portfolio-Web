@@ -1,3 +1,5 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,110 +7,120 @@
 @layer base {
   :root {
     /* ============================================
-       DESIGN SYSTEM - Brand Colors (Deep Teal)
+       DESIGN SYSTEM - The Editorial Stylist Theme
        ============================================ */
-    --primary-50: 180 20% 95%;
-    --primary-100: 180 30% 87%;
-    --primary-200: 180 40% 78%;
-    --primary-300: 180 50% 70%;
-    --primary-400: 180 60% 61%;
-    --primary-500: 180 100% 25%; /* #008080 - Main brand color */
-    --primary-600: 180 100% 21%;
-    --primary-700: 180 100% 17%;
-    --primary-800: 180 100% 13%;
-    --primary-900: 180 100% 9%;
 
-    /* Secondary - Warm Amber */
-    --secondary-50: 45 100% 95%;
-    --secondary-100: 45 100% 87%;
-    --secondary-200: 45 100% 78%;
-    --secondary-300: 45 100% 70%;
-    --secondary-400: 45 100% 61%;
-    --secondary-500: 45 100% 45%; /* #E6A600 - Accent color */
-    --secondary-600: 45 100% 35%;
-    --secondary-700: 45 100% 25%;
-    --secondary-800: 45 100% 15%;
-    --secondary-900: 45 100% 5%;
+    /* Palette: Mint Green (BG), Black (Text), Deep Blue (Accents) */
+    --mint-50: 160 100% 98%;
+    /* #F0FFF4 - Lightest Mint (Background) */
+    --mint-100: 160 84% 90%;
+    /* #D1FAE5 */
+    --mint-200: 160 84% 80%;
+    /* #A7F3D0 */
+    --mint-300: 160 70% 60%;
+    /* #6EE7B7 - Vibrant Mint (Hero Highlight) */
+    --mint-400: 160 60% 45%;
+    /* #34D399 */
 
-    /* Neutral - Cool Gray */
-    --neutral-0: 0 0% 100%;
-    --neutral-50: 210 20% 98%;
-    --neutral-100: 210 20% 95%;
-    --neutral-200: 210 15% 90%;
-    --neutral-300: 210 15% 80%;
-    --neutral-400: 210 10% 65%;
-    --neutral-500: 210 10% 50%;
-    --neutral-600: 210 15% 40%;
-    --neutral-700: 210 20% 30%;
-    --neutral-800: 210 25% 20%;
-    --neutral-900: 210 30% 12%;
+    --navy-deep: 222 47% 11%;
+    /* #0F172A - Deep Blue/Black (Text) */
+    --navy-800: 217 33% 17%;
+    /* #1E293B */
 
-    /* Semantic Colors - Status */
-    --success-light: 142 60% 95%;
-    --success-main: 142 65% 40%;
-    --success-dark: 142 65% 30%;
-    
-    --warning-light: 38 100% 96%;
-    --warning-main: 38 85% 50%;
-    --warning-dark: 38 85% 40%;
-    
-    --error-light: 0 85% 96%;
-    --error-main: 0 70% 53%;
-    --error-dark: 0 70% 43%;
-    
-    --info-light: 210 100% 96%;
-    --info-main: 210 90% 55%;
-    --info-dark: 210 90% 45%;
+    --blue-accent: 221 83% 53%;
+    /* #3B82F6 - Deep Blue Detail */
 
-    /* Module Accent Colors */
-    --portfolio-accent: 238 83% 67%; /* Indigo - Creative */
-    --projects-accent: 174 72% 56%; /* Teal - Productive */
-    --crm-accent: 38 92% 50%; /* Amber - Relationships */
-    --analytics-accent: 258 90% 66%; /* Purple - Insights */
-    --email-accent: 330 81% 60%; /* Pink - Communication */
+    /* Semantic Colors - Mapped to Editorial Palette */
+    --background: var(--mint-50);
+    /* Light Mint Background */
+    --foreground: var(--navy-deep);
+    /* Black/Deep Navy Text */
 
-    /* Shadcn UI Compatibility Variables */
-    --background: var(--neutral-50);
-    --foreground: var(--neutral-900);
-    --card: var(--neutral-0);
-    --card-foreground: var(--neutral-900);
-    --popover: var(--neutral-0);
-    --popover-foreground: var(--neutral-900);
-    --primary: var(--primary-500);
+    /* Dark Teal Glassmorphic Cards */
+    --card: 180 65% 29%;
+    /* Teal 500 Base */
+    --card-foreground: 0 0% 100%;
+    /* White Text */
+
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
+
+    --primary: var(--navy-deep);
+    /* Primary actions Black/Deep Blue */
     --primary-foreground: 0 0% 100%;
-    --secondary: var(--secondary-500);
-    --secondary-foreground: 0 0% 100%;
-    --muted: var(--neutral-100);
-    --muted-foreground: var(--neutral-600);
-    --accent: var(--primary-500);
+
+    --secondary: 160 70% 60%;
+    /* Vibrant Mint for secondary/accents */
+    --secondary-foreground: var(--navy-deep);
+
+    --muted: 160 20% 94%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: var(--blue-accent);
     --accent-foreground: 0 0% 100%;
-    --destructive: var(--error-main);
+
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: var(--neutral-200);
-    --input: var(--neutral-200);
-    --ring: var(--primary-500);
+
+    /* Color from user image (Deep Blue) */
+    --navy-border: 222 47% 11%;
+    /* #0F172A */
+    --navy-highlight: 210 100% 50%;
+    /* Brighter blue for animation glow */
+
+    --border: 160 20% 90%;
+    --input: 160 20% 90%;
+    --ring: var(--navy-deep);
     --radius: 0.5rem;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--mint-50)) 0%, hsl(var(--mint-100)) 100%);
+
+    /* ============================================
+       TYPOGRAPHY - Editorial Fonts
+       ============================================ */
+    --font-family-sans: 'General Sans', sans-serif;
+    --font-family-display: 'Clash Display', sans-serif;
+    --font-family-mono: 'JetBrains Mono', monospace;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
 
     /* ============================================
        SPACING SYSTEM (4px base unit)
        ============================================ */
     --space-0: 0;
     --space-px: 1px;
-    --space-0_5: 0.125rem; /* 2px */
-    --space-1: 0.25rem; /* 4px */
-    --space-1_5: 0.375rem; /* 6px */
-    --space-2: 0.5rem; /* 8px */
-    --space-2_5: 0.625rem; /* 10px */
-    --space-3: 0.75rem; /* 12px */
-    --space-4: 1rem; /* 16px */
-    --space-5: 1.25rem; /* 20px */
-    --space-6: 1.5rem; /* 24px */
-    --space-8: 2rem; /* 32px */
-    --space-10: 2.5rem; /* 40px */
-    --space-12: 3rem; /* 48px */
-    --space-16: 4rem; /* 64px */
-    --space-20: 5rem; /* 80px */
-    --space-24: 6rem; /* 96px */
+    --space-0_5: 0.125rem;
+    /* 2px */
+    --space-1: 0.25rem;
+    /* 4px */
+    --space-1_5: 0.375rem;
+    /* 6px */
+    --space-2: 0.5rem;
+    /* 8px */
+    --space-2_5: 0.625rem;
+    /* 10px */
+    --space-3: 0.75rem;
+    /* 12px */
+    --space-4: 1rem;
+    /* 16px */
+    --space-5: 1.25rem;
+    /* 20px */
+    --space-6: 1.5rem;
+    /* 24px */
+    --space-8: 2rem;
+    /* 32px */
+    --space-10: 2.5rem;
+    /* 40px */
+    --space-12: 3rem;
+    /* 48px */
+    --space-16: 4rem;
+    /* 64px */
+    --space-20: 5rem;
+    /* 80px */
+    --space-24: 6rem;
+    /* 96px */
 
     /* Legacy spacing (for backward compatibility) */
     --space-xs: var(--space-1);
@@ -128,34 +140,43 @@
     --padding-card-compact: var(--space-4);
     --padding-modal: var(--space-6);
     --padding-page: var(--space-6) var(--space-8);
-    
+
     --gap-form: var(--space-4);
     --gap-card-grid: var(--space-5);
     --gap-section: var(--space-8);
     --gap-page: var(--space-10);
-    
+
     /* Card gap for horizontal alignment */
     --card-gap: var(--space-md);
 
     /* ============================================
        TYPOGRAPHY
        ============================================ */
-    --font-family-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 
-                        'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    --font-family-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 
-                        'Consolas', 'Monaco', monospace;
+    --font-family-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont,
+      'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-family-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code',
+      'Consolas', 'Monaco', monospace;
     --font-family-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
 
     /* Type Scale (1.25 ratio - Major Third) */
-    --text-xs: 0.75rem; /* 12px */
-    --text-sm: 0.875rem; /* 14px */
-    --text-base: 1rem; /* 16px */
-    --text-lg: 1.125rem; /* 18px */
-    --text-xl: 1.25rem; /* 20px */
-    --text-2xl: 1.5rem; /* 24px */
-    --text-3xl: 1.875rem; /* 30px */
-    --text-4xl: 2.25rem; /* 36px */
-    --text-5xl: 3rem; /* 48px */
+    --text-xs: 0.75rem;
+    /* 12px */
+    --text-sm: 0.875rem;
+    /* 14px */
+    --text-base: 1rem;
+    /* 16px */
+    --text-lg: 1.125rem;
+    /* 18px */
+    --text-xl: 1.25rem;
+    /* 20px */
+    --text-2xl: 1.5rem;
+    /* 24px */
+    --text-3xl: 1.875rem;
+    /* 30px */
+    --text-4xl: 2.25rem;
+    /* 36px */
+    --text-5xl: 3rem;
+    /* 48px */
 
     /* Line Heights */
     --leading-none: 1;
@@ -190,13 +211,20 @@
        BORDER RADIUS
        ============================================ */
     --radius-none: 0;
-    --radius-sm: 0.125rem; /* 2px */
-    --radius-md: 0.375rem; /* 6px */
-    --radius-lg: 0.5rem; /* 8px */
-    --radius-xl: 0.75rem; /* 12px */
-    --radius-2xl: 1rem; /* 16px */
-    --radius-3xl: 1.5rem; /* 24px */
-    --radius-full: 9999px; /* Pill shape */
+    --radius-sm: 0.125rem;
+    /* 2px */
+    --radius-md: 0.375rem;
+    /* 6px */
+    --radius-lg: 0.5rem;
+    /* 8px */
+    --radius-xl: 0.75rem;
+    /* 12px */
+    --radius-2xl: 1rem;
+    /* 16px */
+    --radius-3xl: 1.5rem;
+    /* 24px */
+    --radius-full: 9999px;
+    /* Pill shape */
 
     /* Gradient border animation colors - Deep Teal */
     --gradient-start: var(--primary-400);
@@ -206,12 +234,12 @@
        SHADOW SCALE
        ============================================ */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-                 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
-                 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
-                 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
     --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
     --shadow-primary: 0 4px 14px 0 hsl(var(--primary-500) / 0.3);
@@ -237,44 +265,54 @@
     /* ============================================
        ICONOGRAPHY
        ============================================ */
-    --icon-xs: 14px; /* Inline with small text */
-    --icon-sm: 16px; /* Buttons, inputs */
-    --icon-md: 20px; /* Navigation, default */
-    --icon-lg: 24px; /* Headers, emphasis */
-    --icon-xl: 32px; /* Empty states */
-    --icon-2xl: 48px; /* Feature illustrations */
+    --icon-xs: 14px;
+    /* Inline with small text */
+    --icon-sm: 16px;
+    /* Buttons, inputs */
+    --icon-md: 20px;
+    /* Navigation, default */
+    --icon-lg: 24px;
+    /* Headers, emphasis */
+    --icon-xl: 32px;
+    /* Empty states */
+    --icon-2xl: 48px;
+    /* Feature illustrations */
   }
 
   .dark {
-    /* Dark Mode Background Scale */
-    --dark-bg-0: 210 25% 8%; /* #0D1117 */
-    --dark-bg-1: 210 20% 12%; /* #161B22 */
-    --dark-bg-2: 210 15% 16%; /* #21262D */
-    --dark-bg-3: 210 10% 20%; /* #30363D */
-    --dark-border: 210 10% 20%; /* #30363D */
-    --dark-text: 210 15% 90%; /* #E6EDF3 */
-    --dark-text-secondary: 210 10% 60%; /* #8B949E */
+    --background: 220 53% 8%;
+    --foreground: 168 20% 95%;
 
-    /* Shadcn UI Dark Mode Variables */
-    --background: var(--dark-bg-0);
-    --foreground: var(--dark-text);
-    --card: var(--dark-bg-1);
-    --card-foreground: var(--dark-text);
-    --popover: var(--dark-bg-1);
-    --popover-foreground: var(--dark-text);
-    --primary: var(--primary-400);
-    --primary-foreground: var(--dark-text);
-    --secondary: var(--secondary-400);
-    --secondary-foreground: var(--dark-text);
-    --muted: var(--dark-bg-2);
-    --muted-foreground: var(--dark-text-secondary);
-    --accent: var(--primary-400);
-    --accent-foreground: var(--dark-text);
-    --destructive: var(--error-main);
-    --destructive-foreground: var(--dark-text);
-    --border: var(--dark-border);
-    --input: var(--dark-bg-2);
-    --ring: var(--primary-400);
+    --card: 220 50% 12%;
+    --card-foreground: 168 20% 95%;
+
+    --popover: 220 50% 12%;
+    --popover-foreground: 168 20% 95%;
+
+    --primary: 168 56% 45%;
+    --primary-foreground: 220 53% 8%;
+
+    --secondary: 192 58% 35%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 40% 18%;
+    --muted-foreground: 168 15% 65%;
+
+    --accent: 180 64% 35%;
+    --accent-foreground: 0 0% 100%;
+
+    --border: 220 40% 20%;
+    --input: 220 40% 20%;
+    --ring: 168 56% 45%;
+
+    /* Dark mode palette overrides using Teal scale */
+    --dark-bg-0: 220 55% 10%;
+    --dark-bg-1: 220 53% 15%;
+    --dark-bg-2: 220 53% 20%;
+    --dark-bg-3: 200 57% 25%;
+    --dark-border: 200 57% 25%;
+    --dark-text: 168 20% 95%;
+    --dark-text-secondary: 168 20% 75%;
 
     /* Gradient border animation colors - Dark mode */
     --gradient-start: var(--primary-300);
@@ -365,12 +403,22 @@ body {
 
 /* Fix Tailwind reset overriding utility classes on headings */
 /* Ensure text size classes work on heading elements */
-h1.text-3xl, h2.text-3xl, h3.text-3xl, h4.text-3xl, h5.text-3xl, h6.text-3xl {
+h1.text-3xl,
+h2.text-3xl,
+h3.text-3xl,
+h4.text-3xl,
+h5.text-3xl,
+h6.text-3xl {
   font-size: 1.875rem !important;
   line-height: 2.25rem !important;
 }
 
-h1.text-xl, h2.text-xl, h3.text-xl, h4.text-xl, h5.text-xl, h6.text-xl {
+h1.text-xl,
+h2.text-xl,
+h3.text-xl,
+h4.text-xl,
+h5.text-xl,
+h6.text-xl {
   font-size: 1.25rem !important;
   line-height: 1.75rem !important;
 }
@@ -400,44 +448,97 @@ h6.text-xl {
   .text-balance {
     text-wrap: balance;
   }
-  
+
   /* Gradient border animation for main cards - Deep Teal */
   .gradient-border {
     position: relative;
     border-radius: var(--radius-lg);
   }
-  
+
   .gradient-border::before {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: var(--radius-lg);
+    inset: -2px;
+    border-radius: inherit;
     padding: 2px;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--gradient-start)),
-      hsl(var(--gradient-end)),
-      hsl(var(--gradient-start))
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--navy-border)),
+        hsl(var(--navy-highlight)),
+        hsl(var(--navy-border)));
     background-size: 200% 200%;
     -webkit-mask: linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     animation: gradient-rotate 3s linear infinite;
-    z-index: -1;
+    z-index: 1;
+    pointer-events: none;
   }
-  
+
   @keyframes gradient-rotate {
     0% {
       background-position: 0% 50%;
     }
+
     50% {
       background-position: 100% 50%;
     }
+
     100% {
       background-position: 0% 50%;
     }
+  }
+
+  /* Gradient Button Styles - Transformative Teal Palette 2026 */
+  .gradient-button {
+    background: linear-gradient(-45deg, #141C33, #212D50, #354F6F, #3D726E, #68A9A5);
+    background-size: 400% 400%;
+    animation: gradientFlow 8s ease infinite;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px 0 rgba(20, 28, 51, 0.2);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .gradient-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(20, 28, 51, 0.4);
+    background-size: 200% 200%;
+  }
+
+  @keyframes gradientFlow {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Variant */
+  .gradient-button-variant {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    box-shadow: none;
+  }
+
+  .dark .gradient-button-variant {
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #fff;
+  }
+
+  .gradient-button-variant:hover {
+    background: white;
+    color: hsl(173 58% 39%);
+    border-color: white;
   }
 
   /* Modern Animation Utilities */
@@ -473,6 +574,7 @@ h6.text-xl {
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -483,6 +585,7 @@ h6.text-xl {
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -494,6 +597,7 @@ h6.text-xl {
       opacity: 0;
       transform: translateY(-20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -505,6 +609,7 @@ h6.text-xl {
       opacity: 0;
       transform: scale(0.95);
     }
+
     to {
       opacity: 1;
       transform: scale(1);
@@ -1118,27 +1223,33 @@ h6.text-xl {
 
   /* Block type indicators */
   .block-type-hero {
-    --block-accent: 238 83% 67%; /* Indigo */
+    --block-accent: 238 83% 67%;
+    /* Indigo */
   }
 
   .block-type-text {
-    --block-accent: 258 90% 66%; /* Purple */
+    --block-accent: 258 90% 66%;
+    /* Purple */
   }
 
   .block-type-gallery {
-    --block-accent: 330 81% 60%; /* Pink */
+    --block-accent: 330 81% 60%;
+    /* Pink */
   }
 
   .block-type-projects {
-    --block-accent: 174 72% 56%; /* Teal */
+    --block-accent: 174 72% 56%;
+    /* Teal */
   }
 
   .block-type-contact {
-    --block-accent: 38 92% 50%; /* Amber */
+    --block-accent: 38 92% 50%;
+    /* Amber */
   }
 
   .block-type-services {
-    --block-accent: 142 65% 40%; /* Green */
+    --block-accent: 142 65% 40%;
+    /* Green */
   }
 
   /* Preview frame styling */

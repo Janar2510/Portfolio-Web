@@ -75,8 +75,8 @@ export default function VerifyEmailPage() {
             </div>
           )}
           <p className="text-sm text-muted-foreground">
-            We've sent a verification email to <strong>{email}</strong>. Please click
-            the link in the email to verify your account.
+            We've sent a verification email to <strong>{email}</strong>. Please
+            click the link in the email to verify your account.
           </p>
           <p className="text-sm text-muted-foreground">
             If you didn't receive the email, check your spam folder or click the
@@ -92,7 +92,10 @@ export default function VerifyEmailPage() {
           >
             {loading ? 'Loading...' : t('resendVerification')}
           </Button>
-          <Link href="/sign-in" className="text-sm text-primary hover:underline">
+          <Link
+            href="/sign-in"
+            className="text-sm text-primary hover:underline"
+          >
             {t('backToSignIn')}
           </Link>
         </CardFooter>

@@ -11,7 +11,7 @@ interface AnalyticsScriptProps {
 
 /**
  * Analytics Tracking Script Component
- * 
+ *
  * Embeds the analytics tracker in public portfolio pages
  */
 export function AnalyticsScript({

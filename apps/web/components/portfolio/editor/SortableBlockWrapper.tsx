@@ -72,7 +72,7 @@ export function SortableBlockWrapper({
       {/* Resize Handle */}
       <div
         className="absolute right-0 bottom-0 cursor-ew-resize p-2 opacity-0 group-hover:opacity-100 z-20"
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
           onResize?.();
         }}

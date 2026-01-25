@@ -10,7 +10,13 @@ import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
 import { PortfolioService } from '@/lib/services/portfolio';
 import { useEditorStore } from '@/stores/portfolio';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -46,7 +52,9 @@ export function FormSubmissionsManager() {
     queryKey: ['portfolio-form-submissions', siteId],
     queryFn: async () => {
       if (!siteId) return [];
-      const response = await fetch(`/api/portfolio/forms/submissions?site_id=${siteId}`);
+      const response = await fetch(
+        `/api/portfolio/forms/submissions?site_id=${siteId}`
+      );
       if (!response.ok) {
         console.error('Failed to fetch form submissions:', response.statusText);
         return [];
@@ -113,7 +121,7 @@ export function FormSubmissionsManager() {
           <Input
             placeholder="Search submissions..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-64"
           />
           <Button variant="outline" onClick={handleExport}>
@@ -157,18 +165,21 @@ export function FormSubmissionsManager() {
                   </TableCell>
                   <TableCell>{submission.email || '-'}</TableCell>
                   <TableCell>
-                    <Badge variant="outline">{submission.page_slug || 'Unknown'}</Badge>
+                    <Badge variant="outline">
+                      {submission.page_slug || 'Unknown'}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     {submission.submitted_at
-                      ? format(new Date(submission.submitted_at), 'MMM d, yyyy HH:mm')
+                      ? format(
+                          new Date(submission.submitted_at),
+                          'MMM d, yyyy HH:mm'
+                        )
                       : '-'}
                   </TableCell>
                   <TableCell>
                     <Badge
-                      variant={
-                        submission.is_read ? 'secondary' : 'default'
-                      }
+                      variant={submission.is_read ? 'secondary' : 'default'}
                     >
                       {submission.is_read ? 'Read' : 'New'}
                     </Badge>
@@ -192,7 +203,7 @@ export function FormSubmissionsManager() {
       {/* Submission Detail Dialog */}
       <Dialog
         open={!!selectedSubmission}
-        onOpenChange={(open) => !open && setSelectedSubmission(null)}
+        onOpenChange={open => !open && setSelectedSubmission(null)}
       >
         <DialogContent className="max-w-2xl">
           {selectedSubmission && (
@@ -212,11 +223,17 @@ export function FormSubmissionsManager() {
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Name</label>
-                    <p className="mt-1">{selectedSubmission.name || 'Anonymous'}</p>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Name
+                    </label>
+                    <p className="mt-1">
+                      {selectedSubmission.name || 'Anonymous'}
+                    </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Email</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Email
+                    </label>
                     <p className="mt-1">
                       {selectedSubmission.email ? (
                         <a
@@ -231,14 +248,22 @@ export function FormSubmissionsManager() {
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Page</label>
-                    <p className="mt-1">{selectedSubmission.page_slug || 'Unknown'}</p>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Page
+                    </label>
+                    <p className="mt-1">
+                      {selectedSubmission.page_slug || 'Unknown'}
+                    </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Status</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Status
+                    </label>
                     <p className="mt-1">
                       <Badge
-                        variant={selectedSubmission.is_read ? 'secondary' : 'default'}
+                        variant={
+                          selectedSubmission.is_read ? 'secondary' : 'default'
+                        }
                       >
                         {selectedSubmission.is_read ? 'Read' : 'New'}
                       </Badge>
@@ -246,7 +271,9 @@ export function FormSubmissionsManager() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Message</label>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Message
+                  </label>
                   <div className="mt-1 p-4 bg-muted rounded-md">
                     <p className="whitespace-pre-wrap">
                       {selectedSubmission.message || 'No message provided'}

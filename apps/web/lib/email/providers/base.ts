@@ -1,6 +1,6 @@
 /**
  * Base Provider Interface
- * 
+ *
  * All email providers must implement this interface
  */
 

@@ -392,8 +392,18 @@ export interface PortfolioEditHistory {
   created_at: string;
 }
 
-export type HistoryEntityType = 'site' | 'page' | 'block' | 'styles' | 'project';
-export type HistoryAction = 'create' | 'update' | 'delete' | 'reorder' | 'duplicate';
+export type HistoryEntityType =
+  | 'site'
+  | 'page'
+  | 'block'
+  | 'styles'
+  | 'project';
+export type HistoryAction =
+  | 'create'
+  | 'update'
+  | 'delete'
+  | 'reorder'
+  | 'duplicate';
 
 // ===========================================
 // VERSION TYPES

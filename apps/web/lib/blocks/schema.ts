@@ -27,15 +27,20 @@ export type BlockType =
   | 'image'
   | 'video'
   | 'header'
-  | 'footer';
+  | 'footer'
+  | 'features'
+  | 'infinite-hero'
+  | 'brand-hero';
 
 // Hero Block
 export const heroBlockContentSchema = z.object({
   headline: z.string().optional(),
   subheadline: z.string().optional(),
+  badge: z.string().optional(), // New: Pulsing badge above headline
   cta_text: z.string().optional(),
   cta_link: z.string().optional(),
   image_url: z.string().url().optional(),
+  show_scroll_indicator: z.boolean().default(true), // New
 });
 
 export const heroBlockSettingsSchema = z.object({
@@ -44,6 +49,8 @@ export const heroBlockSettingsSchema = z.object({
   overlay: z.boolean().default(false),
   height: z.enum(['small', 'medium', 'large', 'full']).default('medium'),
   text_color: z.string().optional(),
+  variant: z.enum(['centered', 'split', 'minimal', 'bold', 'script']).default('centered'),
+  headline_style: z.enum(['default', 'gradient', 'serif', 'script']).default('default'), // New
 });
 
 export type HeroBlockContent = z.infer<typeof heroBlockContentSchema>;
@@ -107,6 +114,7 @@ export const projectsBlockSettingsSchema = z.object({
   columns: z.number().int().min(1).max(4).default(3),
   show_description: z.boolean().default(true),
   show_tags: z.boolean().default(false),
+  aspect_ratio: z.enum(['square', 'video', 'portrait', 'auto']).default('auto'), // New
 });
 
 export type ProjectsBlockContent = z.infer<typeof projectsBlockContentSchema>;
@@ -119,13 +127,24 @@ export const formBlockContentSchema = z.object({
   description: z.string().optional(),
   fields: z.array(z.string()).default(['name', 'email', 'message']),
   submit_text: z.string().default('Submit'),
-  success_message: z.string().default('Thank you! We will get back to you soon.'),
+  success_message: z
+    .string()
+    .default('Thank you! We will get back to you soon.'),
+  contact_info: z
+    .object({
+      email: z.string().optional(),
+      location: z.string().optional(),
+      phone: z.string().optional(),
+      socials: z.array(z.object({ platform: z.string(), url: z.string() })).optional(), // New
+    })
+    .optional(),
 });
 
 export const formBlockSettingsSchema = z.object({
-  layout: z.enum(['single', 'two-column']).default('single'),
+  layout: z.enum(['single', 'two-column', 'split-with-info']).default('single'),
   button_style: z.enum(['primary', 'secondary', 'outline']).default('primary'),
   button_align: z.enum(['left', 'center', 'right']).default('left'),
+  rounded_corners: z.enum(['none', 'md', 'lg', 'full', 'artisanal']).default('md'), // New
 });
 
 export type FormBlockContent = z.infer<typeof formBlockContentSchema>;
@@ -167,7 +186,94 @@ export const videoBlockSettingsSchema = z.object({
 });
 
 export type VideoBlockContent = z.infer<typeof videoBlockContentSchema>;
+
 export type VideoBlockSettings = z.infer<typeof videoBlockSettingsSchema>;
+
+// Header Block
+export const headerBlockContentSchema = z.object({
+  logo_text: z.string().optional(),
+  logo_image: z.string().url().optional(),
+  links: z.array(z.object({
+    label: z.string(),
+    url: z.string(),
+  })).optional(),
+});
+
+export const headerBlockSettingsSchema = z.object({
+  layout: z.enum(['simple', 'centered', 'split']).default('simple'),
+  sticky: z.boolean().default(true),
+  position: z.enum(['fixed', 'relative', 'sticky']).default('sticky'),
+  background_color: z.string().optional(),
+  text_color: z.string().optional(),
+});
+
+export type HeaderBlockContent = z.infer<typeof headerBlockContentSchema>;
+export type HeaderBlockSettings = z.infer<typeof headerBlockSettingsSchema>;
+
+// Features Block
+export const featuresBlockContentSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  features: z
+    .array(
+      z.object({
+        title: z.string(),
+        description: z.string(),
+        icon: z.string().optional(),
+      })
+    )
+    .default([]),
+});
+
+export const featuresBlockSettingsSchema = z.object({
+  layout: z.enum(['grid', 'list', 'cards']).default('grid'),
+  columns: z.number().int().min(1).max(4).default(3),
+  show_icon: z.boolean().default(true),
+  background: z.enum(['default', 'glass']).default('default'),
+});
+
+
+export type FeaturesBlockContent = z.infer<typeof featuresBlockContentSchema>;
+export type FeaturesBlockSettings = z.infer<typeof featuresBlockSettingsSchema>;
+
+// Infinite Hero Block
+export const infiniteHeroBlockContentSchema = z.object({
+  headline: z.string().optional(),
+  subheadline: z.string().optional(),
+  cta_text: z.string().optional(),
+  cta_link: z.string().optional(),
+  cta_secondary_text: z.string().optional(),
+  cta_secondary_link: z.string().optional(),
+});
+
+export const infiniteHeroBlockSettingsSchema = z.object({
+  height: z.enum(['small', 'medium', 'large', 'full']).default('full'),
+  overlay_variant: z.enum(['default', 'dark', 'vignette']).default('vignette'),
+});
+
+export type InfiniteHeroBlockContent = z.infer<typeof infiniteHeroBlockContentSchema>;
+export type InfiniteHeroBlockSettings = z.infer<typeof infiniteHeroBlockSettingsSchema>;
+
+// Brand Hero Block
+export const brandHeroBlockContentSchema = z.object({
+  logoText: z.string().optional(),
+  navLinks: z.array(z.object({
+    label: z.string(),
+    href: z.string(),
+  })).optional(),
+  versionText: z.string().optional(),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  ctaText: z.string().optional(),
+  backgroundImage: z.string().optional(),
+});
+
+export const brandHeroBlockSettingsSchema = z.object({
+  height: z.enum(['small', 'medium', 'large', 'full']).default('full'),
+});
+
+export type BrandHeroBlockContent = z.infer<typeof brandHeroBlockContentSchema>;
+export type BrandHeroBlockSettings = z.infer<typeof brandHeroBlockSettingsSchema>;
 
 // Block content type union
 export type BlockContent =
@@ -177,7 +283,11 @@ export type BlockContent =
   | ProjectsBlockContent
   | FormBlockContent
   | ImageBlockContent
-  | VideoBlockContent;
+  | VideoBlockContent
+  | HeaderBlockContent
+  | FeaturesBlockContent
+  | InfiniteHeroBlockContent
+  | BrandHeroBlockContent;
 
 // Block settings type union
 export type BlockSettings =
@@ -187,7 +297,11 @@ export type BlockSettings =
   | ProjectsBlockSettings
   | FormBlockSettings
   | ImageBlockSettings
-  | VideoBlockSettings;
+  | VideoBlockSettings
+  | HeaderBlockSettings
+  | FeaturesBlockSettings
+  | InfiniteHeroBlockSettings
+  | BrandHeroBlockSettings;
 
 // Block metadata
 export interface BlockMetadata {
@@ -337,6 +451,7 @@ export const blockRegistry: Record<BlockType, BlockMetadata> = {
     defaultSettings: {
       layout: 'simple',
       sticky: true,
+      position: 'sticky', // sticky or fixed
     },
   },
   footer: {
@@ -350,6 +465,67 @@ export const blockRegistry: Record<BlockType, BlockMetadata> = {
     },
     defaultSettings: {
       layout: 'simple',
+    },
+  },
+  features: {
+    type: 'features',
+    name: 'Features',
+    description: 'List of features or services with icons',
+    icon: 'List',
+    category: 'content',
+    defaultContent: {
+      title: 'Our Features',
+      description: 'What makes us special',
+      features: [
+        { title: 'Feature 1', description: 'Description 1', icon: 'Star' },
+        { title: 'Feature 2', description: 'Description 2', icon: 'Zap' },
+        { title: 'Feature 3', description: 'Description 3', icon: 'Shield' },
+      ],
+    },
+    defaultSettings: {
+      layout: 'grid',
+      columns: 3,
+      show_icon: true,
+    },
+  },
+  'infinite-hero': {
+    type: 'infinite-hero',
+    name: 'Infinite Hero',
+    description: 'Immersive shader-based background with cinematic typography',
+    icon: 'Waves',
+    category: 'content',
+    defaultContent: {
+      headline: 'The road dissolves in light,\nthe horizon remains unseen.',
+      subheadline: 'Minimal structures fade into a vast horizon where presence and absence merge. A quiet tension invites the eye to wander without end.',
+      cta_text: 'Learn more',
+      cta_link: '#',
+      cta_secondary_text: 'View portfolio',
+      cta_secondary_link: '#',
+    },
+    defaultSettings: {
+      height: 'full',
+      overlay_variant: 'vignette',
+    },
+  },
+  'brand-hero': {
+    type: 'brand-hero',
+    name: 'Brand Hero',
+    description: 'Minimal branded hero with integrated navigation and full background',
+    icon: 'Package',
+    category: 'content',
+    defaultContent: {
+      logoText: 'Midnight',
+      navLinks: [
+        { label: 'Voyage', href: '#' },
+        { label: 'Explore', href: '#' },
+      ],
+      title: 'Journey into the unknown',
+      subtitle: 'Experience the deep blue elegance of our latest collection.',
+      ctaText: 'Start Now',
+      versionText: 'v1.0.4 - 2024',
+    },
+    defaultSettings: {
+      height: 'full',
     },
   },
 };
@@ -383,8 +559,18 @@ export function validateBlockContent(
         videoBlockContentSchema.parse(content);
         return true;
       case 'header':
+        headerBlockContentSchema.parse(content);
         return true;
       case 'footer':
+        return true;
+      case 'features':
+        featuresBlockContentSchema.parse(content);
+        return true;
+      case 'infinite-hero':
+        infiniteHeroBlockContentSchema.parse(content);
+        return true;
+      case 'brand-hero':
+        brandHeroBlockContentSchema.parse(content);
         return true;
       default:
         return false;
@@ -422,8 +608,18 @@ export function validateBlockSettings(
         videoBlockSettingsSchema.parse(settings);
         return true;
       case 'header':
+        headerBlockSettingsSchema.parse(settings);
         return true;
       case 'footer':
+        return true;
+      case 'features':
+        featuresBlockSettingsSchema.parse(settings);
+        return true;
+      case 'infinite-hero':
+        infiniteHeroBlockSettingsSchema.parse(settings);
+        return true;
+      case 'brand-hero':
+        brandHeroBlockSettingsSchema.parse(settings);
         return true;
       default:
         return false;

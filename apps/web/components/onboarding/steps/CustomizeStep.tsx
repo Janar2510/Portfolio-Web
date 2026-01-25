@@ -24,7 +24,11 @@ export function CustomizeStep({
   const t = useTranslations('onboarding.customize');
   const [siteName, setSiteName] = useState('');
   const [subdomain, setSubdomain] = useState('');
-  const [subdomainAvailable, setSubdomainAvailable] = useState<boolean | null>(null);
+  const [logoUrl, setLogoUrl] = useState('');
+  const [brandVoice, setBrandVoice] = useState('');
+  const [subdomainAvailable, setSubdomainAvailable] = useState<boolean | null>(
+    null
+  );
 
   const supabase = createClient();
   const portfolioService = new PortfolioService(supabase);
@@ -42,6 +46,7 @@ export function CustomizeStep({
     if (existingSite) {
       setSiteName(existingSite.name);
       setSubdomain(existingSite.subdomain);
+      // Logo/BrandVoice not part of site model yet, so no pre-fill
     }
   });
 
@@ -65,6 +70,8 @@ export function CustomizeStep({
           name: siteName,
           subdomain: subdomain,
           templateId: selectedTemplateId || undefined,
+          logoUrl: logoUrl,
+          brandVoice: brandVoice,
         });
       } catch (error) {
         console.error('Error creating site:', error);
@@ -87,7 +94,7 @@ export function CustomizeStep({
           <Input
             id="siteName"
             value={siteName}
-            onChange={(e) => setSiteName(e.target.value)}
+            onChange={e => setSiteName(e.target.value)}
             placeholder={t('siteNamePlaceholder')}
           />
         </div>
@@ -99,7 +106,7 @@ export function CustomizeStep({
             <Input
               id="subdomain"
               value={subdomain}
-              onChange={(e) => handleSubdomainChange(e.target.value)}
+              onChange={e => handleSubdomainChange(e.target.value)}
               placeholder="myportfolio"
               className="flex-1"
             />
@@ -112,13 +119,43 @@ export function CustomizeStep({
               {subdomainAvailable ? (
                 <>
                   <CheckCircle2 className="h-4 w-4 text-success-main" />
-                  <span className="text-success-main">{t('subdomainAvailable')}</span>
+                  <span className="text-success-main">
+                    {t('subdomainAvailable')}
+                  </span>
                 </>
               ) : (
                 <span className="text-error-main">{t('subdomainTaken')}</span>
               )}
             </div>
           )}
+        </div>
+
+        {/* Logo URL */}
+        <div className="space-y-2">
+          <Label htmlFor="logoUrl">Logo URL (Optional)</Label>
+          <Input
+            id="logoUrl"
+            value={logoUrl}
+            onChange={e => setLogoUrl(e.target.value)}
+            placeholder="https://example.com/logo.png"
+          />
+        </div>
+
+        {/* Brand Voice */}
+        <div className="space-y-2">
+          <Label htmlFor="brandVoice">Brand Voice</Label>
+          <div className="relative">
+            <textarea
+              id="brandVoice"
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              value={brandVoice}
+              onChange={e => setBrandVoice(e.target.value)}
+              placeholder="E.g. Professional, Friendly, Minimalist, Bold..."
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Describe how you want your site to sound.
+          </p>
         </div>
 
         {/* Continue Button */}

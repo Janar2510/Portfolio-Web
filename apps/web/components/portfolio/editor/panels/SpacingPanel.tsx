@@ -7,7 +7,13 @@
 
 import { useStylesStore } from '@/stores/portfolio';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 
@@ -36,7 +42,7 @@ export function SpacingPanel() {
             <Label className="text-xs">Scale Preset</Label>
             <Select
               value={styles.spacing.scale}
-              onValueChange={(value) => handleChange('scale', value)}
+              onValueChange={value => handleChange('scale', value)}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -60,7 +66,9 @@ export function SpacingPanel() {
           </div>
           <Slider
             value={[parseInt(styles.spacing.sectionPadding) || 80]}
-            onValueChange={([value]) => handleChange('sectionPadding', value.toString())}
+            onValueChange={([value]) =>
+              handleChange('sectionPadding', value.toString())
+            }
             min={0}
             max={200}
             step={10}
@@ -77,7 +85,9 @@ export function SpacingPanel() {
           </div>
           <Slider
             value={[parseInt(styles.spacing.containerWidth) || 1200]}
-            onValueChange={([value]) => handleChange('containerWidth', value.toString())}
+            onValueChange={([value]) =>
+              handleChange('containerWidth', value.toString())
+            }
             min={800}
             max={1600}
             step={50}
@@ -94,7 +104,9 @@ export function SpacingPanel() {
           </div>
           <Slider
             value={[parseInt(styles.spacing.borderRadius) || 8]}
-            onValueChange={([value]) => handleChange('borderRadius', value.toString())}
+            onValueChange={([value]) =>
+              handleChange('borderRadius', value.toString())
+            }
             min={0}
             max={32}
             step={2}

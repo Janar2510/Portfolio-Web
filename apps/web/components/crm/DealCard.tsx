@@ -74,13 +74,21 @@ export function DealCard({ deal, onClick, isDragging = false }: DealCardProps) {
 
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           {deal.expected_close_date && (
-            <div className={cn('flex items-center gap-1', isOverdue && 'text-orange-600')}>
+            <div
+              className={cn(
+                'flex items-center gap-1',
+                isOverdue && 'text-orange-600'
+              )}
+            >
               <Calendar className="h-3 w-3" />
               <span>
-                {new Date(deal.expected_close_date).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                })}
+                {new Date(deal.expected_close_date).toLocaleDateString(
+                  'en-US',
+                  {
+                    month: 'short',
+                    day: 'numeric',
+                  }
+                )}
               </span>
             </div>
           )}

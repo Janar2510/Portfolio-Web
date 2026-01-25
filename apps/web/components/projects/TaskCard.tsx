@@ -43,9 +43,7 @@ export function TaskCard({ task, onClick, isDragging = false }: TaskCardProps) {
   };
 
   const isOverdue =
-    task.due_date &&
-    new Date(task.due_date) < new Date() &&
-    !task.completed_at;
+    task.due_date && new Date(task.due_date) < new Date() && !task.completed_at;
 
   const priority = task.priority || 'low';
 
@@ -84,7 +82,12 @@ export function TaskCard({ task, onClick, isDragging = false }: TaskCardProps) {
 
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           {task.due_date && (
-            <div className={cn('flex items-center gap-1', isOverdue && 'text-red-600')}>
+            <div
+              className={cn(
+                'flex items-center gap-1',
+                isOverdue && 'text-red-600'
+              )}
+            >
               <Calendar className="h-3 w-3" />
               <span>
                 {new Date(task.due_date).toLocaleDateString('en-US', {

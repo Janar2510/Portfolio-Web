@@ -1,6 +1,6 @@
 /**
  * Trigger Email Sync
- * 
+ *
  * API route to trigger email synchronization for one or all accounts
  */
 
@@ -10,13 +10,12 @@ import { createClient } from '@/lib/supabase/server';
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json().catch(() => ({}));
@@ -37,7 +36,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(`${supabaseUrl}/functions/v1/email-sync`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${supabaseServiceKey}`,
+        Authorization: `Bearer ${supabaseServiceKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -56,7 +55,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Email sync error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to sync emails' },
+      {
+        error: error instanceof Error ? error.message : 'Failed to sync emails',
+      },
       { status: 500 }
     );
   }

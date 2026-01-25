@@ -6,7 +6,7 @@ import { routing } from '@/i18n/routing';
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
-  
+
   // Extract locale from pathname or default to first locale
   const pathname = requestUrl.pathname;
   const locale = pathname.split('/')[1] || routing.locales[0];
@@ -30,7 +30,9 @@ export async function GET(request: NextRequest) {
           .single();
 
         if (!profile?.onboarding_completed) {
-          return NextResponse.redirect(new URL(`/${locale}/onboarding`, request.url));
+          return NextResponse.redirect(
+            new URL(`/${locale}/onboarding`, request.url)
+          );
         }
       }
 

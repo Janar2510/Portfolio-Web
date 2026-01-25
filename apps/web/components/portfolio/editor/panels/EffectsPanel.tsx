@@ -7,7 +7,13 @@
 
 import { useStylesStore } from '@/stores/portfolio';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Sparkles, Zap, Layers } from 'lucide-react';
 
@@ -47,7 +53,9 @@ export function EffectsPanel() {
               <Checkbox
                 id="shadows"
                 checked={styles.effects.shadows}
-                onCheckedChange={(checked) => handleToggle('shadows', checked === true)}
+                onCheckedChange={checked =>
+                  handleToggle('shadows', checked === true)
+                }
               />
             </div>
           </div>
@@ -69,7 +77,9 @@ export function EffectsPanel() {
               <Checkbox
                 id="animations"
                 checked={styles.effects.animations}
-                onCheckedChange={(checked) => handleToggle('animations', checked === true)}
+                onCheckedChange={checked =>
+                  handleToggle('animations', checked === true)
+                }
               />
             </div>
 
@@ -78,7 +88,7 @@ export function EffectsPanel() {
                 <Label className="text-xs">Animation Speed</Label>
                 <Select
                   value={styles.effects.animationSpeed}
-                  onValueChange={(value) => handleSelect('animationSpeed', value)}
+                  onValueChange={value => handleSelect('animationSpeed', value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -93,13 +103,18 @@ export function EffectsPanel() {
             )}
 
             <div className="flex items-center justify-between">
-              <Label htmlFor="scrollAnimations" className="text-xs cursor-pointer">
+              <Label
+                htmlFor="scrollAnimations"
+                className="text-xs cursor-pointer"
+              >
                 Scroll Animations
               </Label>
               <Checkbox
                 id="scrollAnimations"
                 checked={styles.effects.scrollAnimations}
-                onCheckedChange={(checked) => handleToggle('scrollAnimations', checked === true)}
+                onCheckedChange={checked =>
+                  handleToggle('scrollAnimations', checked === true)
+                }
               />
             </div>
           </div>
@@ -121,7 +136,9 @@ export function EffectsPanel() {
               <Checkbox
                 id="hoverEffects"
                 checked={styles.effects.hoverEffects}
-                onCheckedChange={(checked) => handleToggle('hoverEffects', checked === true)}
+                onCheckedChange={checked =>
+                  handleToggle('hoverEffects', checked === true)
+                }
               />
             </div>
           </div>

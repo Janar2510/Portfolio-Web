@@ -14,7 +14,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -71,7 +77,9 @@ export function ProjectsManager() {
       return await portfolioService.createProject(siteId, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-projects', siteId] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-projects', siteId],
+      });
       setIsCreateDialogOpen(false);
       resetForm();
     },
@@ -83,7 +91,9 @@ export function ProjectsManager() {
       return await portfolioService.updateProject(id, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-projects', siteId] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-projects', siteId],
+      });
       setEditingProject(null);
       resetForm();
     },
@@ -95,7 +105,9 @@ export function ProjectsManager() {
       return await portfolioService.deleteProject(projectId);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-projects', siteId] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-projects', siteId],
+      });
     },
   });
 
@@ -120,7 +132,7 @@ export function ProjectsManager() {
   };
 
   const handleRemoveTag = (tag: string) => {
-    setFormData({ ...formData, tags: formData.tags.filter((t) => t !== tag) });
+    setFormData({ ...formData, tags: formData.tags.filter(t => t !== tag) });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -167,11 +179,13 @@ export function ProjectsManager() {
             Manage your portfolio projects
           </p>
         </div>
-        <Button onClick={() => {
-          resetForm();
-          setEditingProject(null);
-          setIsCreateDialogOpen(true);
-        }}>
+        <Button
+          onClick={() => {
+            resetForm();
+            setEditingProject(null);
+            setIsCreateDialogOpen(true);
+          }}
+        >
           <Plus className="h-4 w-4 mr-2" />
           New Project
         </Button>
@@ -179,7 +193,9 @@ export function ProjectsManager() {
 
       {/* Projects List */}
       {isLoading ? (
-        <div className="text-center py-12 text-muted-foreground">Loading projects...</div>
+        <div className="text-center py-12 text-muted-foreground">
+          Loading projects...
+        </div>
       ) : projects.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
@@ -273,7 +289,7 @@ export function ProjectsManager() {
                 <Input
                   id="title"
                   value={formData.title}
-                  onChange={(e) => {
+                  onChange={e => {
                     setFormData({ ...formData, title: e.target.value });
                     if (!editingProject && !formData.slug) {
                       setFormData({
@@ -291,7 +307,7 @@ export function ProjectsManager() {
                 <Input
                   id="slug"
                   value={formData.slug}
-                  onChange={(e) =>
+                  onChange={e =>
                     setFormData({ ...formData, slug: e.target.value })
                   }
                   required
@@ -305,7 +321,7 @@ export function ProjectsManager() {
                 <Textarea
                   id="excerpt"
                   value={formData.excerpt}
-                  onChange={(e) =>
+                  onChange={e =>
                     setFormData({ ...formData, excerpt: e.target.value })
                   }
                   rows={2}
@@ -317,7 +333,7 @@ export function ProjectsManager() {
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) =>
+                  onChange={e =>
                     setFormData({ ...formData, description: e.target.value })
                   }
                   rows={6}
@@ -329,7 +345,7 @@ export function ProjectsManager() {
                 <Input
                   id="category"
                   value={formData.category}
-                  onChange={(e) =>
+                  onChange={e =>
                     setFormData({ ...formData, category: e.target.value })
                   }
                   placeholder="e.g., Web Design, Mobile App"
@@ -340,7 +356,7 @@ export function ProjectsManager() {
                 <Input
                   id="thumbnail_url"
                   value={formData.thumbnail_url}
-                  onChange={(e) =>
+                  onChange={e =>
                     setFormData({ ...formData, thumbnail_url: e.target.value })
                   }
                   placeholder="https://example.com/image.jpg"
@@ -352,8 +368,8 @@ export function ProjectsManager() {
                   <Input
                     id="tags"
                     value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={(e) => {
+                    onChange={e => setTagInput(e.target.value)}
+                    onKeyDown={e => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
                         handleAddTag();
@@ -367,8 +383,13 @@ export function ProjectsManager() {
                 </div>
                 {formData.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {formData.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => handleRemoveTag(tag)}>
+                    {formData.tags.map(tag => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="cursor-pointer"
+                        onClick={() => handleRemoveTag(tag)}
+                      >
                         {tag} ×
                       </Badge>
                     ))}
@@ -391,7 +412,8 @@ export function ProjectsManager() {
               <Button
                 type="submit"
                 disabled={
-                  createProjectMutation.isPending || updateProjectMutation.isPending
+                  createProjectMutation.isPending ||
+                  updateProjectMutation.isPending
                 }
               >
                 {editingProject ? 'Update' : 'Create'} Project

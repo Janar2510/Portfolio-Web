@@ -213,7 +213,9 @@ export class CRMService {
       );
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
@@ -390,7 +392,9 @@ export class CRMService {
       query = query.eq('company_id', filters.company_id);
     }
 
-    const { data, error } = await query.order('sort_order', { ascending: true });
+    const { data, error } = await query.order('sort_order', {
+      ascending: true,
+    });
 
     if (error) throw error;
     return data || [];
@@ -471,7 +475,11 @@ export class CRMService {
     if (error) throw error;
   }
 
-  async moveDeal(dealId: string, stageId: string, sortOrder: number): Promise<Deal> {
+  async moveDeal(
+    dealId: string,
+    stageId: string,
+    sortOrder: number
+  ): Promise<Deal> {
     return this.updateDeal(dealId, {
       stage_id: stageId,
       sort_order: sortOrder,
@@ -499,7 +507,9 @@ export class CRMService {
       query = query.eq('activity_type', filters.activity_type);
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];

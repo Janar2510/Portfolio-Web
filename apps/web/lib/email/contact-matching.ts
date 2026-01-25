@@ -1,6 +1,6 @@
 /**
  * Contact Matching Utilities
- * 
+ *
  * Advanced contact matching algorithms for email-to-contact linking
  */
 
@@ -34,9 +34,7 @@ export async function matchEmailToContactWithConfidence(
   const [localPart, domain] = emailLower.split('@');
 
   // 1. Exact email match (highest confidence)
-  const exactMatch = contacts.find(
-    (c) => c.email?.toLowerCase() === emailLower
-  );
+  const exactMatch = contacts.find(c => c.email?.toLowerCase() === emailLower);
   if (exactMatch) {
     return {
       contact_id: exactMatch.id,
@@ -47,10 +45,10 @@ export async function matchEmailToContactWithConfidence(
 
   // 2. Domain match (medium confidence)
   if (includeDomainMatch && domain) {
-    const domainMatches = contacts.filter(
-      (c) => c.email?.toLowerCase().endsWith(`@${domain}`)
+    const domainMatches = contacts.filter(c =>
+      c.email?.toLowerCase().endsWith(`@${domain}`)
     );
-    
+
     if (domainMatches.length === 1) {
       return {
         contact_id: domainMatches[0].id,
@@ -87,7 +85,7 @@ function matchByName(
   // Try to extract name from email (e.g., "john.doe" -> "John Doe")
   const nameParts = localPart
     .split(/[._-]/)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1));
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1));
 
   if (nameParts.length < 2) {
     return null;
@@ -97,7 +95,7 @@ function matchByName(
   const lastName = nameParts.slice(1).join(' ');
 
   // Find contacts with matching first and last name
-  const matches = contacts.filter((c) => {
+  const matches = contacts.filter(c => {
     const cFirstName = c.first_name?.toLowerCase();
     const cLastName = c.last_name?.toLowerCase();
     return (

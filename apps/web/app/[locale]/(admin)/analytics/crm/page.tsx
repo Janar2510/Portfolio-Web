@@ -1,7 +1,17 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Users, Building2, Briefcase, TrendingUp, DollarSign, Calendar, Mail, Phone, CheckCircle2 } from 'lucide-react';
+import {
+  Users,
+  Building2,
+  Briefcase,
+  TrendingUp,
+  DollarSign,
+  Calendar,
+  Mail,
+  Phone,
+  CheckCircle2,
+} from 'lucide-react';
 import { MetricCard } from '@/components/analytics/MetricCard';
 import { SimpleChart } from '@/components/analytics/SimpleChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -68,21 +78,24 @@ export default function CRMAnalyticsPage() {
   const totalContacts = contacts.length;
   const totalCompanies = companies.length;
   const totalDeals = deals.length;
-  const activeDeals = deals.filter((d) => !d.actual_close_date).length;
-  const wonDeals = deals.filter((d) => d.actual_close_date).length;
+  const activeDeals = deals.filter(d => !d.actual_close_date).length;
+  const wonDeals = deals.filter(d => d.actual_close_date).length;
   const totalDealValue = deals.reduce((sum, d) => sum + (d.value || 0), 0);
   const activeDealValue = deals
-    .filter((d) => !d.actual_close_date)
+    .filter(d => !d.actual_close_date)
     .reduce((sum, d) => sum + (d.value || 0), 0);
   const wonDealValue = deals
-    .filter((d) => d.actual_close_date)
+    .filter(d => d.actual_close_date)
     .reduce((sum, d) => sum + (d.value || 0), 0);
 
   // Activity breakdown
-  const activityBreakdown = activities.reduce((acc, activity) => {
-    acc[activity.activity_type] = (acc[activity.activity_type] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const activityBreakdown = activities.reduce(
+    (acc, activity) => {
+      acc[activity.activity_type] = (acc[activity.activity_type] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   // Deals by stage
   const { data: stages = [] } = useQuery({
@@ -98,12 +111,12 @@ export default function CRMAnalyticsPage() {
     },
   });
 
-  const dealsByStage = stages.map((stage) => ({
+  const dealsByStage = stages.map(stage => ({
     stage_id: stage.id,
     stage_name: stage.name,
-    count: deals.filter((d) => d.stage_id === stage.id).length,
+    count: deals.filter(d => d.stage_id === stage.id).length,
     value: deals
-      .filter((d) => d.stage_id === stage.id)
+      .filter(d => d.stage_id === stage.id)
       .reduce((sum, d) => sum + (d.value || 0), 0),
   }));
 
@@ -111,17 +124,21 @@ export default function CRMAnalyticsPage() {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   const recentActivities = activities.filter(
-    (a) => new Date(a.created_at) >= thirtyDaysAgo
+    a => new Date(a.created_at) >= thirtyDaysAgo
   );
 
   // Activity chart data (last 30 days by day)
-  const activityChartData: Array<{ date: string; value: number; label: string }> = [];
+  const activityChartData: Array<{
+    date: string;
+    value: number;
+    label: string;
+  }> = [];
   for (let i = 29; i >= 0; i--) {
     const date = new Date();
     date.setDate(date.getDate() - i);
     const dateStr = date.toISOString().split('T')[0];
-    const count = recentActivities.filter(
-      (a) => a.created_at.startsWith(dateStr)
+    const count = recentActivities.filter(a =>
+      a.created_at.startsWith(dateStr)
     ).length;
     activityChartData.push({
       date: dateStr,
@@ -131,12 +148,16 @@ export default function CRMAnalyticsPage() {
   }
 
   // Deal value chart data (last 30 days)
-  const dealValueChartData: Array<{ date: string; value: number; label: string }> = [];
+  const dealValueChartData: Array<{
+    date: string;
+    value: number;
+    label: string;
+  }> = [];
   for (let i = 29; i >= 0; i--) {
     const date = new Date();
     date.setDate(date.getDate() - i);
     const dateStr = date.toISOString().split('T')[0];
-    const dealsOnDate = deals.filter((d) => d.created_at.startsWith(dateStr));
+    const dealsOnDate = deals.filter(d => d.created_at.startsWith(dateStr));
     const value = dealsOnDate.reduce((sum, d) => sum + (d.value || 0), 0);
     dealValueChartData.push({
       date: dateStr,
@@ -147,15 +168,17 @@ export default function CRMAnalyticsPage() {
 
   // Top companies by contact count
   const companiesByContactCount = companies
-    .map((company) => {
-      const contactCount = contacts.filter((c) => c.company_id === company.id).length;
+    .map(company => {
+      const contactCount = contacts.filter(
+        c => c.company_id === company.id
+      ).length;
       return {
         company_id: company.id,
         company_name: company.name,
         contact_count: contactCount,
       };
     })
-    .filter((c) => c.contact_count > 0)
+    .filter(c => c.contact_count > 0)
     .sort((a, b) => b.contact_count - a.contact_count)
     .slice(0, 10);
 
@@ -225,18 +248,28 @@ export default function CRMAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 {dealsByStage.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No deals data available</p>
+                  <p className="text-sm text-muted-foreground">
+                    No deals data available
+                  </p>
                 ) : (
                   <div className="space-y-3">
-                    {dealsByStage.map((stage) => {
-                      const totalDeals = dealsByStage.reduce((sum, s) => sum + s.count, 0);
-                      const percentage = totalDeals > 0 ? ((stage.count / totalDeals) * 100).toFixed(1) : '0';
+                    {dealsByStage.map(stage => {
+                      const totalDeals = dealsByStage.reduce(
+                        (sum, s) => sum + s.count,
+                        0
+                      );
+                      const percentage =
+                        totalDeals > 0
+                          ? ((stage.count / totalDeals) * 100).toFixed(1)
+                          : '0';
 
                       return (
                         <div key={stage.stage_id} className="space-y-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium">{stage.stage_name}</span>
+                              <span className="text-sm font-medium">
+                                {stage.stage_name}
+                              </span>
                             </div>
                             <div className="flex items-center gap-2">
                               {stage.value > 0 && (
@@ -274,31 +307,38 @@ export default function CRMAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 {Object.keys(activityBreakdown).length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No activity data available</p>
+                  <p className="text-sm text-muted-foreground">
+                    No activity data available
+                  </p>
                 ) : (
                   <div className="space-y-3">
                     {Object.entries(activityBreakdown)
                       .sort(([, a], [, b]) => b - a)
                       .map(([type, count]) => {
-                        const total = Object.values(activityBreakdown).reduce((a, b) => a + b, 0);
+                        const total = Object.values(activityBreakdown).reduce(
+                          (a, b) => a + b,
+                          0
+                        );
                         const percentage = ((count / total) * 100).toFixed(1);
                         const Icon =
                           type === 'email'
                             ? Mail
                             : type === 'call'
-                            ? Phone
-                            : type === 'meeting'
-                            ? Calendar
-                            : type === 'task'
-                            ? CheckCircle2
-                            : TrendingUp;
+                              ? Phone
+                              : type === 'meeting'
+                                ? Calendar
+                                : type === 'task'
+                                  ? CheckCircle2
+                                  : TrendingUp;
 
                         return (
                           <div key={type} className="space-y-1">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <Icon className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm font-medium capitalize">{type}</span>
+                                <span className="text-sm font-medium capitalize">
+                                  {type}
+                                </span>
                               </div>
                               <span className="text-sm text-muted-foreground">
                                 {count} ({percentage}%)
@@ -327,16 +367,20 @@ export default function CRMAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {companiesByContactCount.map((company) => (
+                  {companiesByContactCount.map(company => (
                     <div
                       key={company.company_id}
                       className="flex items-center justify-between rounded-lg border p-3"
                     >
                       <div className="flex items-center gap-2">
                         <Building2 className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">{company.company_name}</span>
+                        <span className="text-sm font-medium">
+                          {company.company_name}
+                        </span>
                       </div>
-                      <Badge variant="outline">{company.contact_count} contacts</Badge>
+                      <Badge variant="outline">
+                        {company.contact_count} contacts
+                      </Badge>
                     </div>
                   ))}
                 </div>

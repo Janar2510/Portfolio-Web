@@ -20,13 +20,20 @@ import {
 } from '@dnd-kit/sortable';
 import { PipelineStage } from './PipelineStage';
 import { DealCard } from './DealCard';
-import type { PipelineStage as PipelineStageType, Deal } from '@/lib/services/crm';
+import type {
+  PipelineStage as PipelineStageType,
+  Deal,
+} from '@/lib/services/crm';
 
 interface PipelineBoardProps {
   stages: PipelineStageType[];
   deals: Deal[];
   onStagesReorder: (stages: PipelineStageType[]) => void;
-  onDealMove: (dealId: string, newStageId: string, newSortOrder: number) => void;
+  onDealMove: (
+    dealId: string,
+    newStageId: string,
+    newSortOrder: number
+  ) => void;
   onDealClick: (deal: Deal) => void;
   onAddDeal?: (stageId: string) => void;
   onStageSettings?: (stage: PipelineStageType) => void;
@@ -73,7 +80,7 @@ export function PipelineBoard({
 
     if (dragId.startsWith('deal-')) {
       const dealId = getDealIdFromDragId(dragId);
-      const deal = deals.find((d) => d.id === dealId);
+      const deal = deals.find(d => d.id === dealId);
       if (deal) {
         setActiveDeal(deal);
       }
@@ -97,8 +104,8 @@ export function PipelineBoard({
       const activeStageId = getStageIdFromDragId(activeIdStr);
       const overStageId = getStageIdFromDragId(overIdStr);
 
-      const oldIndex = stages.findIndex((stage) => stage.id === activeStageId);
-      const newIndex = stages.findIndex((stage) => stage.id === overStageId);
+      const oldIndex = stages.findIndex(stage => stage.id === activeStageId);
+      const newIndex = stages.findIndex(stage => stage.id === overStageId);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         const newStages = arrayMove(stages, oldIndex, newIndex).map(
@@ -115,13 +122,13 @@ export function PipelineBoard({
     // Handle deal movement between stages
     if (activeIdStr.startsWith('deal-')) {
       const dealId = getDealIdFromDragId(activeIdStr);
-      const deal = deals.find((d) => d.id === dealId);
+      const deal = deals.find(d => d.id === dealId);
       if (!deal) return;
 
       // Moving to a stage
       if (overIdStr.startsWith('stage-')) {
         const newStageId = getStageIdFromDragId(overIdStr);
-        const dealsInNewStage = deals.filter((d) => d.stage_id === newStageId);
+        const dealsInNewStage = deals.filter(d => d.stage_id === newStageId);
         const newSortOrder = dealsInNewStage.length;
         onDealMove(dealId, newStageId, newSortOrder);
         return;
@@ -130,16 +137,17 @@ export function PipelineBoard({
       // Moving within same stage or to another deal
       if (overIdStr.startsWith('deal-')) {
         const overDealId = getDealIdFromDragId(overIdStr);
-        const overDeal = deals.find((d) => d.id === overDealId);
+        const overDeal = deals.find(d => d.id === overDealId);
         if (!overDeal) return;
 
         const newStageId = overDeal.stage_id;
         const dealsInStage = deals
-          .filter((d) => d.stage_id === newStageId && d.id !== dealId)
+          .filter(d => d.stage_id === newStageId && d.id !== dealId)
           .sort((a, b) => a.sort_order - b.sort_order);
 
-        const overIndex = dealsInStage.findIndex((d) => d.id === overDealId);
-        const newSortOrder = overIndex >= 0 ? overIndex + 1 : dealsInStage.length;
+        const overIndex = dealsInStage.findIndex(d => d.id === overDealId);
+        const newSortOrder =
+          overIndex >= 0 ? overIndex + 1 : dealsInStage.length;
 
         onDealMove(dealId, newStageId, newSortOrder);
         return;
@@ -152,15 +160,18 @@ export function PipelineBoard({
     setActiveDeal(null);
   };
 
-  const stageIds = stages.map((stage) => getStageDragId(stage.id));
+  const stageIds = stages.map(stage => getStageDragId(stage.id));
 
   // Group deals by stage
-  const dealsByStage = stages.reduce((acc, stage) => {
-    acc[stage.id] = deals
-      .filter((deal) => deal.stage_id === stage.id)
-      .sort((a, b) => a.sort_order - b.sort_order);
-    return acc;
-  }, {} as Record<string, Deal[]>);
+  const dealsByStage = stages.reduce(
+    (acc, stage) => {
+      acc[stage.id] = deals
+        .filter(deal => deal.stage_id === stage.id)
+        .sort((a, b) => a.sort_order - b.sort_order);
+      return acc;
+    },
+    {} as Record<string, Deal[]>
+  );
 
   return (
     <DndContext
@@ -175,7 +186,7 @@ export function PipelineBoard({
           items={stageIds}
           strategy={horizontalListSortingStrategy}
         >
-          {stages.map((stage) => (
+          {stages.map(stage => (
             <PipelineStage
               key={stage.id}
               stage={stage}

@@ -11,8 +11,16 @@ import { createClient } from '@/lib/supabase/client';
 import { PortfolioService } from '@/lib/services/portfolio';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { Upload, Search, Folder, Image as ImageIcon, Video, File } from 'lucide-react';
+import {
+  Upload,
+  Search,
+  Folder,
+  Image as ImageIcon,
+  Video,
+  File,
+} from 'lucide-react';
 import { useEditorStore } from '@/stores/portfolio';
 import Image from 'next/image';
 
@@ -21,7 +29,10 @@ interface MediaLibraryProps {
   multiple?: boolean;
 }
 
-export function MediaLibrary({ onSelect, multiple = false }: MediaLibraryProps) {
+export function MediaLibrary({
+  onSelect,
+  multiple = false,
+}: MediaLibraryProps) {
   const supabase = createClient();
   const portfolioService = new PortfolioService(supabase);
   const queryClient = useQueryClient();
@@ -70,7 +81,7 @@ export function MediaLibrary({ onSelect, multiple = false }: MediaLibraryProps) 
     if (multiple) {
       const isSelected = selectedMedia.includes(item.id);
       if (isSelected) {
-        setSelectedMedia(selectedMedia.filter((id) => id !== item.id));
+        setSelectedMedia(selectedMedia.filter(id => id !== item.id));
       } else {
         setSelectedMedia([...selectedMedia, item.id]);
       }
@@ -114,7 +125,9 @@ export function MediaLibrary({ onSelect, multiple = false }: MediaLibraryProps) 
     <div className="p-4 space-y-4">
       {/* Upload */}
       <div className="space-y-2">
-        <Label htmlFor="media-upload" className="text-xs">Upload Media</Label>
+        <Label htmlFor="media-upload" className="text-xs">
+          Upload Media
+        </Label>
         <div className="flex gap-2">
           <Input
             id="media-upload"
@@ -142,7 +155,7 @@ export function MediaLibrary({ onSelect, multiple = false }: MediaLibraryProps) 
         <Input
           placeholder="Search media..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={e => setSearchQuery(e.target.value)}
           className="pl-9"
         />
       </div>
@@ -172,7 +185,8 @@ export function MediaLibrary({ onSelect, multiple = false }: MediaLibraryProps) 
               >
                 <CardContent className="p-2">
                   <div className="relative aspect-square bg-muted rounded overflow-hidden mb-2">
-                    {item.mime_type.startsWith('image/') && item.optimized_url ? (
+                    {item.mime_type.startsWith('image/') &&
+                    item.optimized_url ? (
                       <Image
                         src={item.optimized_url}
                         alt={item.alt_text || item.file_name}
@@ -203,15 +217,13 @@ export function MediaLibrary({ onSelect, multiple = false }: MediaLibraryProps) 
       {/* Selected Media Actions */}
       {multiple && selectedMedia.length > 0 && (
         <div className="sticky bottom-0 bg-background border-t p-4 flex items-center justify-between">
-          <span className="text-sm">
-            {selectedMedia.length} selected
-          </span>
+          <span className="text-sm">{selectedMedia.length} selected</span>
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => {
-                selectedMedia.forEach((id) => {
+                selectedMedia.forEach(id => {
                   if (confirm('Delete selected media?')) {
                     deleteMediaMutation.mutate(id);
                   }

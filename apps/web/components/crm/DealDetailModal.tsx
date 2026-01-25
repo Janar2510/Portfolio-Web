@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Calendar, DollarSign, Percent, FileText, Edit2, Trash2, User, Building2 } from 'lucide-react';
+import {
+  X,
+  Calendar,
+  DollarSign,
+  Percent,
+  FileText,
+  Edit2,
+  Trash2,
+  User,
+  Building2,
+} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -13,7 +23,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import type { Deal, Contact, Company, PipelineStage } from '@/lib/services/crm';
 
@@ -66,9 +82,13 @@ export function DealDetailModal({
     setIsEditing(false);
   };
 
-  const currentStage = stages.find((s) => s.id === deal.stage_id);
-  const contact = deal.contact_id ? contacts.find((c) => c.id === deal.contact_id) : null;
-  const company = deal.company_id ? companies.find((c) => c.id === deal.company_id) : null;
+  const currentStage = stages.find(s => s.id === deal.stage_id);
+  const contact = deal.contact_id
+    ? contacts.find(c => c.id === deal.contact_id)
+    : null;
+  const company = deal.company_id
+    ? companies.find(c => c.id === deal.company_id)
+    : null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -79,7 +99,9 @@ export function DealDetailModal({
               {isEditing ? (
                 <Input
                   value={editFormData.title || ''}
-                  onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                  onChange={e =>
+                    setEditFormData({ ...editFormData, title: e.target.value })
+                  }
                   className="mb-2 text-lg font-semibold"
                   placeholder="Deal title"
                 />
@@ -104,7 +126,9 @@ export function DealDetailModal({
                     size="icon"
                     className="text-destructive"
                     onClick={async () => {
-                      if (confirm('Are you sure you want to delete this deal?')) {
+                      if (
+                        confirm('Are you sure you want to delete this deal?')
+                      ) {
                         await onDelete(deal.id);
                         onClose();
                       }
@@ -128,13 +152,15 @@ export function DealDetailModal({
                 <Label htmlFor="stage_id">Stage *</Label>
                 <Select
                   value={editFormData.stage_id || ''}
-                  onValueChange={(value) => setEditFormData({ ...editFormData, stage_id: value })}
+                  onValueChange={value =>
+                    setEditFormData({ ...editFormData, stage_id: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {stages.map((stage) => (
+                    {stages.map(stage => (
                       <SelectItem key={stage.id} value={stage.id}>
                         {stage.name}
                       </SelectItem>
@@ -151,16 +177,20 @@ export function DealDetailModal({
                     type="number"
                     step="0.01"
                     value={editFormData.value || ''}
-                    onChange={(e) =>
+                    onChange={e =>
                       setEditFormData({
                         ...editFormData,
-                        value: e.target.value ? parseFloat(e.target.value) : undefined,
+                        value: e.target.value
+                          ? parseFloat(e.target.value)
+                          : undefined,
                       })
                     }
                   />
                   <Select
                     value={editFormData.currency || 'EUR'}
-                    onValueChange={(value) => setEditFormData({ ...editFormData, currency: value })}
+                    onValueChange={value =>
+                      setEditFormData({ ...editFormData, currency: value })
+                    }
                   >
                     <SelectTrigger className="w-24">
                       <SelectValue />
@@ -180,8 +210,11 @@ export function DealDetailModal({
                 <Label htmlFor="contact_id">Contact</Label>
                 <Select
                   value={editFormData.contact_id || '__none__'}
-                  onValueChange={(value) =>
-                    setEditFormData({ ...editFormData, contact_id: value === '__none__' ? undefined : value })
+                  onValueChange={value =>
+                    setEditFormData({
+                      ...editFormData,
+                      contact_id: value === '__none__' ? undefined : value,
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -189,7 +222,7 @@ export function DealDetailModal({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">None</SelectItem>
-                    {contacts.map((contact) => (
+                    {contacts.map(contact => (
                       <SelectItem key={contact.id} value={contact.id}>
                         {contact.first_name} {contact.last_name}
                       </SelectItem>
@@ -202,8 +235,11 @@ export function DealDetailModal({
                 <Label htmlFor="company_id">Company</Label>
                 <Select
                   value={editFormData.company_id || '__none__'}
-                  onValueChange={(value) =>
-                    setEditFormData({ ...editFormData, company_id: value === '__none__' ? undefined : value })
+                  onValueChange={value =>
+                    setEditFormData({
+                      ...editFormData,
+                      company_id: value === '__none__' ? undefined : value,
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -211,7 +247,7 @@ export function DealDetailModal({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">None</SelectItem>
-                    {companies.map((company) => (
+                    {companies.map(company => (
                       <SelectItem key={company.id} value={company.id}>
                         {company.name}
                       </SelectItem>
@@ -228,8 +264,11 @@ export function DealDetailModal({
                   id="expected_close_date"
                   type="date"
                   value={editFormData.expected_close_date || ''}
-                  onChange={(e) =>
-                    setEditFormData({ ...editFormData, expected_close_date: e.target.value || undefined })
+                  onChange={e =>
+                    setEditFormData({
+                      ...editFormData,
+                      expected_close_date: e.target.value || undefined,
+                    })
                   }
                 />
               </div>
@@ -242,10 +281,12 @@ export function DealDetailModal({
                   min="0"
                   max="100"
                   value={editFormData.probability || ''}
-                  onChange={(e) =>
+                  onChange={e =>
                     setEditFormData({
                       ...editFormData,
-                      probability: e.target.value ? parseInt(e.target.value) : undefined,
+                      probability: e.target.value
+                        ? parseInt(e.target.value)
+                        : undefined,
                     })
                   }
                 />
@@ -257,7 +298,9 @@ export function DealDetailModal({
               <Textarea
                 id="notes"
                 value={editFormData.notes || ''}
-                onChange={(e) => setEditFormData({ ...editFormData, notes: e.target.value })}
+                onChange={e =>
+                  setEditFormData({ ...editFormData, notes: e.target.value })
+                }
                 rows={4}
               />
             </div>
@@ -285,7 +328,9 @@ export function DealDetailModal({
                       <>
                         <div
                           className="h-3 w-3 rounded-full"
-                          style={{ backgroundColor: currentStage.color || '#3b82f6' }}
+                          style={{
+                            backgroundColor: currentStage.color || '#3b82f6',
+                          }}
                         />
                         <span className="font-medium">{currentStage.name}</span>
                       </>
@@ -331,22 +376,29 @@ export function DealDetailModal({
               <div className="grid grid-cols-2 gap-4">
                 {deal.expected_close_date && (
                   <div>
-                    <div className="text-xs text-muted-foreground">Expected Close Date</div>
+                    <div className="text-xs text-muted-foreground">
+                      Expected Close Date
+                    </div>
                     <div className="mt-1 flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-muted-foreground" />
                       <span>
-                        {new Date(deal.expected_close_date).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
+                        {new Date(deal.expected_close_date).toLocaleDateString(
+                          'en-US',
+                          {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric',
+                          }
+                        )}
                       </span>
                     </div>
                   </div>
                 )}
                 {deal.probability !== null && (
                   <div>
-                    <div className="text-xs text-muted-foreground">Probability</div>
+                    <div className="text-xs text-muted-foreground">
+                      Probability
+                    </div>
                     <div className="mt-1 flex items-center gap-2">
                       <Percent className="h-4 w-4 text-muted-foreground" />
                       <span>{deal.probability}%</span>
@@ -358,7 +410,9 @@ export function DealDetailModal({
               {deal.notes && (
                 <div>
                   <div className="text-xs text-muted-foreground">Notes</div>
-                  <div className="mt-1 whitespace-pre-wrap text-sm">{deal.notes}</div>
+                  <div className="mt-1 whitespace-pre-wrap text-sm">
+                    {deal.notes}
+                  </div>
                 </div>
               )}
             </div>

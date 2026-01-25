@@ -1,6 +1,6 @@
 /**
  * Microsoft Graph OAuth Callback
- * 
+ *
  * Handles OAuth callback and stores encrypted credentials
  */
 
@@ -37,7 +37,9 @@ export async function GET(request: NextRequest) {
   try {
     const clientId = process.env.MICROSOFT_CLIENT_ID;
     const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
-    const redirectUri = process.env.MICROSOFT_REDIRECT_URI || `${request.nextUrl.origin}/api/email/oauth/microsoft/callback`;
+    const redirectUri =
+      process.env.MICROSOFT_REDIRECT_URI ||
+      `${request.nextUrl.origin}/api/email/oauth/microsoft/callback`;
     const tenantId = process.env.MICROSOFT_TENANT_ID || 'common';
 
     if (!clientId || !clientSecret) {
@@ -58,7 +60,8 @@ export async function GET(request: NextRequest) {
           code,
           redirect_uri: redirectUri,
           grant_type: 'authorization_code',
-          scope: 'https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/User.Read offline_access',
+          scope:
+            'https://graph.microsoft.com/Mail.ReadWrite https://graph.microsoft.com/User.Read offline_access',
         }),
       }
     );
@@ -73,7 +76,7 @@ export async function GET(request: NextRequest) {
     // Get user profile to get email address
     const userResponse = await fetch('https://graph.microsoft.com/v1.0/me', {
       headers: {
-        'Authorization': `Bearer ${tokenData.access_token}`,
+        Authorization: `Bearer ${tokenData.access_token}`,
       },
     });
 
@@ -89,7 +92,7 @@ export async function GET(request: NextRequest) {
     const credentials = {
       access_token: tokenData.access_token,
       refresh_token: tokenData.refresh_token,
-      expires_at: Date.now() + (tokenData.expires_in * 1000),
+      expires_at: Date.now() + tokenData.expires_in * 1000,
       token_type: tokenData.token_type,
     };
 
@@ -97,7 +100,9 @@ export async function GET(request: NextRequest) {
 
     // Store in database
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       return NextResponse.redirect(
@@ -126,16 +131,14 @@ export async function GET(request: NextRequest) {
         .eq('id', existing.id);
     } else {
       // Create new account
-      await supabase
-        .from('email_accounts')
-        .insert({
-          user_id: user.id,
-          provider: 'outlook',
-          email_address: emailAddress,
-          display_name: displayName,
-          credentials_encrypted: credentialsEncrypted,
-          is_active: true,
-        });
+      await supabase.from('email_accounts').insert({
+        user_id: user.id,
+        provider: 'outlook',
+        email_address: emailAddress,
+        display_name: displayName,
+        credentials_encrypted: credentialsEncrypted,
+        is_active: true,
+      });
     }
 
     // Clear state cookie
@@ -148,7 +151,10 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('OAuth callback error:', error);
     return NextResponse.redirect(
-      new URL(`/email/accounts?error=${encodeURIComponent(error instanceof Error ? error.message : 'unknown_error')}`, request.url)
+      new URL(
+        `/email/accounts?error=${encodeURIComponent(error instanceof Error ? error.message : 'unknown_error')}`,
+        request.url
+      )
     );
   }
 }

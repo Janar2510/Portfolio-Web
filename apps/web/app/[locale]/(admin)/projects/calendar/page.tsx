@@ -20,7 +20,9 @@ export default function CalendarPage() {
     queryKey: ['calendar-tasks'],
     queryFn: async () => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return [];
 
       // Get all projects for the user
@@ -31,15 +33,17 @@ export default function CalendarPage() {
 
       if (!projects || projects.length === 0) return [];
 
-      const projectIds = projects.map((p) => p.id);
+      const projectIds = projects.map(p => p.id);
 
       // Get all tasks with due dates
       const { data: tasksData, error } = await supabase
         .from('tasks')
-        .select(`
+        .select(
+          `
           *,
           projects!inner(id, name, user_id)
-        `)
+        `
+        )
         .in('project_id', projectIds)
         .not('due_date', 'is', null)
         .order('due_date', { ascending: true });
@@ -99,7 +103,9 @@ export default function CalendarPage() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
             <CalendarIcon className="w-8 h-8 text-white animate-pulse" />
           </div>
-          <p className="mt-4 text-foreground font-medium">Loading calendar...</p>
+          <p className="mt-4 text-foreground font-medium">
+            Loading calendar...
+          </p>
         </div>
       </div>
     );
@@ -148,9 +154,12 @@ export default function CalendarPage() {
               setSelectedTask(data as Task);
             }
           }}
-          onDelete={async (taskId) => {
+          onDelete={async taskId => {
             const supabase = createClient();
-            const { error } = await supabase.from('tasks').delete().eq('id', taskId);
+            const { error } = await supabase
+              .from('tasks')
+              .delete()
+              .eq('id', taskId);
             if (error) throw error;
             setIsTaskModalOpen(false);
             setSelectedTask(null);
@@ -176,14 +185,19 @@ export default function CalendarPage() {
               .single();
             if (error) throw error;
           }}
-          onSubtaskDelete={async (subtaskId) => {
+          onSubtaskDelete={async subtaskId => {
             const supabase = createClient();
-            const { error } = await supabase.from('subtasks').delete().eq('id', subtaskId);
+            const { error } = await supabase
+              .from('subtasks')
+              .delete()
+              .eq('id', subtaskId);
             if (error) throw error;
           }}
           onCommentCreate={async (taskId, content) => {
             const supabase = createClient();
-            const { data: { user } } = await supabase.auth.getUser();
+            const {
+              data: { user },
+            } = await supabase.auth.getUser();
             if (!user) throw new Error('Not authenticated');
             const { data, error } = await supabase
               .from('task_comments')
@@ -202,9 +216,12 @@ export default function CalendarPage() {
               .single();
             if (error) throw error;
           }}
-          onCommentDelete={async (commentId) => {
+          onCommentDelete={async commentId => {
             const supabase = createClient();
-            const { error } = await supabase.from('task_comments').delete().eq('id', commentId);
+            const { error } = await supabase
+              .from('task_comments')
+              .delete()
+              .eq('id', commentId);
             if (error) throw error;
           }}
           currentUserId={user?.id}

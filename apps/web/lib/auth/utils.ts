@@ -48,10 +48,15 @@ export function getAuthErrorMessage(error: AuthError | Error | null): string {
   return error.message || 'An error occurred';
 }
 
-export function isEmailNotConfirmedError(error: AuthError | Error | null): boolean {
+export function isEmailNotConfirmedError(
+  error: AuthError | Error | null
+): boolean {
   if (!error || !('message' in error)) return false;
   const message = error.message.toLowerCase();
-  return message.includes('email not confirmed') || message.includes('email_not_confirmed');
+  return (
+    message.includes('email not confirmed') ||
+    message.includes('email_not_confirmed')
+  );
 }
 
 export function validateEmail(email: string): boolean {

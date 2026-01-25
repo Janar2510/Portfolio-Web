@@ -26,7 +26,7 @@ export default async function PortfolioDebugPage() {
   return (
     <div className="max-w-4xl mx-auto p-8">
       <h1 className="text-2xl font-bold mb-4">Portfolio Debug</h1>
-      
+
       <div className="space-y-4">
         <div className="p-4 border rounded">
           <h2 className="font-semibold mb-2">Site Status</h2>

@@ -41,7 +41,23 @@ export const heroBlockSettingsSchema = z.object({
   overlay_opacity: z.number().min(0).max(1).default(0.5),
   height: z.enum(['small', 'medium', 'large', 'full']).default('medium'),
   text_color: z.string().optional(),
-  variant: z.enum(['centered', 'split', 'minimal', 'bold']).default('centered'),
+  variant: z.enum(['centered', 'split', 'minimal', 'bold', 'script']).default('centered'),
+  headline_style: z.enum(['default', 'gradient', 'serif', 'script']).default('default'),
+});
+
+// Infinite Hero Block
+export const infiniteHeroBlockContentSchema = z.object({
+  headline: z.string().optional(),
+  subheadline: z.string().optional(),
+  cta_text: z.string().optional(),
+  cta_link: z.string().optional(),
+  cta_secondary_text: z.string().optional(),
+  cta_secondary_link: z.string().optional(),
+});
+
+export const infiniteHeroBlockSettingsSchema = z.object({
+  height: z.enum(['small', 'medium', 'large', 'full']).default('full'),
+  overlay_variant: z.enum(['default', 'dark', 'vignette']).default('vignette'),
 });
 
 // Section Block
@@ -51,7 +67,9 @@ export const sectionBlockContentSchema = z.object({
 });
 
 export const sectionBlockSettingsSchema = z.object({
-  container_width: z.enum(['narrow', 'default', 'wide', 'full']).default('default'),
+  container_width: z
+    .enum(['narrow', 'default', 'wide', 'full'])
+    .default('default'),
   background_color: z.string().optional(),
   text_color: z.string().optional(),
 });
@@ -83,6 +101,54 @@ export const textBlockSettingsSchema = z.object({
   text_align: z.enum(['left', 'center', 'right', 'justify']).default('left'),
   font_size: z.enum(['small', 'medium', 'large']).default('medium'),
   line_height: z.number().default(1.6),
+});
+
+// Organic Flow Hero Block
+export const organicHeroBlockContentSchema = z.object({
+  slogan: z.string().optional(),
+  headline: z.string().optional(),
+  subheadline: z.string().optional(),
+  description: z.string().optional(),
+  cta_text: z.string().optional(),
+  cta_link: z.string().optional(),
+});
+
+export const organicHeroBlockSettingsSchema = commonBlockSettingsSchema.extend({
+  animation: z.boolean().default(true),
+});
+
+// Cyber Hero Block
+export const cyberHeroBlockContentSchema = z.object({
+  headline: z.string().optional(),
+  subheadline: z.string().optional(),
+  cta_text: z.string().optional(),
+  image_url: z.string().url().optional(),
+  depth_url: z.string().url().optional(),
+});
+
+export const cyberHeroBlockSettingsSchema = z.object({
+  layout: z.enum(['full', 'centered']).default('full'),
+});
+
+// Split Hero Block
+export const splitHeroBlockContentSchema = z.object({
+  logo_text: z.string().optional(),
+  logo_image: z.string().url().optional(),
+  slogan: z.string().optional(),
+  headline: z.string().optional(),
+  subheadline: z.string().optional(),
+  cta_text: z.string().optional(),
+  cta_link: z.string().optional(),
+  image_url: z.string().url().optional(),
+  contact_info: z.object({
+    website: z.string().optional(),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+  }).optional(),
+});
+
+export const splitHeroBlockSettingsSchema = z.object({
+  layout: z.enum(['split', 'split-reversed']).default('split'),
 });
 
 // Heading Block
@@ -271,7 +337,10 @@ export const statsBlockSettingsSchema = z.object({
 
 // Shape Block
 export const shapeBlockContentSchema = z.object({
-  shape: z.enum(['square', 'circle', 'triangle', 'diamond']).optional().default('square'),
+  shape: z
+    .enum(['square', 'circle', 'triangle', 'diamond'])
+    .optional()
+    .default('square'),
   color: z.string().optional().default('#000000'),
   width: z.union([z.string(), z.number()]).optional().default(100),
   height: z.union([z.string(), z.number()]).optional().default(100),
@@ -299,16 +368,18 @@ export const frameBlockSettingsSchema = commonBlockSettingsSchema.extend({
 export const headerBlockContentSchema = z.object({
   logo_text: z.string().optional().default('My Portfolio'),
   logo_image: z.string().url().optional(),
-  links: z.array(
-    z.object({
-      label: z.string(),
-      url: z.string(),
-    })
-  ).default([
-    { label: 'Home', url: '/' },
-    { label: 'About', url: '#about' },
-    { label: 'Contact', url: '#contact' },
-  ]),
+  links: z
+    .array(
+      z.object({
+        label: z.string(),
+        url: z.string(),
+      })
+    )
+    .default([
+      { label: 'Home', url: '/' },
+      { label: 'About', url: '#about' },
+      { label: 'Contact', url: '#contact' },
+    ]),
 });
 
 export const headerBlockSettingsSchema = z.object({
@@ -320,13 +391,24 @@ export const headerBlockSettingsSchema = z.object({
 
 // Footer Block
 export const footerBlockContentSchema = z.object({
-  copyright_text: z.string().optional().default('© 2024 My Portfolio. All rights reserved.'),
-  social_links: z.array(
-    z.object({
-      platform: z.enum(['twitter', 'github', 'linkedin', 'instagram', 'youtube']),
-      url: z.string().url(),
-    })
-  ).optional(),
+  copyright_text: z
+    .string()
+    .optional()
+    .default('© 2024 My Portfolio. All rights reserved.'),
+  social_links: z
+    .array(
+      z.object({
+        platform: z.enum([
+          'twitter',
+          'github',
+          'linkedin',
+          'instagram',
+          'youtube',
+        ]),
+        url: z.string().url(),
+      })
+    )
+    .optional(),
 });
 
 export const footerBlockSettingsSchema = z.object({
@@ -357,6 +439,9 @@ export const blockContentSchemas: Record<string, z.ZodSchema> = {
   frame: frameBlockContentSchema,
   header: headerBlockContentSchema,
   footer: footerBlockContentSchema,
+  'organic-hero': organicHeroBlockContentSchema,
+  'cyber-hero': cyberHeroBlockContentSchema,
+  'split-hero': splitHeroBlockContentSchema,
 };
 
 export const blockSettingsSchemas: Record<string, z.ZodSchema> = {
@@ -377,4 +462,7 @@ export const blockSettingsSchemas: Record<string, z.ZodSchema> = {
   frame: frameBlockSettingsSchema,
   header: headerBlockSettingsSchema,
   footer: footerBlockSettingsSchema,
+  'organic-hero': organicHeroBlockSettingsSchema,
+  'cyber-hero': cyberHeroBlockSettingsSchema,
+  'split-hero': splitHeroBlockSettingsSchema,
 };

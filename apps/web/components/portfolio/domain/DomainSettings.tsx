@@ -13,10 +13,22 @@ import { useEditorStore } from '@/stores/portfolio';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Globe, CheckCircle2, XCircle, AlertCircle, ExternalLink } from 'lucide-react';
+import {
+  Globe,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  ExternalLink,
+} from 'lucide-react';
 
 export function DomainSettings() {
   const supabase = createClient();
@@ -33,7 +45,7 @@ export function DomainSettings() {
     queryKey: ['portfolio-site', siteId],
     queryFn: async () => {
       if (!siteId) return null;
-      return await portfolioService.getSite(siteId);
+      return await portfolioService.getSiteById(siteId);
     },
     enabled: !!siteId,
   });
@@ -69,15 +81,15 @@ export function DomainSettings() {
         // 1. DNS lookup to check CNAME/A records point to our server
         // 2. SSL certificate validation
         // 3. Domain ownership verification (TXT record or meta tag)
-        // 
+        //
         // For now, this is a placeholder that simulates verification
         // In production, use a service like:
         // - DNS lookup API (dns.resolve4, dns.resolveCname)
         // - SSL checker API
         // - Domain verification service
-        
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
         // Placeholder: Domain verification not yet implemented
         // The domain is considered "configured" but not "verified"
         // Users should manually verify DNS settings match the instructions
@@ -93,7 +105,10 @@ export function DomainSettings() {
 
   const handleSetDomain = () => {
     if (!domainInput.trim()) return;
-    const domain = domainInput.trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
+    const domain = domainInput
+      .trim()
+      .replace(/^https?:\/\//, '')
+      .replace(/\/$/, '');
     updateDomainMutation.mutate(domain);
     setDomainInput('');
   };
@@ -168,7 +183,8 @@ export function DomainSettings() {
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
-                    Domain verification is pending. Please configure your DNS records:
+                    Domain verification is pending. Please configure your DNS
+                    records:
                   </AlertDescription>
                 </Alert>
                 <div className="p-4 bg-muted rounded-md space-y-2">
@@ -215,9 +231,9 @@ export function DomainSettings() {
               <Input
                 id="domain"
                 value={domainInput}
-                onChange={(e) => setDomainInput(e.target.value)}
+                onChange={e => setDomainInput(e.target.value)}
                 placeholder="example.com"
-                onKeyDown={(e) => {
+                onKeyDown={e => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     handleSetDomain();
@@ -247,7 +263,8 @@ export function DomainSettings() {
           <div className="space-y-2">
             <h4 className="font-semibold">Step 1: Add DNS Record</h4>
             <p className="text-sm text-muted-foreground">
-              Add a CNAME or A record in your domain's DNS settings pointing to our servers.
+              Add a CNAME or A record in your domain&apos;s DNS settings
+              pointing to our servers.
             </p>
           </div>
           <div className="space-y-2">
@@ -259,8 +276,9 @@ export function DomainSettings() {
           <div className="space-y-2">
             <h4 className="font-semibold">Step 3: Verify Domain</h4>
             <p className="text-sm text-muted-foreground">
-              Click "Verify Domain" once your DNS records are configured. We'll automatically
-              set up SSL certificates for secure HTTPS access.
+              Click &quot;Verify Domain&quot; once your DNS records are
+              configured. We&apos;ll automatically set up SSL certificates for
+              secure HTTPS access.
             </p>
           </div>
         </CardContent>

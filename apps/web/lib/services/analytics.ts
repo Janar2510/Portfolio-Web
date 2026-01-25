@@ -319,10 +319,7 @@ export class AnalyticsService {
 
   async deleteVariant(id: string): Promise<void> {
     const supabase = await this.getSupabase();
-    const { error } = await supabase
-      .from('ab_variants')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('ab_variants').delete().eq('id', id);
 
     if (error) throw error;
   }
@@ -334,7 +331,10 @@ export class AnalyticsService {
   }> {
     const variants = await this.getVariants(experimentId);
     const totalVisitors = variants.reduce((sum, v) => sum + v.visitors, 0);
-    const totalConversions = variants.reduce((sum, v) => sum + v.conversions, 0);
+    const totalConversions = variants.reduce(
+      (sum, v) => sum + v.conversions,
+      0
+    );
 
     return {
       variants,
@@ -390,7 +390,10 @@ export class AnalyticsService {
   }
 
   // Analytics summary methods
-  async getSiteSummary(siteId: string, days: number = 30): Promise<{
+  async getSiteSummary(
+    siteId: string,
+    days: number = 30
+  ): Promise<{
     totalPageviews: number;
     totalUniqueVisitors: number;
     totalFormSubmissions: number;
@@ -406,14 +409,17 @@ export class AnalyticsService {
     });
 
     const totalPageviews = daily.reduce((sum, d) => sum + d.pageviews, 0);
-    const totalUniqueVisitors = daily.reduce((sum, d) => sum + d.unique_visitors, 0);
+    const totalUniqueVisitors = daily.reduce(
+      (sum, d) => sum + d.unique_visitors,
+      0
+    );
     const totalFormSubmissions = daily.reduce(
       (sum, d) => sum + d.form_submissions,
       0
     );
 
     const durations = daily
-      .map((d) => d.avg_session_duration)
+      .map(d => d.avg_session_duration)
       .filter((d): d is number => d !== null);
     const avgSessionDuration =
       durations.length > 0
@@ -421,7 +427,7 @@ export class AnalyticsService {
         : null;
 
     const bounceRates = daily
-      .map((d) => d.bounce_rate)
+      .map(d => d.bounce_rate)
       .filter((r): r is number => r !== null);
     const bounceRate =
       bounceRates.length > 0

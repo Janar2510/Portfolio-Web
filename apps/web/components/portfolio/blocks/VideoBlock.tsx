@@ -3,12 +3,18 @@
 import { BaseBlock } from './BaseBlock';
 import { cn } from '@/lib/utils';
 import type { PortfolioBlock } from '@/lib/services/portfolio';
-import type { VideoBlockContent, VideoBlockSettings } from '@/lib/blocks/schema';
+import type {
+  VideoBlockContent,
+  VideoBlockSettings,
+} from '@/lib/blocks/schema';
 
 interface VideoBlockProps {
   block: PortfolioBlock;
   isEditing?: boolean;
-  onUpdate?: (content: Record<string, unknown>, settings?: Record<string, unknown>) => void;
+  onUpdate?: (
+    content: Record<string, unknown>,
+    settings?: Record<string, unknown>
+  ) => void;
   onDelete?: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
@@ -70,7 +76,8 @@ export function VideoBlock({
           )}
         >
           {content.video_url ? (
-            content.video_type === 'youtube' || content.video_type === 'vimeo' ? (
+            content.video_type === 'youtube' ||
+            content.video_type === 'vimeo' ? (
               <iframe
                 src={getVideoEmbedUrl() || ''}
                 className="h-full w-full"
@@ -91,7 +98,9 @@ export function VideoBlock({
             )
           ) : (
             <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed border-muted bg-muted/50">
-              <p className="text-sm text-muted-foreground">No video URL provided</p>
+              <p className="text-sm text-muted-foreground">
+                No video URL provided
+              </p>
             </div>
           )}
         </div>

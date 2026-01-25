@@ -9,7 +9,13 @@ import { useStylesStore } from '@/stores/portfolio';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Palette, Moon, Save } from 'lucide-react';
 import { useState } from 'react';
@@ -90,7 +96,8 @@ const COLOR_PRESETS = [
 ];
 
 export function ColorsPanel() {
-  const { styles, updateColors, savePreset, presets, applyPreset } = useStylesStore();
+  const { styles, updateColors, savePreset, presets, applyPreset } =
+    useStylesStore();
   const [presetName, setPresetName] = useState('');
 
   if (!styles) {
@@ -132,13 +139,13 @@ export function ColorsPanel() {
                   id="color-primary"
                   type="color"
                   value={styles.colors.primary}
-                  onChange={(e) => handleColorChange('primary', e.target.value)}
+                  onChange={e => handleColorChange('primary', e.target.value)}
                   className="h-10 w-16"
                 />
                 <Input
                   type="text"
                   value={styles.colors.primary}
-                  onChange={(e) => handleColorChange('primary', e.target.value)}
+                  onChange={e => handleColorChange('primary', e.target.value)}
                   className="flex-1"
                   placeholder="#008080"
                 />
@@ -155,13 +162,13 @@ export function ColorsPanel() {
                   id="color-secondary"
                   type="color"
                   value={styles.colors.secondary}
-                  onChange={(e) => handleColorChange('secondary', e.target.value)}
+                  onChange={e => handleColorChange('secondary', e.target.value)}
                   className="h-10 w-16"
                 />
                 <Input
                   type="text"
                   value={styles.colors.secondary}
-                  onChange={(e) => handleColorChange('secondary', e.target.value)}
+                  onChange={e => handleColorChange('secondary', e.target.value)}
                   className="flex-1"
                   placeholder="#E6A600"
                 />
@@ -178,13 +185,13 @@ export function ColorsPanel() {
                   id="color-accent"
                   type="color"
                   value={styles.colors.accent}
-                  onChange={(e) => handleColorChange('accent', e.target.value)}
+                  onChange={e => handleColorChange('accent', e.target.value)}
                   className="h-10 w-16"
                 />
                 <Input
                   type="text"
                   value={styles.colors.accent}
-                  onChange={(e) => handleColorChange('accent', e.target.value)}
+                  onChange={e => handleColorChange('accent', e.target.value)}
                   className="flex-1"
                   placeholder="#6366F1"
                 />
@@ -201,13 +208,17 @@ export function ColorsPanel() {
                   id="color-background"
                   type="color"
                   value={styles.colors.background}
-                  onChange={(e) => handleColorChange('background', e.target.value)}
+                  onChange={e =>
+                    handleColorChange('background', e.target.value)
+                  }
                   className="h-10 w-16"
                 />
                 <Input
                   type="text"
                   value={styles.colors.background}
-                  onChange={(e) => handleColorChange('background', e.target.value)}
+                  onChange={e =>
+                    handleColorChange('background', e.target.value)
+                  }
                   className="flex-1"
                   placeholder="#FFFFFF"
                 />
@@ -224,13 +235,13 @@ export function ColorsPanel() {
                   id="color-text"
                   type="color"
                   value={styles.colors.text}
-                  onChange={(e) => handleColorChange('text', e.target.value)}
+                  onChange={e => handleColorChange('text', e.target.value)}
                   className="h-10 w-16"
                 />
                 <Input
                   type="text"
                   value={styles.colors.text}
-                  onChange={(e) => handleColorChange('text', e.target.value)}
+                  onChange={e => handleColorChange('text', e.target.value)}
                   className="flex-1"
                   placeholder="#171C20"
                 />
@@ -247,13 +258,13 @@ export function ColorsPanel() {
                   id="color-surface"
                   type="color"
                   value={styles.colors.surface}
-                  onChange={(e) => handleColorChange('surface', e.target.value)}
+                  onChange={e => handleColorChange('surface', e.target.value)}
                   className="h-10 w-16"
                 />
                 <Input
                   type="text"
                   value={styles.colors.surface}
-                  onChange={(e) => handleColorChange('surface', e.target.value)}
+                  onChange={e => handleColorChange('surface', e.target.value)}
                   className="flex-1"
                   placeholder="#F8FAFB"
                 />
@@ -275,13 +286,13 @@ export function ColorsPanel() {
                   id="color-border"
                   type="color"
                   value={styles.colors.border}
-                  onChange={(e) => handleColorChange('border', e.target.value)}
+                  onChange={e => handleColorChange('border', e.target.value)}
                   className="h-10 w-16"
                 />
                 <Input
                   type="text"
                   value={styles.colors.border}
-                  onChange={(e) => handleColorChange('border', e.target.value)}
+                  onChange={e => handleColorChange('border', e.target.value)}
                   className="flex-1"
                 />
               </div>
@@ -295,13 +306,17 @@ export function ColorsPanel() {
                   id="color-textSecondary"
                   type="color"
                   value={styles.colors.textSecondary}
-                  onChange={(e) => handleColorChange('textSecondary', e.target.value)}
+                  onChange={e =>
+                    handleColorChange('textSecondary', e.target.value)
+                  }
                   className="h-10 w-16"
                 />
                 <Input
                   type="text"
                   value={styles.colors.textSecondary}
-                  onChange={(e) => handleColorChange('textSecondary', e.target.value)}
+                  onChange={e =>
+                    handleColorChange('textSecondary', e.target.value)
+                  }
                   className="flex-1"
                 />
               </div>
@@ -315,7 +330,7 @@ export function ColorsPanel() {
         <div>
           <h3 className="font-semibold text-sm mb-2">Presets</h3>
           <div className="grid grid-cols-2 gap-2">
-            {COLOR_PRESETS.map((preset) => (
+            {COLOR_PRESETS.map(preset => (
               <Card
                 key={preset.name}
                 className="cursor-pointer hover:ring-2 hover:ring-primary transition-all group"
@@ -350,7 +365,9 @@ export function ColorsPanel() {
                     />
                     <div
                       className="h-8 w-8 rounded-full border-2 border-background ring-1 ring-border"
-                      style={{ backgroundColor: preset.colors.surface || '#f3f4f6' }}
+                      style={{
+                        backgroundColor: preset.colors.surface || '#f3f4f6',
+                      }}
                       title="Surface"
                     />
                   </div>
@@ -365,7 +382,7 @@ export function ColorsPanel() {
           <div>
             <h3 className="font-semibold text-sm mb-2">Saved Presets</h3>
             <div className="space-y-2">
-              {presets.map((preset) => (
+              {presets.map(preset => (
                 <div
                   key={preset.id}
                   className="flex items-center justify-between p-2 rounded border hover:bg-muted/50 cursor-pointer"
@@ -374,13 +391,15 @@ export function ColorsPanel() {
                   <span className="text-sm">{preset.name}</span>
                   {preset.colors && (
                     <div className="flex gap-1">
-                      {Object.values(preset.colors).slice(0, 3).map((color, i) => (
-                        <div
-                          key={i}
-                          className="w-4 h-4 rounded"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
+                      {Object.values(preset.colors)
+                        .slice(0, 3)
+                        .map((color, i) => (
+                          <div
+                            key={i}
+                            className="w-4 h-4 rounded"
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
                     </div>
                   )}
                 </div>
@@ -400,7 +419,7 @@ export function ColorsPanel() {
               type="text"
               placeholder="Preset name"
               value={presetName}
-              onChange={(e) => setPresetName(e.target.value)}
+              onChange={e => setPresetName(e.target.value)}
               className="flex-1"
             />
             <Button

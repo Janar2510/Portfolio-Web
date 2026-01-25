@@ -1,6 +1,6 @@
 /**
  * Public Analytics Tracking Endpoint
- * 
+ *
  * Accepts tracking events from public portfolio sites
  */
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from('analytics_events')
       .insert(
-        events.map((event) => ({
+        events.map(event => ({
           site_id: event.site_id,
           page_id: event.page_id || null,
           event_type: event.event_type,

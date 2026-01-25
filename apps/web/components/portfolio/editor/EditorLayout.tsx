@@ -9,7 +9,11 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
 import { PortfolioService } from '@/lib/services/portfolio';
-import { useEditorStore, useBlocksStore, useStylesStore } from '@/stores/portfolio';
+import {
+  useEditorStore,
+  useBlocksStore,
+  useStylesStore,
+} from '@/stores/portfolio';
 import { EditorSidebar } from './EditorSidebar';
 import { EditorCanvas } from './EditorCanvas';
 import { EditorToolbar } from './EditorToolbar';
@@ -33,7 +37,6 @@ import { getBlockIdFromDragId } from '@/lib/blocks/dnd';
 import { useAddBlock } from '@/hooks/portfolio/use-editor';
 
 interface EditorLayoutProps {
-
   pageId: string;
   siteId: string;
 }
@@ -202,7 +205,7 @@ export function EditorLayout({ pageId, siteId }: EditorLayoutProps) {
     } else {
       // It's a canvas block
       const blockId = getBlockIdFromDragId(active.id as string);
-      const block = blocks.find((b) => b.id === blockId);
+      const block = blocks.find(b => b.id === blockId);
       setDraggedBlock(block);
     }
   };
@@ -221,7 +224,7 @@ export function EditorLayout({ pageId, siteId }: EditorLayoutProps) {
       const overBlockId = getBlockIdFromDragId(over.id as string);
 
       // Check if dropped relative to another block
-      const newIndex = blocks.findIndex((block) => block.id === overBlockId);
+      const newIndex = blocks.findIndex(block => block.id === overBlockId);
 
       if (newIndex !== -1) {
         const afterBlockId = blocks[newIndex].id;
@@ -244,8 +247,8 @@ export function EditorLayout({ pageId, siteId }: EditorLayoutProps) {
       const activeBlockId = getBlockIdFromDragId(active.id as string);
       const overBlockId = getBlockIdFromDragId(over.id as string);
 
-      const oldIndex = blocks.findIndex((block) => block.id === activeBlockId);
-      const newIndex = blocks.findIndex((block) => block.id === overBlockId);
+      const oldIndex = blocks.findIndex(block => block.id === activeBlockId);
+      const newIndex = blocks.findIndex(block => block.id === overBlockId);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         moveBlock(activeBlockId, newIndex);
@@ -304,18 +307,16 @@ export function EditorLayout({ pageId, siteId }: EditorLayoutProps) {
 
           {/* Canvas */}
           <div className="flex-1 flex flex-col overflow-hidden">
-            <EditorCanvas
-              page={page}
-              previewMode={previewMode}
-              view={view}
-            />
+            <EditorCanvas page={page} previewMode={previewMode} view={view} />
           </div>
 
           {/* Settings Panel */}
           <EditorSettingsPanel
             className={cn(
               'transition-all duration-300 ease-in-out border-l',
-              settingsPanelOpen && view !== 'preview' ? 'w-80' : 'w-0 overflow-hidden'
+              settingsPanelOpen && view !== 'preview'
+                ? 'w-80'
+                : 'w-0 overflow-hidden'
             )}
           />
         </div>

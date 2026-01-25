@@ -17,7 +17,8 @@ export default function ProductsPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (product: Partial<Product>) => crmService.createProduct(product),
+    mutationFn: (product: Partial<Product>) =>
+      crmService.createProduct(product),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['crm-products'] });
     },
@@ -58,13 +59,13 @@ export default function ProductsPage() {
 
       <ProductsList
         products={products}
-        onCreateProduct={async (product) => {
+        onCreateProduct={async product => {
           await createMutation.mutateAsync(product);
         }}
         onUpdateProduct={async (id, updates) => {
           await updateMutation.mutateAsync({ id, updates });
         }}
-        onDeleteProduct={async (id) => {
+        onDeleteProduct={async id => {
           await deleteMutation.mutateAsync(id);
         }}
       />

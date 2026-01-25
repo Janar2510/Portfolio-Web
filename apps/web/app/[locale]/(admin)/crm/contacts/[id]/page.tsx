@@ -2,7 +2,16 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Mail, Phone, Building2, MapPin, Calendar, Edit2, Trash2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  Mail,
+  Phone,
+  Building2,
+  MapPin,
+  Calendar,
+  Edit2,
+  Trash2,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ActivityTimeline } from '@/components/crm/ActivityTimeline';
@@ -10,7 +19,11 @@ import { createClient } from '@/lib/supabase/client';
 import { format } from 'date-fns';
 import type { Contact, Company, CRMActivity, Deal } from '@/lib/services/crm';
 
-export default function ContactDetailPage({ params }: { params: { id: string } }) {
+export default function ContactDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -97,14 +110,22 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
       return data as CRMActivity;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crm-activities', params.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['crm-activities', params.id],
+      });
       queryClient.invalidateQueries({ queryKey: ['crm-contact', params.id] });
     },
   });
 
   // Update activity mutation
   const updateActivityMutation = useMutation({
-    mutationFn: async ({ id, updates }: { id: string; updates: Partial<CRMActivity> }) => {
+    mutationFn: async ({
+      id,
+      updates,
+    }: {
+      id: string;
+      updates: Partial<CRMActivity>;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('crm_activities')
@@ -116,7 +137,9 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
       return data as CRMActivity;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crm-activities', params.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['crm-activities', params.id],
+      });
     },
   });
 
@@ -124,11 +147,16 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
   const deleteActivityMutation = useMutation({
     mutationFn: async (id: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from('crm_activities').delete().eq('id', id);
+      const { error } = await supabase
+        .from('crm_activities')
+        .delete()
+        .eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crm-activities', params.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['crm-activities', params.id],
+      });
     },
   });
 
@@ -269,7 +297,9 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
                   <div className="flex items-start gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                     <div className="text-sm">
-                      {contact.address.street && <div>{contact.address.street}</div>}
+                      {contact.address.street && (
+                        <div>{contact.address.street}</div>
+                      )}
                       {contact.address.city && contact.address.country && (
                         <div>
                           {contact.address.city}, {contact.address.country}
@@ -286,7 +316,10 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
                       Last contacted:{' '}
-                      {format(new Date(contact.last_contacted_at), 'MMM d, yyyy')}
+                      {format(
+                        new Date(contact.last_contacted_at),
+                        'MMM d, yyyy'
+                      )}
                     </span>
                   </div>
                 )}
@@ -298,15 +331,19 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
               <div className="space-y-3">
                 {contact.lead_source && (
                   <div>
-                    <div className="text-xs text-muted-foreground">Lead Source</div>
+                    <div className="text-xs text-muted-foreground">
+                      Lead Source
+                    </div>
                     <div className="text-sm">{contact.lead_source}</div>
                   </div>
                 )}
                 {contact.tags.length > 0 && (
                   <div>
-                    <div className="mb-2 text-xs text-muted-foreground">Tags</div>
+                    <div className="mb-2 text-xs text-muted-foreground">
+                      Tags
+                    </div>
                     <div className="flex flex-wrap gap-2">
-                      {contact.tags.map((tag) => (
+                      {contact.tags.map(tag => (
                         <Badge key={tag} variant="secondary">
                           {tag}
                         </Badge>
@@ -329,11 +366,8 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Deals ({deals.length})</h2>
               <div className="space-y-2">
-                {deals.map((deal) => (
-                  <div
-                    key={deal.id}
-                    className="rounded-lg border p-4"
-                  >
+                {deals.map(deal => (
+                  <div key={deal.id} className="rounded-lg border p-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-medium">{deal.title}</div>
@@ -348,7 +382,11 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
                       </div>
                       {deal.expected_close_date && (
                         <div className="text-sm text-muted-foreground">
-                          Expected: {format(new Date(deal.expected_close_date), 'MMM d, yyyy')}
+                          Expected:{' '}
+                          {format(
+                            new Date(deal.expected_close_date),
+                            'MMM d, yyyy'
+                          )}
                         </div>
                       )}
                     </div>
@@ -372,13 +410,16 @@ export default function ContactDetailPage({ params }: { params: { id: string } }
           {/* Activity Timeline */}
           <ActivityTimeline
             activities={activities}
-            onActivityCreate={async (activity) => {
+            onActivityCreate={async activity => {
               await createActivityMutation.mutateAsync(activity);
             }}
             onActivityUpdate={async (activityId, updates) => {
-              await updateActivityMutation.mutateAsync({ id: activityId, updates });
+              await updateActivityMutation.mutateAsync({
+                id: activityId,
+                updates,
+              });
             }}
-            onActivityDelete={async (activityId) => {
+            onActivityDelete={async activityId => {
               await deleteActivityMutation.mutateAsync(activityId);
             }}
             contactId={contact.id}

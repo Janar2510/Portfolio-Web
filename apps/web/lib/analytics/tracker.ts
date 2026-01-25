@@ -1,6 +1,6 @@
 /**
  * Analytics Event Tracker
- * 
+ *
  * Client-side tracking script for public portfolio sites
  */
 
@@ -46,12 +46,12 @@ class AnalyticsTracker {
   private getOrCreateVisitorId(): string {
     const key = `analytics_visitor_${this.config.siteId}`;
     let visitorId = localStorage.getItem(key);
-    
+
     if (!visitorId) {
       visitorId = this.generateId();
       localStorage.setItem(key, visitorId);
     }
-    
+
     return visitorId;
   }
 
@@ -61,12 +61,12 @@ class AnalyticsTracker {
   private getOrCreateSessionId(): string {
     const key = `analytics_session_${this.config.siteId}`;
     let sessionId = sessionStorage.getItem(key);
-    
+
     if (!sessionId) {
       sessionId = this.generateId();
       sessionStorage.setItem(key, sessionId);
     }
-    
+
     return sessionId;
   }
 
@@ -85,7 +85,11 @@ class AnalyticsTracker {
     if (/tablet|ipad|playbook|silk/i.test(ua)) {
       return 'tablet';
     }
-    if (/mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(ua)) {
+    if (
+      /mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(
+        ua
+      )
+    ) {
       return 'mobile';
     }
     return 'desktop';
@@ -132,7 +136,10 @@ class AnalyticsTracker {
   /**
    * Track an event
    */
-  async track(eventType: 'pageview' | 'click' | 'form_submit', metadata?: Record<string, unknown>): Promise<void> {
+  async track(
+    eventType: 'pageview' | 'click' | 'form_submit',
+    metadata?: Record<string, unknown>
+  ): Promise<void> {
     const utmParams = this.getUTMParams();
     const country = await this.getCountry();
 
@@ -236,7 +243,7 @@ class AnalyticsTracker {
     });
 
     // Auto-track form submissions
-    document.addEventListener('submit', (e) => {
+    document.addEventListener('submit', e => {
       const form = e.target as HTMLFormElement;
       if (form.dataset.trackForm !== 'false') {
         const formId = form.id || form.name || 'unknown';
@@ -245,7 +252,7 @@ class AnalyticsTracker {
     });
 
     // Auto-track clicks on tracked elements
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', e => {
       const target = e.target as HTMLElement;
       if (target.dataset.trackClick === 'true') {
         const elementId = target.id || target.dataset.trackId || 'unknown';
@@ -284,7 +291,10 @@ declare global {
   interface Window {
     PortfolioAnalytics?: {
       init: (config: TrackingConfig) => AnalyticsTracker;
-      track: (eventType: 'pageview' | 'click' | 'form_submit', metadata?: Record<string, unknown>) => void;
+      track: (
+        eventType: 'pageview' | 'click' | 'form_submit',
+        metadata?: Record<string, unknown>
+      ) => void;
     };
   }
 }
@@ -298,7 +308,10 @@ if (typeof window !== 'undefined') {
       trackerInstance = new AnalyticsTracker(config);
       return trackerInstance;
     },
-    track: (eventType: 'pageview' | 'click' | 'form_submit', metadata?: Record<string, unknown>) => {
+    track: (
+      eventType: 'pageview' | 'click' | 'form_submit',
+      metadata?: Record<string, unknown>
+    ) => {
       if (trackerInstance) {
         trackerInstance.track(eventType, metadata);
       }

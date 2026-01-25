@@ -1,6 +1,13 @@
 export type UserType = 'freelancer' | 'agency' | 'business' | 'creative';
 export type PrimaryGoal = 'portfolio' | 'clients' | 'both';
-export type OnboardingStepId = 'welcome' | 'profile' | 'template' | 'customize' | 'content' | 'tour' | 'publish';
+export type OnboardingStepId =
+  | 'welcome'
+  | 'profile'
+  | 'template'
+  | 'customize'
+  | 'content'
+  | 'tour'
+  | 'publish';
 
 export interface OnboardingStep {
   id: OnboardingStepId;

@@ -3,7 +3,10 @@
 import { BaseBlock } from './BaseBlock';
 import { cn } from '@/lib/utils';
 import type { PortfolioBlock } from '@/lib/services/portfolio';
-import type { ImageBlockContent, ImageBlockSettings } from '@/lib/blocks/schema';
+import type {
+  ImageBlockContent,
+  ImageBlockSettings,
+} from '@/lib/blocks/schema';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ImageUploader } from '@/components/portfolio/media/ImageUploader';
@@ -11,7 +14,10 @@ import { ImageUploader } from '@/components/portfolio/media/ImageUploader';
 interface ImageBlockProps {
   block: PortfolioBlock;
   isEditing?: boolean;
-  onUpdate?: (content: Record<string, unknown>, settings?: Record<string, unknown>) => void;
+  onUpdate?: (
+    content: Record<string, unknown>,
+    settings?: Record<string, unknown>
+  ) => void;
   onDelete?: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
@@ -59,22 +65,20 @@ export function ImageBlock({
           value={content.image_url}
           className="w-full"
         />
-      ) : (
-        content.image_url ? (
-          <Image
-            src={content.image_url}
-            alt={content.alt || ''}
-            width={800}
-            height={600}
-            className={cn(
-              'h-auto w-full object-cover',
-              settings.rounded && 'rounded-lg'
-            )}
-            // Use legacy prop behavior or loader if needed for external images
-            unoptimized={true}
-          />
-        ) : null
-      )}
+      ) : content.image_url ? (
+        <Image
+          src={content.image_url}
+          alt={content.alt || ''}
+          width={800}
+          height={600}
+          className={cn(
+            'h-auto w-full object-cover',
+            settings.rounded && 'rounded-lg'
+          )}
+          // Use legacy prop behavior or loader if needed for external images
+          unoptimized={true}
+        />
+      ) : null}
       {content.caption && (
         <p className="mt-2 text-center text-sm text-muted-foreground">
           {content.caption}

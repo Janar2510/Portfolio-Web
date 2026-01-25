@@ -50,18 +50,20 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
     totalVisitors > 0 ? (totalConversions / totalVisitors) * 100 : 0;
 
   // Find control variant
-  const controlVariant = variants.find((v) => v.is_control);
+  const controlVariant = variants.find(v => v.is_control);
   const controlRate =
     controlVariant && controlVariant.visitors > 0
       ? (controlVariant.conversions / controlVariant.visitors) * 100
       : 0;
 
   // Calculate improvement for each variant
-  const variantsWithStats = variants.map((variant) => {
+  const variantsWithStats = variants.map(variant => {
     const rate =
       variant.visitors > 0 ? (variant.conversions / variant.visitors) * 100 : 0;
-    const improvement = controlRate > 0 ? ((rate - controlRate) / controlRate) * 100 : 0;
-    const isWinner = !variant.is_control && rate > controlRate && variant.visitors >= 100; // Minimum sample size
+    const improvement =
+      controlRate > 0 ? ((rate - controlRate) / controlRate) * 100 : 0;
+    const isWinner =
+      !variant.is_control && rate > controlRate && variant.visitors >= 100; // Minimum sample size
 
     return {
       ...variant,
@@ -78,7 +80,7 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
     label: variant.name,
   }));
 
-  const conversionChartData = variants.map((variant) => ({
+  const conversionChartData = variants.map(variant => ({
     date: new Date().toISOString(),
     value: variant.conversions,
     label: variant.name,
@@ -90,7 +92,9 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium">Total Visitors</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Visitors
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalVisitors}</div>
@@ -98,7 +102,9 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium">Total Conversions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Conversions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalConversions}</div>
@@ -106,10 +112,14 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium">Overall Conversion Rate</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Overall Conversion Rate
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{overallConversionRate.toFixed(2)}%</div>
+            <div className="text-2xl font-bold">
+              {overallConversionRate.toFixed(2)}%
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -121,7 +131,7 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {variantsWithStats.map((variant) => (
+            {variantsWithStats.map(variant => (
               <div key={variant.id} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -134,7 +144,8 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
                     )}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {variant.visitors} visitors, {variant.conversions} conversions
+                    {variant.visitors} visitors, {variant.conversions}{' '}
+                    conversions
                   </div>
                 </div>
                 <div className="space-y-1">
@@ -143,7 +154,9 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
                     {!variant.is_control && variant.improvement !== 0 && (
                       <span
                         className={
-                          variant.improvement > 0 ? 'text-green-600' : 'text-red-600'
+                          variant.improvement > 0
+                            ? 'text-green-600'
+                            : 'text-red-600'
                         }
                       >
                         {variant.improvement > 0 ? '+' : ''}
@@ -166,10 +179,7 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
 
       {/* Charts */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <SimpleChart
-          title="Visitors by Variant"
-          data={visitorChartData}
-        />
+        <SimpleChart title="Visitors by Variant" data={visitorChartData} />
         <SimpleChart
           title="Conversions by Variant"
           data={conversionChartData}
@@ -181,8 +191,9 @@ export function ExperimentResults({ experimentId }: ExperimentResultsProps) {
         <Card className="border-yellow-200 bg-yellow-50">
           <CardContent className="pt-6">
             <p className="text-sm text-yellow-800">
-              <strong>Note:</strong> This experiment needs more data for statistical significance.
-              We recommend at least 1,000 visitors per variant for reliable results.
+              <strong>Note:</strong> This experiment needs more data for
+              statistical significance. We recommend at least 1,000 visitors per
+              variant for reliable results.
             </p>
           </CardContent>
         </Card>

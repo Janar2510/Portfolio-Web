@@ -5,7 +5,14 @@
 
 'use client';
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, Eye, Sparkles } from 'lucide-react';
@@ -18,7 +25,11 @@ interface TemplateCardProps {
   onSelect: () => void;
 }
 
-export function TemplateCard({ template, onPreview, onSelect }: TemplateCardProps) {
+export function TemplateCard({
+  template,
+  onPreview,
+  onSelect,
+}: TemplateCardProps) {
   return (
     <Card className="group hover:shadow-lg transition-shadow cursor-pointer overflow-hidden">
       <div className="relative aspect-video bg-muted overflow-hidden">
@@ -50,17 +61,24 @@ export function TemplateCard({ template, onPreview, onSelect }: TemplateCardProp
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
           <div className="flex gap-2">
-            <Button size="sm" variant="secondary" onClick={(e) => {
-              e.stopPropagation();
-              onPreview();
-            }}>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={e => {
+                e.stopPropagation();
+                onPreview();
+              }}
+            >
               <Eye className="h-4 w-4 mr-1" />
               Preview
             </Button>
-            <Button size="sm" onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-            }}>
+            <Button
+              size="sm"
+              onClick={e => {
+                e.stopPropagation();
+                onSelect();
+              }}
+            >
               Use Template
             </Button>
           </div>
@@ -107,7 +125,7 @@ export function TemplateCard({ template, onPreview, onSelect }: TemplateCardProp
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-foreground transition-colors"
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
             Live Demo →
           </a>

@@ -23,11 +23,16 @@ export default function Error({
           {error.message || 'An unexpected error occurred'}
         </p>
         {error.digest && (
-          <p className="text-xs text-muted-foreground">Error ID: {error.digest}</p>
+          <p className="text-xs text-muted-foreground">
+            Error ID: {error.digest}
+          </p>
         )}
         <div className="flex gap-2 justify-center">
           <Button onClick={reset}>Try again</Button>
-          <Button variant="outline" onClick={() => (window.location.href = '/')}>
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = '/')}
+          >
             Go home
           </Button>
         </div>

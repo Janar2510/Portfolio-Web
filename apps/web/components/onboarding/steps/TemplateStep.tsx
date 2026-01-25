@@ -43,7 +43,8 @@ export function TemplateStep({
         <Card
           className={cn(
             'cursor-pointer transition-all hover:shadow-md',
-            selectedTemplateId === null && 'ring-2 ring-primary-500 border-primary-500'
+            selectedTemplateId === null &&
+              'ring-2 ring-primary-500 border-primary-500'
           )}
           onClick={() => onTemplateSelect(null)}
         >
@@ -73,7 +74,9 @@ export function TemplateStep({
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold mb-1">{t('scratch')}</h3>
-                <p className="text-sm text-muted-foreground">{t('scratchDesc')}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t('scratchDesc')}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -82,11 +85,7 @@ export function TemplateStep({
 
       {/* Continue Button */}
       <div className="flex justify-center pt-4">
-        <Button
-          size="lg"
-          onClick={onContinue}
-          className="min-w-[200px]"
-        >
+        <Button size="lg" onClick={onContinue} className="min-w-[200px]">
           Continue
         </Button>
       </div>

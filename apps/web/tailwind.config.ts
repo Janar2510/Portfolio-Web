@@ -109,6 +109,9 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        navy: {
+          900: 'hsl(var(--navy-border))',
+        },
       },
       fontFamily: {
         sans: ['var(--font-family-sans)', 'sans-serif'],

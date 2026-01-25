@@ -20,6 +20,8 @@ import type {
   ImageBlockSettings,
   VideoBlockContent,
   VideoBlockSettings,
+  FeaturesBlockContent,
+  FeaturesBlockSettings,
 } from './schema';
 
 // Typed block interfaces
@@ -43,6 +45,9 @@ export interface BlockContentMap {
   form: FormBlockContent;
   image: ImageBlockContent;
   video: VideoBlockContent;
+  features: FeaturesBlockContent;
+  header: unknown;
+  footer: unknown;
 }
 
 // Settings type map
@@ -54,6 +59,9 @@ export interface BlockSettingsMap {
   form: FormBlockSettings;
   image: ImageBlockSettings;
   video: VideoBlockSettings;
+  features: FeaturesBlockSettings;
+  header: unknown;
+  footer: unknown;
 }
 
 // Helper to convert PortfolioBlock to TypedBlock

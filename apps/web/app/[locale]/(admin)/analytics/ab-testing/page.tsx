@@ -30,8 +30,12 @@ import { format } from 'date-fns';
 export default function ABTestingPage() {
   const queryClient = useQueryClient();
   const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
-  const [selectedExperimentId, setSelectedExperimentId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'list' | 'variants' | 'results'>('list');
+  const [selectedExperimentId, setSelectedExperimentId] = useState<
+    string | null
+  >(null);
+  const [viewMode, setViewMode] = useState<'list' | 'variants' | 'results'>(
+    'list'
+  );
 
   // Fetch sites
   const { data: sites = [] } = useQuery({
@@ -98,13 +102,16 @@ export default function ABTestingPage() {
         .from('portfolio_pages')
         .select('id')
         .eq('site_id', selectedSiteId);
-      
+
       if (!pages || pages.length === 0) return [];
-      
+
       const { data, error } = await supabase
         .from('portfolio_blocks')
         .select('id, block_type, page_id')
-        .in('page_id', pages.map((p) => p.id));
+        .in(
+          'page_id',
+          pages.map(p => p.id)
+        );
       if (error) throw error;
       return data || [];
     },
@@ -142,7 +149,9 @@ export default function ABTestingPage() {
       return experiment as ABExperiment;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ab-experiments', selectedSiteId] });
+      queryClient.invalidateQueries({
+        queryKey: ['ab-experiments', selectedSiteId],
+      });
     },
   });
 
@@ -163,7 +172,9 @@ export default function ABTestingPage() {
       return data as ABExperiment;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ab-experiments', selectedSiteId] });
+      queryClient.invalidateQueries({
+        queryKey: ['ab-experiments', selectedSiteId],
+      });
     },
   });
 
@@ -180,7 +191,9 @@ export default function ABTestingPage() {
       return data as ABExperiment;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ab-experiments', selectedSiteId] });
+      queryClient.invalidateQueries({
+        queryKey: ['ab-experiments', selectedSiteId],
+      });
     },
   });
 
@@ -200,19 +213,26 @@ export default function ABTestingPage() {
       return data as ABExperiment;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ab-experiments', selectedSiteId] });
+      queryClient.invalidateQueries({
+        queryKey: ['ab-experiments', selectedSiteId],
+      });
     },
   });
 
   const deleteExperimentMutation = useMutation({
     mutationFn: async (id: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from('ab_experiments').delete().eq('id', id);
+      const { error } = await supabase
+        .from('ab_experiments')
+        .delete()
+        .eq('id', id);
       if (error) throw error;
       return id;
     },
-    onSuccess: (deletedId) => {
-      queryClient.invalidateQueries({ queryKey: ['ab-experiments', selectedSiteId] });
+    onSuccess: deletedId => {
+      queryClient.invalidateQueries({
+        queryKey: ['ab-experiments', selectedSiteId],
+      });
       if (selectedExperimentId === deletedId) {
         setSelectedExperimentId(null);
         setViewMode('list');
@@ -228,12 +248,12 @@ export default function ABTestingPage() {
       completed: { label: 'Completed', className: 'bg-blue-100 text-blue-800' },
     };
     const variant = variants[status] || variants.draft;
-    return (
-      <Badge className={variant.className}>{variant.label}</Badge>
-    );
+    return <Badge className={variant.className}>{variant.label}</Badge>;
   };
 
-  const selectedExperiment = experiments.find((e) => e.id === selectedExperimentId);
+  const selectedExperiment = experiments.find(
+    e => e.id === selectedExperimentId
+  );
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col">
@@ -254,7 +274,7 @@ export default function ABTestingPage() {
               <SelectValue placeholder="Select site" />
             </SelectTrigger>
             <SelectContent>
-              {sites.map((site) => (
+              {sites.map(site => (
                 <SelectItem key={site.id} value={site.id}>
                   {site.name} ({site.subdomain})
                 </SelectItem>
@@ -266,7 +286,7 @@ export default function ABTestingPage() {
               siteId={selectedSiteId}
               pages={pages}
               blocks={blocks}
-              onCreate={async (data) => {
+              onCreate={async data => {
                 await createExperimentMutation.mutateAsync(data);
               }}
             />
@@ -284,7 +304,9 @@ export default function ABTestingPage() {
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
                     <Play className="w-8 h-8 text-white" />
                   </div>
-                  <p className="text-lg font-semibold text-foreground">No experiments yet</p>
+                  <p className="text-lg font-semibold text-foreground">
+                    No experiments yet
+                  </p>
                   <p className="mt-2 text-sm text-muted-foreground">
                     Create your first A/B test experiment to get started
                   </p>
@@ -292,12 +314,14 @@ export default function ABTestingPage() {
               </div>
             ) : (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {experiments.map((experiment) => (
+                {experiments.map(experiment => (
                   <Card key={experiment.id}>
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <CardTitle className="text-lg">{experiment.name}</CardTitle>
+                          <CardTitle className="text-lg">
+                            {experiment.name}
+                          </CardTitle>
                           {experiment.description && (
                             <p className="mt-1 text-sm text-muted-foreground">
                               {experiment.description}
@@ -323,9 +347,14 @@ export default function ABTestingPage() {
                         </div>
                         {experiment.started_at && (
                           <div className="text-sm">
-                            <span className="text-muted-foreground">Started:</span>{' '}
+                            <span className="text-muted-foreground">
+                              Started:
+                            </span>{' '}
                             <span className="font-medium">
-                              {format(new Date(experiment.started_at), 'MMM d, yyyy')}
+                              {format(
+                                new Date(experiment.started_at),
+                                'MMM d, yyyy'
+                              )}
                             </span>
                           </div>
                         )}
@@ -346,7 +375,9 @@ export default function ABTestingPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => startExperimentMutation.mutate(experiment.id)}
+                              onClick={() =>
+                                startExperimentMutation.mutate(experiment.id)
+                              }
                             >
                               <Play className="mr-2 h-4 w-4" />
                               Start
@@ -356,7 +387,9 @@ export default function ABTestingPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => pauseExperimentMutation.mutate(experiment.id)}
+                              onClick={() =>
+                                pauseExperimentMutation.mutate(experiment.id)
+                              }
                             >
                               <Pause className="mr-2 h-4 w-4" />
                               Pause
@@ -379,7 +412,9 @@ export default function ABTestingPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => completeExperimentMutation.mutate(experiment.id)}
+                              onClick={() =>
+                                completeExperimentMutation.mutate(experiment.id)
+                              }
                             >
                               <CheckCircle2 className="mr-2 h-4 w-4" />
                               Complete
@@ -389,7 +424,9 @@ export default function ABTestingPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => startExperimentMutation.mutate(experiment.id)}
+                              onClick={() =>
+                                startExperimentMutation.mutate(experiment.id)
+                              }
                             >
                               <Play className="mr-2 h-4 w-4" />
                               Resume
@@ -400,7 +437,9 @@ export default function ABTestingPage() {
                             <Button
                               size="sm"
                               variant="destructive"
-                              onClick={() => deleteExperimentMutation.mutate(experiment.id)}
+                              onClick={() =>
+                                deleteExperimentMutation.mutate(experiment.id)
+                              }
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
                               Delete
@@ -420,7 +459,9 @@ export default function ABTestingPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold">{selectedExperiment?.name}</h2>
+                <h2 className="text-xl font-semibold">
+                  {selectedExperiment?.name}
+                </h2>
                 <p className="text-sm text-muted-foreground">
                   Manage variants for this experiment
                 </p>
@@ -437,8 +478,12 @@ export default function ABTestingPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold">{selectedExperiment?.name}</h2>
-                <p className="text-sm text-muted-foreground">Experiment results and analytics</p>
+                <h2 className="text-xl font-semibold">
+                  {selectedExperiment?.name}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Experiment results and analytics
+                </p>
               </div>
               <Button variant="outline" onClick={() => setViewMode('list')}>
                 Back to List

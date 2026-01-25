@@ -1,4 +1,6 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js';
+import { templates as fileTemplates } from '@/lib/portfolio/templates';
+import { convertTemplateDefToPortfolioTemplate } from '@/lib/portfolio/templates/converter';
 
 export interface PortfolioSite {
   id: string;
@@ -6,6 +8,7 @@ export interface PortfolioSite {
   name: string;
   subdomain: string;
   custom_domain: string | null;
+  custom_domain_verified: boolean;
   is_published: boolean;
   seo_title: string | null;
   seo_description: string | null;
@@ -36,6 +39,7 @@ export interface PortfolioBlock {
   block_type: string;
   content: Record<string, unknown>;
   settings: Record<string, unknown>;
+  anchor_id?: string;
   layout?: {
     colSpan?: number; // 1-12
     rowSpan?: number; // 1-n
@@ -76,10 +80,15 @@ export interface PortfolioTemplate {
   name: string;
   description: string | null;
   thumbnail_url: string | null;
+  preview_images?: string[];
   category: string | null;
   pages_schema: Record<string, unknown>;
   styles_schema: Record<string, unknown>;
+  features?: string[];
   is_active: boolean;
+  is_featured?: boolean;
+  is_premium?: boolean;
+  demo_url?: string | null;
   created_at: string;
 }
 
@@ -99,7 +108,9 @@ export class PortfolioService {
 
     if (!user) {
       try {
-        const { data: { user: authUser } } = await this.supabase.auth.getUser();
+        const {
+          data: { user: authUser },
+        } = await this.supabase.auth.getUser();
         user = authUser;
       } catch {
         // Auth call failed, continue with null user
@@ -112,9 +123,8 @@ export class PortfolioService {
       .from('portfolio_sites')
       .select('*')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code === 'PGRST116') return null; // No site found
     if (error) throw error;
     return data;
   }
@@ -125,9 +135,8 @@ export class PortfolioService {
       .select('*')
       .eq('subdomain', subdomain)
       .eq('is_published', true)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code === 'PGRST116') return null;
     if (error) throw error;
     return data;
   }
@@ -137,9 +146,8 @@ export class PortfolioService {
       .from('portfolio_sites')
       .select('*')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code === 'PGRST116') return null;
     if (error) throw error;
     return data;
   }
@@ -148,19 +156,32 @@ export class PortfolioService {
     name: string;
     subdomain: string;
     templateId?: string;
+    logoUrl?: string; // New
+    brandVoice?: string; // New (placeholder)
   }): Promise<PortfolioSite> {
     // Try to get user from the service instance (recovered in route or provided in constructor)
     let user = this.providedUser;
 
     if (!user) {
-      console.log('[PortfolioService] No provided user, attempting auth.getUser()...');
-      const { data: { user: authUser }, error: userError } = await this.supabase.auth.getUser();
-      if (userError) console.error('[PortfolioService] auth.getUser() error:', userError.message);
+      console.log(
+        '[PortfolioService] No provided user, attempting auth.getUser()...'
+      );
+      const {
+        data: { user: authUser },
+        error: userError,
+      } = await this.supabase.auth.getUser();
+      if (userError)
+        console.error(
+          '[PortfolioService] auth.getUser() error:',
+          userError.message
+        );
       user = authUser;
     }
 
     if (!user) {
-      console.error('[PortfolioService] Final auth check failed: Not authenticated');
+      console.error(
+        '[PortfolioService] Final auth check failed: Not authenticated'
+      );
       throw new Error('Not authenticated');
     }
 
@@ -175,7 +196,10 @@ export class PortfolioService {
       .maybeSingle();
 
     if (profileError || !profile) {
-      console.warn('[PortfolioService] Profile missing or error:', profileError?.message);
+      console.warn(
+        '[PortfolioService] Profile missing or error:',
+        profileError?.message
+      );
       console.log('[PortfolioService] Attempting to create missing profile...');
 
       const { error: createProfileError } = await this.supabase
@@ -183,11 +207,14 @@ export class PortfolioService {
         .insert({
           id: user.id,
           display_name: user.user_metadata?.full_name || user.email,
-          locale: 'en'
+          locale: 'en',
         });
 
       if (createProfileError) {
-        console.error('[PortfolioService] Failed to create profile:', createProfileError.message);
+        console.error(
+          '[PortfolioService] Failed to create profile:',
+          createProfileError.message
+        );
         // We still try to proceed, but it will likely fail on FK constraint
       } else {
         console.log('[PortfolioService] Profile created successfully');
@@ -203,7 +230,11 @@ export class PortfolioService {
       throw new Error('User already has a portfolio site');
     }
 
-    console.log('[PortfolioService] Inserting site row:', { name: site.name, subdomain: site.subdomain, user_id: user.id });
+    console.log('[PortfolioService] Inserting site row:', {
+      name: site.name,
+      subdomain: site.subdomain,
+      user_id: user.id,
+    });
     const { data, error } = await this.supabase
       .from('portfolio_sites')
       .insert({
@@ -223,11 +254,16 @@ export class PortfolioService {
     if (site.templateId) {
       try {
         console.log('[PortfolioService] Applying template:', site.templateId);
-        await this.applyTemplate(data.id, site.templateId);
+        await this.applyTemplate(data.id, site.templateId, {
+          logoUrl: site.logoUrl,
+        });
       } catch (templateError) {
-        console.error('[PortfolioService] Failed to apply template:', templateError);
-        // We don't throw here to avoid failing the whole site creation, 
-        // but arguably we should let the user know. 
+        console.error(
+          '[PortfolioService] Failed to apply template:',
+          templateError
+        );
+        // We don't throw here to avoid failing the whole site creation,
+        // but arguably we should let the user know.
         // For now, we'll just log it. The site is created empty.
       }
     }
@@ -241,6 +277,7 @@ export class PortfolioService {
       name?: string;
       subdomain?: string;
       custom_domain?: string;
+      custom_domain_verified?: boolean;
       is_published?: boolean;
       seo_title?: string;
       seo_description?: string;
@@ -294,22 +331,23 @@ export class PortfolioService {
       .from('portfolio_pages')
       .select('*')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code === 'PGRST116') return null;
     if (error) throw error;
     return data;
   }
 
-  async getPageBySlug(siteId: string, slug: string): Promise<PortfolioPage | null> {
+  async getPageBySlug(
+    siteId: string,
+    slug: string
+  ): Promise<PortfolioPage | null> {
     const { data, error } = await this.supabase
       .from('portfolio_pages')
       .select('*')
       .eq('site_id', siteId)
       .eq('slug', slug)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code === 'PGRST116') return null;
     if (error) throw error;
     return data;
   }
@@ -480,9 +518,8 @@ export class PortfolioService {
       .from('portfolio_styles')
       .select('*')
       .eq('site_id', siteId)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code === 'PGRST116') return null;
     if (error) throw error;
     return data;
   }
@@ -529,87 +566,107 @@ export class PortfolioService {
     const { data, error } = await query;
     if (error) throw error;
 
-    // Inject static templates
-    const staticTemplates: PortfolioTemplate[] = [
-      {
-        id: 'espresso',
-        name: 'The Espresso Stroll',
-        description: 'Warm, dark themed template perfect for lifestyle blogs or coffee shops.',
-        thumbnail_url: null,
-        category: 'portfolio',
-        pages_schema: {},
-        styles_schema: {},
-        is_active: true,
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 'ava',
-        name: 'Ava Jones',
-        description: 'Creative copywriter portfolio with soft gradients and clean typography.',
-        thumbnail_url: null,
-        category: 'portfolio',
-        pages_schema: {},
-        styles_schema: {},
-        is_active: true,
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 'bernadette',
-        name: 'Bernadette Wilde',
-        description: 'Professional marketing portfolio with a clean, neutral aesthetic.',
-        thumbnail_url: null,
-        category: 'business',
-        pages_schema: {},
-        styles_schema: {},
-        is_active: true,
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 'emily',
-        name: 'Emily Maine',
-        description: 'Elegant writer portfolio with a focus on editorial content.',
-        thumbnail_url: null,
-        category: 'portfolio',
-        pages_schema: {},
-        styles_schema: {},
-        is_active: true,
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 'bento',
-        name: 'Bento Grid',
-        description: 'Modern, block-based layout perfect for showcasing diverse content types.',
-        thumbnail_url: null,
-        category: 'portfolio',
-        pages_schema: {},
-        styles_schema: {},
-        is_active: true,
-        created_at: new Date().toISOString(),
-      }
-    ];
+    // Inject static templates from file definitions
+    const staticTemplates: PortfolioTemplate[] = fileTemplates.map(def =>
+      convertTemplateDefToPortfolioTemplate(def)
+    );
 
     // Filter static templates if category provided
     const filteredStatic = category
-      ? staticTemplates.filter(t => t.category === category)
+      ? staticTemplates.filter(t =>
+        // Simple category matching
+        category === 'portfolio' ? true : t.category === category
+      )
       : staticTemplates;
 
-    return [...(data || []), ...filteredStatic];
+    // FORCED OVERRIDE: Return ONLY static templates to ensure users see the updated designs
+    // and not stale/broken database records.
+    return filteredStatic;
   }
 
   async getTemplateById(id: string): Promise<PortfolioTemplate | null> {
+    // Check file templates FIRST (Static First Strategy)
+    const fileTemplate = fileTemplates.find(t => t.templateId === id);
+    if (fileTemplate) {
+      return convertTemplateDefToPortfolioTemplate(fileTemplate);
+    }
+
     const { data, error } = await this.supabase
       .from('portfolio_templates')
       .select('*')
       .eq('id', id)
       .eq('is_active', true)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code === 'PGRST116') return null;
+    if (data) return data;
+
+    return null;
+  }
+
+  // Project methods
+  async getProjects(siteId: string): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('portfolio_projects')
+      .select('*')
+      .eq('site_id', siteId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  async getProjectBySlug(siteId: string, slug: string): Promise<any | null> {
+    const { data, error } = await this.supabase
+      .from('portfolio_projects')
+      .select('*')
+      .eq('site_id', siteId)
+      .eq('slug', slug)
+      .maybeSingle();
+
     if (error) throw error;
     return data;
   }
 
-  async applyTemplate(siteId: string, templateId: string): Promise<void> {
+  async createProject(siteId: string, project: any): Promise<any> {
+    const { data, error } = await this.supabase
+      .from('portfolio_projects')
+      .insert({
+        site_id: siteId,
+        ...project,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async updateProject(id: string, updates: any): Promise<any> {
+    const { data, error } = await this.supabase
+      .from('portfolio_projects')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async deleteProject(id: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('portfolio_projects')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async applyTemplate(
+    siteId: string,
+    templateId: string,
+    options: { logoUrl?: string } = {}
+  ): Promise<void> {
     const template = await this.getTemplateById(templateId);
     if (!template) throw new Error('Template not found');
 
@@ -620,7 +677,7 @@ export class PortfolioService {
         color_palette: styles.color_palette || {},
         typography: styles.typography || {},
         spacing_scale: styles.spacing_scale,
-        custom_css: styles.custom_css || undefined
+        custom_css: styles.custom_css || undefined,
       });
     }
 
@@ -638,12 +695,30 @@ export class PortfolioService {
 
     if (pages && Array.isArray(pages)) {
       // DELETE EXISTING PAGES (Strict Replacement)
-      // We do this first to ensure a clean slate.
       const existingPages = await this.getPages(siteId);
       for (const p of existingPages) {
-        // We delete one by one to ensure any potential cascades or hooks (if we add them later) run.
-        // In a real prod env, a bulk delete via supabase.rpc or delete().in() would be better.
         await this.deletePage(p.id);
+      }
+
+      // DELETE EXISTING PROJECTS (To ensure clean template projects)
+      const existingProjects = await this.getProjects(siteId);
+      for (const p of existingProjects) {
+        await this.deleteProject(p.id);
+      }
+
+      // SEED PROJECTS (if defined in template)
+      // Note: We need to check the raw template definition for the projects section
+      const templateDef = fileTemplates.find(t => t.templateId === templateId);
+      if (templateDef?.sections?.projects?.items) {
+        for (const item of templateDef.sections.projects.items) {
+          await this.createProject(siteId, {
+            title: item.title,
+            slug: item.title.toLowerCase().replace(/\s+/g, '-'),
+            thumbnail_url: item.image,
+            excerpt: item.description,
+            category: item.category,
+          });
+        }
       }
 
       for (const pageData of pages) {
@@ -656,9 +731,15 @@ export class PortfolioService {
         // Create blocks for the page
         if (pageData.blocks) {
           for (const blockData of pageData.blocks) {
+            // Apply logo override if Header
+            let content = blockData.content;
+            if (options.logoUrl && blockData.block_type === 'header') {
+              content = { ...content, logo_image: options.logoUrl };
+            }
+
             await this.createBlock(page.id, {
               block_type: blockData.block_type,
-              content: blockData.content,
+              content: content,
               settings: blockData.settings,
             });
           }
@@ -680,35 +761,147 @@ export class PortfolioService {
     // 1. Create the new page
     const newPage = await this.createPage(siteId, page);
 
-    // 2. If it's NOT a homepage, try to inherit layout from the existing homepage
-    if (!page.is_homepage) {
-      const allPages = await this.getPages(siteId);
-      const homePage = allPages.find(p => p.is_homepage);
+    // 2. Try to inherit layout logic
+    let layoutBlocks: PortfolioBlock[] = [];
 
-      if (homePage) {
-        // Fetch blocks from homepage
-        const homeBlocks = await this.getBlocks(homePage.id);
+    // Try getting from homepage first
+    const allPages = await this.getPages(siteId);
+    const homePage = allPages.find(p => p.is_homepage);
 
-        // Find Header and Footer
-        const layoutBlocks = homeBlocks.filter(b =>
-          b.block_type === 'header' || b.block_type === 'footer'
-        );
+    if (homePage) {
+      const homeBlocks = await this.getBlocks(homePage.id);
+      layoutBlocks = homeBlocks.filter(
+        b => b.block_type === 'header' || b.block_type === 'footer'
+      );
+    }
 
-        // Clone them to the new page
-        for (const block of layoutBlocks) {
-          await this.createBlock(newPage.id, {
-            block_type: block.block_type,
-            content: block.content,
-            settings: block.settings,
-            // Keep sort order logic: Header at top (0), Footer at bottom (likely high number)
-            // But usually we just want to copy them. We might need to adjust sort_order if we want them specifically placed.
-            // For now, let's just copy exactly.
-            sort_order: block.sort_order
-          });
-        }
-      }
+    // If no inherited blocks found (or not homepage), create defaults
+    const hasHeader = layoutBlocks.some(b => b.block_type === 'header');
+    const hasFooter = layoutBlocks.some(b => b.block_type === 'footer');
+
+    // Helper to add block
+    const addBlock = async (
+      type: string,
+      sortOrder: number,
+      content: any = {}
+    ) => {
+      await this.createBlock(newPage.id, {
+        block_type: type,
+        content,
+        settings: {},
+        sort_order: sortOrder,
+      });
+    };
+
+    // Clone inherited blocks
+    for (const block of layoutBlocks) {
+      await this.createBlock(newPage.id, {
+        block_type: block.block_type,
+        content: block.content,
+        settings: block.settings,
+        sort_order: block.block_type === 'header' ? -1 : 9999, // Force to top/bottom
+      });
+    }
+
+    // Create missing defaults
+    if (!hasHeader) {
+      await addBlock('header', -1, {
+        logo_text: 'My Portfolio',
+        links: [
+          { label: 'Home', url: '/' },
+          { label: 'Services', url: '#services' },
+          { label: 'My Work', url: '#work' },
+          { label: 'Contact', url: '#contact' }, // In real app, this triggers modal via ID
+        ],
+      });
+    }
+
+    if (!hasFooter) {
+      await addBlock('footer', 9999, {
+        copyright_text: `© ${new Date().getFullYear()} My Portfolio. • Privacy Statement • Made with Portfolio Web`,
+        social_links: [
+          { platform: 'twitter', url: '#' },
+          { platform: 'linkedin', url: '#' },
+          { platform: 'instagram', url: '#' },
+        ],
+      });
     }
 
     return newPage;
+  }
+
+  // Media methods
+  async getMedia(siteId: string, folder?: string): Promise<any[]> {
+    let query = this.supabase
+      .from('portfolio_media')
+      .select('*')
+      .eq('site_id', siteId)
+      .order('created_at', { ascending: false });
+
+    if (folder) {
+      // Assuming folder logic or just ignoring if not implemented in DB
+      // query = query.eq('folder', folder);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data || [];
+  }
+
+  async uploadMedia(siteId: string, file: File): Promise<any> {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `${siteId}/${fileName}`;
+
+    // Upload to Storage
+    const { error: uploadError } = await this.supabase.storage
+      .from('portfolio-media')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    // Get Public URL
+    const {
+      data: { publicUrl },
+    } = this.supabase.storage.from('portfolio-media').getPublicUrl(filePath);
+
+    // Insert to DB
+    const { data, error } = await this.supabase
+      .from('portfolio_media')
+      .insert({
+        site_id: siteId,
+        file_name: file.name,
+        file_path: filePath,
+        optimized_url: publicUrl, // Using public URL as optimized for now
+        mime_type: file.type,
+        file_size: file.size,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async deleteMedia(mediaId: string): Promise<void> {
+    // Get file path first
+    const { data: media } = await this.supabase
+      .from('portfolio_media')
+      .select('file_path')
+      .eq('id', mediaId)
+      .single();
+
+    if (media) {
+      await this.supabase.storage
+        .from('portfolio-media')
+        .remove([media.file_path]);
+    }
+
+    const { error } = await this.supabase
+      .from('portfolio_media')
+      .delete()
+      .eq('id', mediaId);
+
+    if (error) throw error;
   }
 }

@@ -67,7 +67,9 @@ export function VariantManager({ experimentId }: VariantManagerProps) {
       return result as ABVariant;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ab-variants', experimentId] });
+      queryClient.invalidateQueries({
+        queryKey: ['ab-variants', experimentId],
+      });
       setIsCreateOpen(false);
     },
   });
@@ -92,7 +94,9 @@ export function VariantManager({ experimentId }: VariantManagerProps) {
       return data as ABVariant;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ab-variants', experimentId] });
+      queryClient.invalidateQueries({
+        queryKey: ['ab-variants', experimentId],
+      });
       setEditingVariant(null);
     },
   });
@@ -101,15 +105,20 @@ export function VariantManager({ experimentId }: VariantManagerProps) {
   const deleteVariantMutation = useMutation({
     mutationFn: async (id: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from('ab_variants').delete().eq('id', id);
+      const { error } = await supabase
+        .from('ab_variants')
+        .delete()
+        .eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ab-variants', experimentId] });
+      queryClient.invalidateQueries({
+        queryKey: ['ab-variants', experimentId],
+      });
     },
   });
 
-  const hasControl = variants.some((v) => v.is_control);
+  const hasControl = variants.some(v => v.is_control);
 
   return (
     <div className="space-y-4">
@@ -125,11 +134,13 @@ export function VariantManager({ experimentId }: VariantManagerProps) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create Variant</DialogTitle>
-              <DialogDescription>Add a new variant to test against the control</DialogDescription>
+              <DialogDescription>
+                Add a new variant to test against the control
+              </DialogDescription>
             </DialogHeader>
             <VariantForm
               isControl={!hasControl}
-              onSubmit={(data) => {
+              onSubmit={data => {
                 createVariantMutation.mutate({
                   name: data.name,
                   is_control: data.is_control,
@@ -143,7 +154,7 @@ export function VariantManager({ experimentId }: VariantManagerProps) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        {variants.map((variant) => (
+        {variants.map(variant => (
           <Card key={variant.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -187,9 +198,14 @@ export function VariantManager({ experimentId }: VariantManagerProps) {
                 </div>
                 {variant.visitors > 0 && (
                   <div>
-                    <span className="text-muted-foreground">Conversion Rate:</span>{' '}
+                    <span className="text-muted-foreground">
+                      Conversion Rate:
+                    </span>{' '}
                     <span className="font-medium">
-                      {((variant.conversions / variant.visitors) * 100).toFixed(2)}%
+                      {((variant.conversions / variant.visitors) * 100).toFixed(
+                        2
+                      )}
+                      %
                     </span>
                   </div>
                 )}
@@ -200,15 +216,20 @@ export function VariantManager({ experimentId }: VariantManagerProps) {
       </div>
 
       {editingVariant && (
-        <Dialog open={!!editingVariant} onOpenChange={() => setEditingVariant(null)}>
+        <Dialog
+          open={!!editingVariant}
+          onOpenChange={() => setEditingVariant(null)}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Edit Variant</DialogTitle>
-              <DialogDescription>Update variant name and content differences</DialogDescription>
+              <DialogDescription>
+                Update variant name and content differences
+              </DialogDescription>
             </DialogHeader>
             <VariantForm
               variant={editingVariant}
-              onSubmit={(data) => {
+              onSubmit={data => {
                 updateVariantMutation.mutate({
                   id: editingVariant.id,
                   updates: {
@@ -229,22 +250,37 @@ export function VariantManager({ experimentId }: VariantManagerProps) {
 interface VariantFormProps {
   variant?: ABVariant;
   isControl?: boolean;
-  onSubmit: (data: { name: string; is_control: boolean; content_diff: string }) => void;
+  onSubmit: (data: {
+    name: string;
+    is_control: boolean;
+    content_diff: string;
+  }) => void;
   onCancel: () => void;
 }
 
-function VariantForm({ variant, isControl = false, onSubmit, onCancel }: VariantFormProps) {
+function VariantForm({
+  variant,
+  isControl = false,
+  onSubmit,
+  onCancel,
+}: VariantFormProps) {
   const [name, setName] = useState(variant?.name || '');
   const [contentDiff, setContentDiff] = useState(
     variant ? JSON.stringify(variant.content_diff, null, 2) : '{}'
   );
-  const [isControlVariant, setIsControlVariant] = useState(variant?.is_control || isControl);
+  const [isControlVariant, setIsControlVariant] = useState(
+    variant?.is_control || isControl
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     try {
       JSON.parse(contentDiff); // Validate JSON
-      onSubmit({ name, is_control: isControlVariant, content_diff: contentDiff });
+      onSubmit({
+        name,
+        is_control: isControlVariant,
+        content_diff: contentDiff,
+      });
     } catch (error) {
       alert('Invalid JSON in content differences');
     }
@@ -257,7 +293,7 @@ function VariantForm({ variant, isControl = false, onSubmit, onCancel }: Variant
         <Input
           id="variant_name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
           placeholder="e.g., Variant A, Red Button, etc."
           required
         />
@@ -269,7 +305,7 @@ function VariantForm({ variant, isControl = false, onSubmit, onCancel }: Variant
             type="checkbox"
             id="is_control"
             checked={isControlVariant}
-            onChange={(e) => setIsControlVariant(e.target.checked)}
+            onChange={e => setIsControlVariant(e.target.checked)}
             disabled={variant?.is_control}
           />
           <Label htmlFor="is_control">Control Variant</Label>
@@ -284,7 +320,7 @@ function VariantForm({ variant, isControl = false, onSubmit, onCancel }: Variant
         <Textarea
           id="content_diff"
           value={contentDiff}
-          onChange={(e) => setContentDiff(e.target.value)}
+          onChange={e => setContentDiff(e.target.value)}
           placeholder='{"title": "New Title", "buttonText": "Click Me"}'
           rows={8}
           required

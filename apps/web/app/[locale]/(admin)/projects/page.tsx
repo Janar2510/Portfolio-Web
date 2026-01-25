@@ -3,14 +3,25 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ProjectList, type Project } from '@/components/projects/ProjectList';
-import { KanbanBoard, type ProjectColumn, type ProjectTask } from '@/components/projects/KanbanBoard';
+import {
+  KanbanBoard,
+  type ProjectColumn,
+  type ProjectTask,
+} from '@/components/projects/KanbanBoard';
 import { TaskDetailModal } from '@/components/projects/TaskDetailModal';
-import { type Task, type Subtask, type TaskComment, type ProjectColumn as ServiceProjectColumn } from '@/lib/services/projects';
+import {
+  type Task,
+  type Subtask,
+  type TaskComment,
+  type ProjectColumn as ServiceProjectColumn,
+} from '@/lib/services/projects';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function ProjectsPage() {
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const { user } = useAuth();
@@ -101,9 +112,15 @@ export default function ProjectsPage() {
 
   // Create project mutation
   const createProjectMutation = useMutation({
-    mutationFn: async (data: { name: string; description?: string; color?: string }) => {
+    mutationFn: async (data: {
+      name: string;
+      description?: string;
+      color?: string;
+    }) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) throw new Error('User not found');
 
@@ -140,7 +157,13 @@ export default function ProjectsPage() {
 
   // Update project mutation
   const updateProjectMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<Project> }) => {
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<Project>;
+    }) => {
       const supabase = createClient();
       const { data: project, error } = await supabase
         .from('projects')
@@ -184,13 +207,23 @@ export default function ProjectsPage() {
       await Promise.all(updates);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['project-columns', selectedProjectId] });
+      queryClient.invalidateQueries({
+        queryKey: ['project-columns', selectedProjectId],
+      });
     },
   });
 
   // Move task mutation
   const moveTaskMutation = useMutation({
-    mutationFn: async ({ taskId, columnId, sortOrder }: { taskId: string; columnId: string; sortOrder: number }) => {
+    mutationFn: async ({
+      taskId,
+      columnId,
+      sortOrder,
+    }: {
+      taskId: string;
+      columnId: string;
+      sortOrder: number;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('tasks')
@@ -202,13 +235,21 @@ export default function ProjectsPage() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['project-tasks', selectedProjectId] });
+      queryClient.invalidateQueries({
+        queryKey: ['project-tasks', selectedProjectId],
+      });
     },
   });
 
   // Update task mutation
   const updateTaskMutation = useMutation({
-    mutationFn: async ({ taskId, updates }: { taskId: string; updates: Partial<Task> }) => {
+    mutationFn: async ({
+      taskId,
+      updates,
+    }: {
+      taskId: string;
+      updates: Partial<Task>;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('tasks')
@@ -220,8 +261,12 @@ export default function ProjectsPage() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['project-tasks', selectedProjectId] });
-      queryClient.invalidateQueries({ queryKey: ['task-subtasks', selectedTask?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['project-tasks', selectedProjectId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['task-subtasks', selectedTask?.id],
+      });
     },
   });
 
@@ -233,7 +278,9 @@ export default function ProjectsPage() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['project-tasks', selectedProjectId] });
+      queryClient.invalidateQueries({
+        queryKey: ['project-tasks', selectedProjectId],
+      });
       setIsTaskModalOpen(false);
       setSelectedTask(null);
     },
@@ -241,9 +288,19 @@ export default function ProjectsPage() {
 
   // Create task mutation
   const createTaskMutation = useMutation({
-    mutationFn: async ({ projectId, columnId, title }: { projectId: string; columnId: string; title: string }) => {
+    mutationFn: async ({
+      projectId,
+      columnId,
+      title,
+    }: {
+      projectId: string;
+      columnId: string;
+      title: string;
+    }) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
       // Get current max sort order
@@ -254,7 +311,10 @@ export default function ProjectsPage() {
         .order('sort_order', { ascending: false })
         .limit(1);
 
-      const newSortOrder = existingTasks?.[0]?.sort_order !== undefined ? existingTasks[0].sort_order + 1 : 0;
+      const newSortOrder =
+        existingTasks?.[0]?.sort_order !== undefined
+          ? existingTasks[0].sort_order + 1
+          : 0;
 
       const { data, error } = await supabase
         .from('tasks')
@@ -271,13 +331,21 @@ export default function ProjectsPage() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['project-tasks', selectedProjectId] });
+      queryClient.invalidateQueries({
+        queryKey: ['project-tasks', selectedProjectId],
+      });
     },
   });
 
   // Create subtask mutation
   const createSubtaskMutation = useMutation({
-    mutationFn: async ({ taskId, title }: { taskId: string; title: string }) => {
+    mutationFn: async ({
+      taskId,
+      title,
+    }: {
+      taskId: string;
+      title: string;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('subtasks')
@@ -288,13 +356,21 @@ export default function ProjectsPage() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['task-subtasks', selectedTask?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['task-subtasks', selectedTask?.id],
+      });
     },
   });
 
   // Update subtask mutation
   const updateSubtaskMutation = useMutation({
-    mutationFn: async ({ subtaskId, updates }: { subtaskId: string; updates: Partial<Subtask> }) => {
+    mutationFn: async ({
+      subtaskId,
+      updates,
+    }: {
+      subtaskId: string;
+      updates: Partial<Subtask>;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('subtasks')
@@ -306,7 +382,9 @@ export default function ProjectsPage() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['task-subtasks', selectedTask?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['task-subtasks', selectedTask?.id],
+      });
     },
   });
 
@@ -314,19 +392,32 @@ export default function ProjectsPage() {
   const deleteSubtaskMutation = useMutation({
     mutationFn: async (subtaskId: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from('subtasks').delete().eq('id', subtaskId);
+      const { error } = await supabase
+        .from('subtasks')
+        .delete()
+        .eq('id', subtaskId);
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['task-subtasks', selectedTask?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['task-subtasks', selectedTask?.id],
+      });
     },
   });
 
   // Create comment mutation
   const createCommentMutation = useMutation({
-    mutationFn: async ({ taskId, content }: { taskId: string; content: string }) => {
+    mutationFn: async ({
+      taskId,
+      content,
+    }: {
+      taskId: string;
+      content: string;
+    }) => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
       const { data, error } = await supabase
         .from('task_comments')
@@ -337,13 +428,21 @@ export default function ProjectsPage() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['task-comments', selectedTask?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['task-comments', selectedTask?.id],
+      });
     },
   });
 
   // Update comment mutation
   const updateCommentMutation = useMutation({
-    mutationFn: async ({ commentId, content }: { commentId: string; content: string }) => {
+    mutationFn: async ({
+      commentId,
+      content,
+    }: {
+      commentId: string;
+      content: string;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('task_comments')
@@ -355,7 +454,9 @@ export default function ProjectsPage() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['task-comments', selectedTask?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['task-comments', selectedTask?.id],
+      });
     },
   });
 
@@ -363,11 +464,16 @@ export default function ProjectsPage() {
   const deleteCommentMutation = useMutation({
     mutationFn: async (commentId: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from('task_comments').delete().eq('id', commentId);
+      const { error } = await supabase
+        .from('task_comments')
+        .delete()
+        .eq('id', commentId);
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['task-comments', selectedTask?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['task-comments', selectedTask?.id],
+      });
     },
   });
 
@@ -395,7 +501,7 @@ export default function ProjectsPage() {
           projects={projects}
           currentProjectId={selectedProjectId || undefined}
           onProjectSelect={setSelectedProjectId}
-          onProjectCreate={async (data) => {
+          onProjectCreate={async data => {
             const newProject = await createProjectMutation.mutateAsync(data);
             if (newProject) {
               setSelectedProjectId(newProject.id);
@@ -404,7 +510,7 @@ export default function ProjectsPage() {
           onProjectUpdate={async (id, data) => {
             await updateProjectMutation.mutateAsync({ id, data });
           }}
-          onProjectDelete={async (id) => {
+          onProjectDelete={async id => {
             await deleteProjectMutation.mutateAsync(id);
           }}
         />
@@ -417,14 +523,18 @@ export default function ProjectsPage() {
             projectId={selectedProjectId}
             columns={columns as ProjectColumn[]}
             tasks={tasks as ProjectTask[]}
-            onColumnsReorder={async (newColumns) => {
+            onColumnsReorder={async newColumns => {
               await reorderColumnsMutation.mutateAsync(newColumns);
             }}
             onTasksReorder={async () => {
               // This is handled by moveTask
             }}
             onTaskMove={async (taskId, columnId, sortOrder) => {
-              await moveTaskMutation.mutateAsync({ taskId, columnId, sortOrder });
+              await moveTaskMutation.mutateAsync({
+                taskId,
+                columnId,
+                sortOrder,
+              });
             }}
             onTaskClick={handleTaskClick}
             onTaskCreate={async (columnId, title) => {
@@ -441,11 +551,23 @@ export default function ProjectsPage() {
           <div className="flex h-full items-center justify-center animate-fade-in">
             <div className="text-center animate-scale-in">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
                 </svg>
               </div>
-              <p className="text-lg font-semibold text-foreground">Select a project to get started</p>
+              <p className="text-lg font-semibold text-foreground">
+                Select a project to get started
+              </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Choose a project from the sidebar or create a new one
               </p>
@@ -476,7 +598,7 @@ export default function ProjectsPage() {
               setSelectedTask(updatedTask as Task);
             }
           }}
-          onDelete={async (taskId) => {
+          onDelete={async taskId => {
             await deleteTaskMutation.mutateAsync(taskId);
           }}
           subtasks={subtasks}
@@ -487,7 +609,7 @@ export default function ProjectsPage() {
           onSubtaskUpdate={async (subtaskId, updates) => {
             await updateSubtaskMutation.mutateAsync({ subtaskId, updates });
           }}
-          onSubtaskDelete={async (subtaskId) => {
+          onSubtaskDelete={async subtaskId => {
             await deleteSubtaskMutation.mutateAsync(subtaskId);
           }}
           onCommentCreate={async (taskId, content) => {
@@ -496,7 +618,7 @@ export default function ProjectsPage() {
           onCommentUpdate={async (commentId, content) => {
             await updateCommentMutation.mutateAsync({ commentId, content });
           }}
-          onCommentDelete={async (commentId) => {
+          onCommentDelete={async commentId => {
             await deleteCommentMutation.mutateAsync(commentId);
           }}
           currentUserId={user?.id}

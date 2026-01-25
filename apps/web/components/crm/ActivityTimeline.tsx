@@ -2,7 +2,15 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { Mail, Phone, Calendar, FileText, CheckCircle2, Clock, Plus } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  Calendar,
+  FileText,
+  CheckCircle2,
+  Clock,
+  Plus,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -17,7 +25,13 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import type { CRMActivity, ActivityType } from '@/lib/services/crm';
 
@@ -32,7 +46,10 @@ interface ActivityTimelineProps {
     is_completed?: boolean;
     due_date?: string;
   }) => Promise<void>;
-  onActivityUpdate: (activityId: string, updates: Partial<CRMActivity>) => Promise<void>;
+  onActivityUpdate: (
+    activityId: string,
+    updates: Partial<CRMActivity>
+  ) => Promise<void>;
   onActivityDelete: (activityId: string) => Promise<void>;
   contactId?: string;
   dealId?: string;
@@ -76,7 +93,8 @@ export function ActivityTimeline({
       activity_type: activityType,
       title: formData.get('title')?.toString() || undefined,
       description: formData.get('description')?.toString() || undefined,
-      is_completed: activityType !== 'task' || formData.get('is_completed') === 'true',
+      is_completed:
+        activityType !== 'task' || formData.get('is_completed') === 'true',
       due_date: dueDate || undefined,
     });
     setIsCreateDialogOpen(false);
@@ -84,7 +102,8 @@ export function ActivityTimeline({
   };
 
   const sortedActivities = [...activities].sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
 
   return (
@@ -161,7 +180,7 @@ export function ActivityTimeline({
             No activities yet. Add your first activity!
           </div>
         ) : (
-          sortedActivities.map((activity) => {
+          sortedActivities.map(activity => {
             const Icon = activityIcons[activity.activity_type];
             const colorClass = activityColors[activity.activity_type];
 
@@ -194,7 +213,10 @@ export function ActivityTimeline({
                       ) : (
                         <Clock className="h-4 w-4 text-orange-600" />
                       )}
-                      {format(new Date(activity.created_at), 'MMM d, yyyy h:mm a')}
+                      {format(
+                        new Date(activity.created_at),
+                        'MMM d, yyyy h:mm a'
+                      )}
                     </div>
                   </div>
                   {activity.description && (
@@ -204,7 +226,11 @@ export function ActivityTimeline({
                   )}
                   {activity.due_date && !activity.is_completed && (
                     <div className="text-xs text-muted-foreground">
-                      Due: {format(new Date(activity.due_date), 'MMM d, yyyy h:mm a')}
+                      Due:{' '}
+                      {format(
+                        new Date(activity.due_date),
+                        'MMM d, yyyy h:mm a'
+                      )}
                     </div>
                   )}
                   <div className="flex items-center gap-2">
@@ -235,7 +261,11 @@ export function ActivityTimeline({
                       size="sm"
                       className="h-7 text-xs text-destructive"
                       onClick={async () => {
-                        if (confirm('Are you sure you want to delete this activity?')) {
+                        if (
+                          confirm(
+                            'Are you sure you want to delete this activity?'
+                          )
+                        ) {
                           await onActivityDelete(activity.id);
                         }
                       }}

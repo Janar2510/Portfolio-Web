@@ -143,15 +143,18 @@ export class EmailService {
   }
 
   // Email methods
-  async getEmails(accountId: string, filters?: {
-    direction?: EmailDirection;
-    contact_id?: string;
-    deal_id?: string;
-    thread_id?: string;
-    is_read?: boolean;
-    limit?: number;
-    offset?: number;
-  }): Promise<{ emails: Email[]; total: number }> {
+  async getEmails(
+    accountId: string,
+    filters?: {
+      direction?: EmailDirection;
+      contact_id?: string;
+      deal_id?: string;
+      thread_id?: string;
+      is_read?: boolean;
+      limit?: number;
+      offset?: number;
+    }
+  ): Promise<{ emails: Email[]; total: number }> {
     const supabase = this.supabase;
     let query = supabase
       .from('emails')
@@ -312,7 +315,9 @@ export class EmailService {
       );
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
@@ -402,7 +407,10 @@ export class EmailService {
   }
 
   // Sync methods
-  async triggerSync(accountId?: string, forceFullSync: boolean = false): Promise<{
+  async triggerSync(
+    accountId?: string,
+    forceFullSync: boolean = false
+  ): Promise<{
     message: string;
     results: Array<{
       account_id: string;

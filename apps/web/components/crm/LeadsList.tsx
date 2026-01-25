@@ -1,7 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Mail, Phone, Building2, TrendingUp, CheckCircle2 } from 'lucide-react';
+import {
+  Plus,
+  Mail,
+  Phone,
+  Building2,
+  TrendingUp,
+  CheckCircle2,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,7 +23,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { LabelPicker } from './LabelPicker';
 import type { Lead, Label as LabelType } from '@/lib/crm/types';
 
@@ -61,7 +74,7 @@ export function LeadsList({
       expected_value: formData.get('expected_value')
         ? Number(formData.get('expected_value'))
         : undefined,
-      currency: formData.get('currency') as string || 'EUR',
+      currency: (formData.get('currency') as string) || 'EUR',
     });
 
     setIsCreateOpen(false);
@@ -73,7 +86,9 @@ export function LeadsList({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Leads</h2>
-          <p className="text-sm text-muted-foreground">Manage and convert your leads</p>
+          <p className="text-sm text-muted-foreground">
+            Manage and convert your leads
+          </p>
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
@@ -86,16 +101,27 @@ export function LeadsList({
             <form onSubmit={handleCreate}>
               <DialogHeader>
                 <DialogTitle>Create Lead</DialogTitle>
-                <DialogDescription>Add a new lead to your pipeline</DialogDescription>
+                <DialogDescription>
+                  Add a new lead to your pipeline
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto">
                 <div className="space-y-2">
                   <Label htmlFor="title">Lead Title *</Label>
-                  <Input id="title" name="title" required placeholder="e.g. Interested in Product X" />
+                  <Input
+                    id="title"
+                    name="title"
+                    required
+                    placeholder="e.g. Interested in Product X"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="source_name">Source</Label>
-                  <Input id="source_name" name="source_name" placeholder="e.g. Website, Referral, Trade Show" />
+                  <Input
+                    id="source_name"
+                    name="source_name"
+                    placeholder="e.g. Website, Referral, Trade Show"
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -120,7 +146,12 @@ export function LeadsList({
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="expected_value">Expected Value</Label>
-                    <Input id="expected_value" name="expected_value" type="number" step="0.01" />
+                    <Input
+                      id="expected_value"
+                      name="expected_value"
+                      type="number"
+                      step="0.01"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="currency">Currency</Label>
@@ -138,7 +169,11 @@ export function LeadsList({
                 </div>
               </div>
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsCreateOpen(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit">Create Lead</Button>
@@ -150,12 +185,14 @@ export function LeadsList({
 
       {/* Leads Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {leads.map((lead) => (
+        {leads.map(lead => (
           <Card key={lead.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-3">
                 <h3 className="font-semibold text-lg">{lead.title}</h3>
-                <Badge className={statusColors[lead.status]}>{lead.status}</Badge>
+                <Badge className={statusColors[lead.status]}>
+                  {lead.status}
+                </Badge>
               </div>
 
               <div className="space-y-2 mb-3">
@@ -212,7 +249,9 @@ export function LeadsList({
                   </Button>
                 )}
                 {lead.status === 'converted' && (
-                  <span className="text-sm text-muted-foreground">Converted to deal</span>
+                  <span className="text-sm text-muted-foreground">
+                    Converted to deal
+                  </span>
                 )}
               </div>
             </CardContent>

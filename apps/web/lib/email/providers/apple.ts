@@ -1,6 +1,6 @@
 /**
  * Apple Mail IMAP Provider
- * 
+ *
  * Implements IMAP connection for Apple Mail/iCloud email
  */
 

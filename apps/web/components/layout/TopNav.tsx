@@ -5,14 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Link, useRouter } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/client';
 import { useState, useEffect } from 'react';
-import {
-  Bell,
-  Settings,
-  LogOut,
-  User,
-  ChevronDown,
-  Globe,
-} from 'lucide-react';
+import { Bell, Settings, LogOut, User, ChevronDown, Globe } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,10 +38,10 @@ export function TopNav({ locale }: TopNavProps) {
           data: { user },
           error,
         } = await supabase.auth.getUser();
-        
+
         // Only update state if component is still mounted
         if (!isMounted) return;
-        
+
         if (error) {
           console.error('Error loading user:', error);
           return;
@@ -65,7 +58,7 @@ export function TopNav({ locale }: TopNavProps) {
         }
       }
     }
-    
+
     loadUser();
 
     return () => {
@@ -153,7 +146,10 @@ export function TopNav({ locale }: TopNavProps) {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-error-main">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-error-main"
+            >
               <LogOut className="h-4 w-4 mr-2" />
               {t('auth.logout')}
             </DropdownMenuItem>

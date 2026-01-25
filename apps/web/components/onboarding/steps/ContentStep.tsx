@@ -37,7 +37,7 @@ export function ContentStep({ onContinue, onSkip }: ContentStepProps) {
           <Input
             id="heroTitle"
             value={heroTitle}
-            onChange={(e) => setHeroTitle(e.target.value)}
+            onChange={e => setHeroTitle(e.target.value)}
             placeholder={t('heroTitlePlaceholder')}
           />
         </div>
@@ -48,7 +48,7 @@ export function ContentStep({ onContinue, onSkip }: ContentStepProps) {
           <Input
             id="heroSubtitle"
             value={heroSubtitle}
-            onChange={(e) => setHeroSubtitle(e.target.value)}
+            onChange={e => setHeroSubtitle(e.target.value)}
             placeholder={t('heroSubtitlePlaceholder')}
           />
         </div>
@@ -59,7 +59,7 @@ export function ContentStep({ onContinue, onSkip }: ContentStepProps) {
           <Textarea
             id="bio"
             value={bio}
-            onChange={(e) => setBio(e.target.value)}
+            onChange={e => setBio(e.target.value)}
             placeholder={t('bioPlaceholder')}
             rows={4}
           />
@@ -74,11 +74,7 @@ export function ContentStep({ onContinue, onSkip }: ContentStepProps) {
 
         {/* Continue Button */}
         <div className="flex justify-center pt-4">
-          <Button
-            size="lg"
-            onClick={handleContinue}
-            className="min-w-[200px]"
-          >
+          <Button size="lg" onClick={handleContinue} className="min-w-[200px]">
             Continue
           </Button>
         </div>

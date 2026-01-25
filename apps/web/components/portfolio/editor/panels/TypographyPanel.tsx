@@ -8,7 +8,13 @@
 import { useStylesStore } from '@/stores/portfolio';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -53,13 +59,13 @@ export function TypographyPanel() {
               </Label>
               <Select
                 value={styles.typography.headingFont}
-                onValueChange={(value) => handleChange('headingFont', value)}
+                onValueChange={value => handleChange('headingFont', value)}
               >
                 <SelectTrigger id="font-heading">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {FONTS.map((font) => (
+                  {FONTS.map(font => (
                     <SelectItem key={font.value} value={font.value}>
                       {font.label}
                     </SelectItem>
@@ -75,13 +81,13 @@ export function TypographyPanel() {
               </Label>
               <Select
                 value={styles.typography.bodyFont}
-                onValueChange={(value) => handleChange('bodyFont', value)}
+                onValueChange={value => handleChange('bodyFont', value)}
               >
                 <SelectTrigger id="font-body">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {FONTS.map((font) => (
+                  {FONTS.map(font => (
                     <SelectItem key={font.value} value={font.value}>
                       {font.label}
                     </SelectItem>
@@ -97,13 +103,15 @@ export function TypographyPanel() {
               </Label>
               <Select
                 value={styles.typography.monoFont}
-                onValueChange={(value) => handleChange('monoFont', value)}
+                onValueChange={value => handleChange('monoFont', value)}
               >
                 <SelectTrigger id="font-mono">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {FONTS.filter((f) => f.value.includes('Mono') || f.value.includes('Code')).map((font) => (
+                  {FONTS.filter(
+                    f => f.value.includes('Mono') || f.value.includes('Code')
+                  ).map(font => (
                     <SelectItem key={font.value} value={font.value}>
                       {font.label}
                     </SelectItem>
@@ -178,8 +186,10 @@ export function TypographyPanel() {
             <div className="space-y-2">
               <Label className="text-xs">Heading Weight</Label>
               <Select
-                value={styles.typography.headingWeight?.toString() || "700"}
-                onValueChange={(value) => handleChange('headingWeight', parseInt(value))}
+                value={styles.typography.headingWeight?.toString() || '700'}
+                onValueChange={value =>
+                  handleChange('headingWeight', parseInt(value))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -196,8 +206,10 @@ export function TypographyPanel() {
             <div className="space-y-2">
               <Label className="text-xs">Body Weight</Label>
               <Select
-                value={styles.typography.bodyWeight?.toString() || "400"}
-                onValueChange={(value) => handleChange('bodyWeight', parseInt(value))}
+                value={styles.typography.bodyWeight?.toString() || '400'}
+                onValueChange={value =>
+                  handleChange('bodyWeight', parseInt(value))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />

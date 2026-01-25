@@ -97,7 +97,13 @@ export default function ActivitiesPage() {
 
   // Update activity mutation
   const updateActivityMutation = useMutation({
-    mutationFn: async ({ id, updates }: { id: string; updates: Partial<CRMActivity> }) => {
+    mutationFn: async ({
+      id,
+      updates,
+    }: {
+      id: string;
+      updates: Partial<CRMActivity>;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('crm_activities')
@@ -117,7 +123,10 @@ export default function ActivitiesPage() {
   const deleteActivityMutation = useMutation({
     mutationFn: async (activityId: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from('crm_activities').delete().eq('id', activityId);
+      const { error } = await supabase
+        .from('crm_activities')
+        .delete()
+        .eq('id', activityId);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -149,7 +158,13 @@ export default function ActivitiesPage() {
 
   // Update follow-up mutation
   const updateFollowUpMutation = useMutation({
-    mutationFn: async ({ id, updates }: { id: string; updates: Partial<FollowUp> }) => {
+    mutationFn: async ({
+      id,
+      updates,
+    }: {
+      id: string;
+      updates: Partial<FollowUp>;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('follow_ups')
@@ -169,7 +184,10 @@ export default function ActivitiesPage() {
   const deleteFollowUpMutation = useMutation({
     mutationFn: async (followUpId: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from('follow_ups').delete().eq('id', followUpId);
+      const { error } = await supabase
+        .from('follow_ups')
+        .delete()
+        .eq('id', followUpId);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -181,7 +199,9 @@ export default function ActivitiesPage() {
     <div className="flex h-[calc(100vh-4rem)] flex-col bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
       {/* Header */}
       <div className="border-b border-border bg-card/50 backdrop-blur-sm p-4 animate-slide-down">
-        <h1 className="text-2xl font-bold text-foreground">Activities & Follow-ups</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          Activities & Follow-ups
+        </h1>
         <p className="text-sm text-muted-foreground">
           Manage your CRM activities and follow-up reminders
         </p>
@@ -210,13 +230,16 @@ export default function ActivitiesPage() {
             <div className="rounded-lg border p-4">
               <ActivityTimeline
                 activities={activities}
-                onActivityCreate={async (activity) => {
+                onActivityCreate={async activity => {
                   await createActivityMutation.mutateAsync(activity);
                 }}
                 onActivityUpdate={async (activityId, updates) => {
-                  await updateActivityMutation.mutateAsync({ id: activityId, updates });
+                  await updateActivityMutation.mutateAsync({
+                    id: activityId,
+                    updates,
+                  });
                 }}
-                onActivityDelete={async (activityId) => {
+                onActivityDelete={async activityId => {
                   await deleteActivityMutation.mutateAsync(activityId);
                 }}
               />
@@ -229,13 +252,16 @@ export default function ActivitiesPage() {
                 followUps={followUps}
                 contacts={contacts}
                 deals={deals}
-                onFollowUpCreate={async (followUp) => {
+                onFollowUpCreate={async followUp => {
                   await createFollowUpMutation.mutateAsync(followUp);
                 }}
                 onFollowUpUpdate={async (followUpId, updates) => {
-                  await updateFollowUpMutation.mutateAsync({ id: followUpId, updates });
+                  await updateFollowUpMutation.mutateAsync({
+                    id: followUpId,
+                    updates,
+                  });
                 }}
-                onFollowUpDelete={async (followUpId) => {
+                onFollowUpDelete={async followUpId => {
                   await deleteFollowUpMutation.mutateAsync(followUpId);
                 }}
               />

@@ -1,6 +1,6 @@
 /**
  * Email Sync Utilities
- * 
+ *
  * Thread grouping and contact matching logic
  */
 
@@ -18,16 +18,16 @@ export function generateThreadId(email: {
 }): string {
   // Normalize subject (remove Re:, Fwd:, etc.)
   const normalizedSubject = normalizeSubject(email.subject || '');
-  
+
   // Get all participants (from + to)
   const participants = [
     email.from_address.toLowerCase(),
-    ...email.to_addresses.map((a) => a.toLowerCase()),
+    ...email.to_addresses.map(a => a.toLowerCase()),
   ].sort();
 
   // Create thread ID from normalized subject and participants
   const threadKey = `${normalizedSubject}|${participants.join(',')}`;
-  
+
   // Hash the thread key (simple hash for now)
   return hashString(threadKey);
 }
@@ -37,17 +37,17 @@ export function generateThreadId(email: {
  */
 function normalizeSubject(subject: string): string {
   if (!subject) return '';
-  
+
   // Remove common prefixes
   const prefixes = ['re:', 'fwd:', 'fw:', 'aw:', 'vs:'];
   let normalized = subject.toLowerCase().trim();
-  
+
   for (const prefix of prefixes) {
     if (normalized.startsWith(prefix)) {
       normalized = normalized.substring(prefix.length).trim();
     }
   }
-  
+
   return normalized;
 }
 
@@ -58,7 +58,7 @@ function hashString(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
   return Math.abs(hash).toString(36);
@@ -126,18 +126,23 @@ export function determineDirection(
   fromAddress: string,
   accountEmail: string
 ): 'inbound' | 'outbound' {
-  return fromAddress.toLowerCase() === accountEmail.toLowerCase() ? 'outbound' : 'inbound';
+  return fromAddress.toLowerCase() === accountEmail.toLowerCase()
+    ? 'outbound'
+    : 'inbound';
 }
 
 /**
  * Extract body preview from HTML or text
  */
-export function extractBodyPreview(body: string | null, maxLength: number = 200): string | null {
+export function extractBodyPreview(
+  body: string | null,
+  maxLength: number = 200
+): string | null {
   if (!body) return null;
 
   // Remove HTML tags if present
   const textOnly = body.replace(/<[^>]*>/g, '').trim();
-  
+
   if (textOnly.length <= maxLength) {
     return textOnly;
   }
@@ -152,12 +157,14 @@ export function groupEmailsIntoThreads(emails: Email[]): Map<string, Email[]> {
   const threads = new Map<string, Email[]>();
 
   for (const email of emails) {
-    const threadId = email.thread_id || generateThreadId({
-      subject: email.subject,
-      from_address: email.from_address,
-      to_addresses: email.to_addresses,
-      sent_at: email.sent_at,
-    });
+    const threadId =
+      email.thread_id ||
+      generateThreadId({
+        subject: email.subject,
+        from_address: email.from_address,
+        to_addresses: email.to_addresses,
+        sent_at: email.sent_at,
+      });
 
     if (!threads.has(threadId)) {
       threads.set(threadId, []);
@@ -167,8 +174,8 @@ export function groupEmailsIntoThreads(emails: Email[]): Map<string, Email[]> {
 
   // Sort emails within each thread by sent_at
   for (const [threadId, threadEmails] of threads.entries()) {
-    threadEmails.sort((a, b) => 
-      new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime()
+    threadEmails.sort(
+      (a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime()
     );
   }
 

@@ -7,7 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import type { PortfolioStyle } from '@/lib/services/portfolio';
 
@@ -24,9 +30,10 @@ export function StyleCustomizationPanel({
   isOpen,
   onClose,
 }: StyleCustomizationPanelProps) {
-  const { register, handleSubmit, watch, setValue, reset } = useForm<PortfolioStyle>({
-    defaultValues: style || undefined,
-  });
+  const { register, handleSubmit, watch, setValue, reset } =
+    useForm<PortfolioStyle>({
+      defaultValues: style || undefined,
+    });
 
   useEffect(() => {
     if (style) {
@@ -50,8 +57,14 @@ export function StyleCustomizationPanel({
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-1 flex-col overflow-hidden">
-        <Tabs defaultValue="colors" className="flex flex-1 flex-col overflow-hidden">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-1 flex-col overflow-hidden"
+      >
+        <Tabs
+          defaultValue="colors"
+          className="flex flex-1 flex-col overflow-hidden"
+        >
           <TabsList className="mx-4 mt-4 grid w-auto grid-cols-3">
             <TabsTrigger value="colors" className="flex items-center gap-2">
               <Palette className="h-4 w-4" />
@@ -159,7 +172,9 @@ export function StyleCustomizationPanel({
                   <Label htmlFor="headingFont">Heading Font</Label>
                   <Select
                     value={watch('typography.headingFont') || 'Inter'}
-                    onValueChange={(value) => setValue('typography.headingFont', value)}
+                    onValueChange={value =>
+                      setValue('typography.headingFont', value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -168,8 +183,12 @@ export function StyleCustomizationPanel({
                       <SelectItem value="Inter">Inter</SelectItem>
                       <SelectItem value="Roboto">Roboto</SelectItem>
                       <SelectItem value="Poppins">Poppins</SelectItem>
-                      <SelectItem value="Playfair Display">Playfair Display</SelectItem>
-                      <SelectItem value="JetBrains Mono">JetBrains Mono</SelectItem>
+                      <SelectItem value="Playfair Display">
+                        Playfair Display
+                      </SelectItem>
+                      <SelectItem value="JetBrains Mono">
+                        JetBrains Mono
+                      </SelectItem>
                       <SelectItem value="Lora">Lora</SelectItem>
                       <SelectItem value="Open Sans">Open Sans</SelectItem>
                     </SelectContent>
@@ -179,7 +198,9 @@ export function StyleCustomizationPanel({
                   <Label htmlFor="bodyFont">Body Font</Label>
                   <Select
                     value={watch('typography.bodyFont') || 'Inter'}
-                    onValueChange={(value) => setValue('typography.bodyFont', value)}
+                    onValueChange={value =>
+                      setValue('typography.bodyFont', value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -188,8 +209,12 @@ export function StyleCustomizationPanel({
                       <SelectItem value="Inter">Inter</SelectItem>
                       <SelectItem value="Roboto">Roboto</SelectItem>
                       <SelectItem value="Poppins">Poppins</SelectItem>
-                      <SelectItem value="Playfair Display">Playfair Display</SelectItem>
-                      <SelectItem value="JetBrains Mono">JetBrains Mono</SelectItem>
+                      <SelectItem value="Playfair Display">
+                        Playfair Display
+                      </SelectItem>
+                      <SelectItem value="JetBrains Mono">
+                        JetBrains Mono
+                      </SelectItem>
                       <SelectItem value="Lora">Lora</SelectItem>
                       <SelectItem value="Open Sans">Open Sans</SelectItem>
                     </SelectContent>
@@ -199,7 +224,7 @@ export function StyleCustomizationPanel({
                   <Label htmlFor="scale">Font Scale</Label>
                   <Select
                     value={watch('typography.scale') || '1.25'}
-                    onValueChange={(value) => setValue('typography.scale', value)}
+                    onValueChange={value => setValue('typography.scale', value)}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -222,7 +247,7 @@ export function StyleCustomizationPanel({
                   <Label htmlFor="spacing_scale">Spacing Scale</Label>
                   <Select
                     value={watch('spacing_scale') || 'default'}
-                    onValueChange={(value) => setValue('spacing_scale', value)}
+                    onValueChange={value => setValue('spacing_scale', value)}
                   >
                     <SelectTrigger>
                       <SelectValue />

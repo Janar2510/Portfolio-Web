@@ -89,7 +89,7 @@ export function ProfileStep({ onContinue, onSkip }: ProfileStepProps) {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => {
+              onChange={e => {
                 const file = e.target.files?.[0];
                 if (file) handleAvatarUpload(file);
               }}
@@ -106,7 +106,7 @@ export function ProfileStep({ onContinue, onSkip }: ProfileStepProps) {
           <Input
             id="displayName"
             value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
+            onChange={e => setDisplayName(e.target.value)}
             placeholder={t('displayNamePlaceholder')}
           />
         </div>
@@ -117,7 +117,7 @@ export function ProfileStep({ onContinue, onSkip }: ProfileStepProps) {
           <Input
             id="tagline"
             value={tagline}
-            onChange={(e) => setTagline(e.target.value)}
+            onChange={e => setTagline(e.target.value)}
             placeholder={t('taglinePlaceholder')}
           />
         </div>

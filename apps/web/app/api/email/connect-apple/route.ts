@@ -1,6 +1,6 @@
 /**
  * Apple Mail IMAP Connection
- * 
+ *
  * Handles IMAP credential storage for Apple Mail/iCloud
  */
 
@@ -34,13 +34,12 @@ export async function POST(request: NextRequest) {
 
     // Store in database
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Check if account already exists
@@ -66,16 +65,14 @@ export async function POST(request: NextRequest) {
       if (error) throw error;
     } else {
       // Create new account
-      const { error } = await supabase
-        .from('email_accounts')
-        .insert({
-          user_id: user.id,
-          provider: 'apple',
-          email_address: email,
-          display_name: displayName || email,
-          credentials_encrypted: credentialsEncrypted,
-          is_active: true,
-        });
+      const { error } = await supabase.from('email_accounts').insert({
+        user_id: user.id,
+        provider: 'apple',
+        email_address: email,
+        display_name: displayName || email,
+        credentials_encrypted: credentialsEncrypted,
+        is_active: true,
+      });
 
       if (error) throw error;
     }
@@ -84,7 +81,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Apple connection error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to connect account' },
+      {
+        error:
+          error instanceof Error ? error.message : 'Failed to connect account',
+      },
       { status: 500 }
     );
   }

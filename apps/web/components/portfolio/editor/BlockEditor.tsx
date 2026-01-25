@@ -65,8 +65,8 @@ export function BlockEditor({
     const activeId = getBlockIdFromDragId(active.id as string);
     const overId = getBlockIdFromDragId(over.id as string);
 
-    const oldIndex = blocks.findIndex((block) => block.id === activeId);
-    const newIndex = blocks.findIndex((block) => block.id === overId);
+    const oldIndex = blocks.findIndex(block => block.id === activeId);
+    const newIndex = blocks.findIndex(block => block.id === overId);
 
     if (oldIndex !== -1 && newIndex !== -1) {
       const newBlocks = arrayMove(blocks, oldIndex, newIndex).map(
@@ -91,7 +91,7 @@ export function BlockEditor({
     setActiveId(null);
   };
 
-  const blockIds = blocks.map((block) => getDragId(block.id));
+  const blockIds = blocks.map(block => getDragId(block.id));
 
   return (
     <DndContext
@@ -101,12 +101,9 @@ export function BlockEditor({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <SortableContext
-        items={blockIds}
-        strategy={verticalListSortingStrategy}
-      >
+      <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
         <div className="space-y-4">
-          {blocks.map((block) => (
+          {blocks.map(block => (
             <SortableBlockWrapper
               key={block.id}
               blockId={block.id}
@@ -115,9 +112,9 @@ export function BlockEditor({
               <BlockRenderer
                 block={block}
                 isEditing={isEditing}
-                onUpdate={(updates) => onBlockUpdate(block.id, updates)}
+                onUpdate={updates => onBlockUpdate(block.id, updates)}
                 onDelete={() => onBlockDelete(block.id)}
-                onAddAfter={(blockType) => onBlockAdd(blockType, block.id)}
+                onAddAfter={blockType => onBlockAdd(blockType, block.id)}
                 onEdit={onBlockEdit}
               />
             </SortableBlockWrapper>

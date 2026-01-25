@@ -1,40 +1,67 @@
 // Pipedrive-style CRM Types
 
-export type EntityType = 'person' | 'organization' | 'deal' | 'activity' | 'product' | 'lead';
-export type FieldType = 
-  | 'text' 
-  | 'textarea' 
-  | 'number' 
-  | 'monetary' 
-  | 'date' 
+export type EntityType =
+  | 'person'
+  | 'organization'
+  | 'deal'
+  | 'activity'
+  | 'product'
+  | 'lead';
+export type FieldType =
+  | 'text'
+  | 'textarea'
+  | 'number'
+  | 'monetary'
+  | 'date'
   | 'datetime'
-  | 'single_select' 
-  | 'multi_select' 
-  | 'phone' 
-  | 'email' 
+  | 'single_select'
+  | 'multi_select'
+  | 'phone'
+  | 'email'
   | 'url'
-  | 'person' 
-  | 'organization' 
-  | 'user' 
-  | 'address' 
+  | 'person'
+  | 'organization'
+  | 'user'
+  | 'address'
   | 'boolean';
 
-export type ActivityType = 'call' | 'meeting' | 'task' | 'deadline' | 'email' | 'lunch';
+export type ActivityType =
+  | 'call'
+  | 'meeting'
+  | 'task'
+  | 'deadline'
+  | 'email'
+  | 'lunch';
 export type DealStatus = 'open' | 'won' | 'lost' | 'deleted';
 export type StageType = 'normal' | 'won' | 'lost';
-export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'converted' | 'archived';
+export type LeadStatus =
+  | 'new'
+  | 'contacted'
+  | 'qualified'
+  | 'converted'
+  | 'archived';
 export type VisibleTo = 'owner' | 'team' | 'everyone';
 export type FilterType = 'system' | 'user' | 'shared';
-export type GoalType = 'deals_won' | 'deals_started' | 'revenue' | 'activities_completed' | 'activities_added';
+export type GoalType =
+  | 'deals_won'
+  | 'deals_started'
+  | 'revenue'
+  | 'activities_completed'
+  | 'activities_added';
 export type PeriodType = 'weekly' | 'monthly' | 'quarterly' | 'yearly';
-export type WorkflowTriggerEntity = 'deal' | 'person' | 'organization' | 'activity' | 'lead';
-export type WorkflowTriggerEvent = 
-  | 'created' 
-  | 'updated' 
-  | 'stage_changed' 
-  | 'status_changed' 
-  | 'owner_changed' 
-  | 'field_changed' 
+export type WorkflowTriggerEntity =
+  | 'deal'
+  | 'person'
+  | 'organization'
+  | 'activity'
+  | 'lead';
+export type WorkflowTriggerEvent =
+  | 'created'
+  | 'updated'
+  | 'stage_changed'
+  | 'status_changed'
+  | 'owner_changed'
+  | 'field_changed'
   | 'activity_completed';
 
 // Custom Field Definition

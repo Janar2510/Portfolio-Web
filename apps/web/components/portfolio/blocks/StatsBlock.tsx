@@ -14,7 +14,10 @@ import type { PortfolioBlock } from '@/lib/services/portfolio';
 interface StatsBlockProps {
   block: PortfolioBlock;
   isEditing?: boolean;
-  onUpdate?: (content: Record<string, unknown>, settings?: Record<string, unknown>) => void;
+  onUpdate?: (
+    content: Record<string, unknown>,
+    settings?: Record<string, unknown>
+  ) => void;
   onDelete?: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
@@ -51,12 +54,17 @@ export function StatsBlock({
   const animate = settings.animation !== false;
 
   // Animation state
-  const [animatedValues, setAnimatedValues] = useState<Record<string, number>>({});
+  const [animatedValues, setAnimatedValues] = useState<Record<string, number>>(
+    {}
+  );
 
   useEffect(() => {
     if (animate && !isEditing) {
       const timers = stats.map((stat, index) => {
-        const numericValue = typeof stat.value === 'number' ? stat.value : parseFloat(stat.value.toString().replace(/[^0-9.]/g, ''));
+        const numericValue =
+          typeof stat.value === 'number'
+            ? stat.value
+            : parseFloat(stat.value.toString().replace(/[^0-9.]/g, ''));
         if (isNaN(numericValue)) return null;
 
         return setTimeout(() => {
@@ -71,7 +79,7 @@ export function StatsBlock({
               current = numericValue;
               clearInterval(interval);
             }
-            setAnimatedValues((prev) => ({
+            setAnimatedValues(prev => ({
               ...prev,
               [stat.id]: Math.floor(current),
             }));
@@ -80,13 +88,16 @@ export function StatsBlock({
       });
 
       return () => {
-        timers.forEach((timer) => timer && clearTimeout(timer));
+        timers.forEach(timer => timer && clearTimeout(timer));
       };
     } else {
       // Set final values immediately
       const finalValues: Record<string, number> = {};
-      stats.forEach((stat) => {
-        const numericValue = typeof stat.value === 'number' ? stat.value : parseFloat(stat.value.toString().replace(/[^0-9.]/g, ''));
+      stats.forEach(stat => {
+        const numericValue =
+          typeof stat.value === 'number'
+            ? stat.value
+            : parseFloat(stat.value.toString().replace(/[^0-9.]/g, ''));
         if (!isNaN(numericValue)) {
           finalValues[stat.id] = numericValue;
         }
@@ -95,7 +106,7 @@ export function StatsBlock({
     }
   }, [stats, animate, isEditing]);
 
-  const formatValue = (stat: typeof stats[0]) => {
+  const formatValue = (stat: (typeof stats)[0]) => {
     if (typeof stat.value === 'number') {
       return animate && animatedValues[stat.id] !== undefined
         ? animatedValues[stat.id]
@@ -116,29 +127,39 @@ export function StatsBlock({
     >
       <section className="w-full px-4 py-8">
         {content.title && (
-          <h2 className="text-3xl font-bold mb-8 text-center">{content.title}</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">
+            {content.title}
+          </h2>
         )}
 
         {stats.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
-            {isEditing ? 'Add stats in the block settings.' : 'No stats to display.'}
+            {isEditing
+              ? 'Add stats in the block settings.'
+              : 'No stats to display.'}
           </div>
         ) : (
           <div
             className={cn(
-              layout === 'grid' && `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-6`,
+              layout === 'grid' &&
+                `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-6`,
               layout === 'horizontal' && 'flex flex-wrap justify-center gap-8'
             )}
           >
             {stats.map((stat, index) => (
-              <Card key={`${stat.id || 'stat'}-${index}`} className="text-center">
+              <Card
+                key={`${stat.id || 'stat'}-${index}`}
+                className="text-center"
+              >
                 <CardContent className="p-6">
                   {stat.icon && (
                     <div className="text-4xl mb-4">{stat.icon}</div>
                   )}
                   <div className="text-4xl md:text-5xl font-bold mb-2">
                     {formatValue(stat)}
-                    {stat.suffix && <span className="text-2xl">{stat.suffix}</span>}
+                    {stat.suffix && (
+                      <span className="text-2xl">{stat.suffix}</span>
+                    )}
                   </div>
                   <div className="text-sm text-muted-foreground uppercase tracking-wide">
                     {stat.label}

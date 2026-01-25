@@ -10,7 +10,13 @@ import { useForm } from 'react-hook-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -44,21 +50,36 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col">
-      <Tabs defaultValue="content" className="flex flex-col flex-1 overflow-hidden">
+      <Tabs
+        defaultValue="content"
+        className="flex flex-col flex-1 overflow-hidden"
+      >
         <TabsList className="grid grid-cols-4 w-full rounded-none border-b">
-          <TabsTrigger value="content" className="flex items-center gap-2 text-xs">
+          <TabsTrigger
+            value="content"
+            className="flex items-center gap-2 text-xs"
+          >
             <FileText className="h-3 w-3" />
             Content
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2 text-xs">
+          <TabsTrigger
+            value="settings"
+            className="flex items-center gap-2 text-xs"
+          >
             <Settings className="h-3 w-3" />
             Settings
           </TabsTrigger>
-          <TabsTrigger value="layout" className="flex items-center gap-2 text-xs">
+          <TabsTrigger
+            value="layout"
+            className="flex items-center gap-2 text-xs"
+          >
             <Layout className="h-3 w-3" />
             Layout
           </TabsTrigger>
-          <TabsTrigger value="visibility" className="flex items-center gap-2 text-xs">
+          <TabsTrigger
+            value="visibility"
+            className="flex items-center gap-2 text-xs"
+          >
             <Eye className="h-3 w-3" />
             Visibility
           </TabsTrigger>
@@ -161,7 +182,9 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
                   <Label htmlFor="alignment">Alignment</Label>
                   <Select
                     value={(watch('settings.alignment') as string) || 'center'}
-                    onValueChange={(value) => setValue('settings.alignment', value)}
+                    onValueChange={value =>
+                      setValue('settings.alignment', value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -177,7 +200,9 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
                   <Label htmlFor="background">Background</Label>
                   <Select
                     value={(watch('settings.background') as string) || 'solid'}
-                    onValueChange={(value) => setValue('settings.background', value)}
+                    onValueChange={value =>
+                      setValue('settings.background', value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -193,7 +218,7 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
                   <Label htmlFor="height">Height</Label>
                   <Select
                     value={(watch('settings.height') as string) || 'medium'}
-                    onValueChange={(value) => setValue('settings.height', value)}
+                    onValueChange={value => setValue('settings.height', value)}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -223,7 +248,9 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
                   <Label htmlFor="text_align">Text Align</Label>
                   <Select
                     value={(watch('settings.text_align') as string) || 'left'}
-                    onValueChange={(value) => setValue('settings.text_align', value)}
+                    onValueChange={value =>
+                      setValue('settings.text_align', value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -251,7 +278,7 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
               <Label htmlFor="layout-width">Width</Label>
               <Select
                 value={(watch('layout.width') as string) || 'container'}
-                onValueChange={(value) => setValue('layout.width', value)}
+                onValueChange={value => setValue('layout.width', value)}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -268,7 +295,7 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
               <Label htmlFor="layout-padding">Padding</Label>
               <Select
                 value={(watch('layout.padding') as string) || 'default'}
-                onValueChange={(value) => setValue('layout.padding', value)}
+                onValueChange={value => setValue('layout.padding', value)}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -285,7 +312,7 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
               <Label htmlFor="layout-alignment">Alignment</Label>
               <Select
                 value={(watch('layout.alignment') as string) || 'left'}
-                onValueChange={(value) => setValue('layout.alignment', value)}
+                onValueChange={value => setValue('layout.alignment', value)}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -308,44 +335,55 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
                 <Checkbox
                   id="is_visible"
                   checked={watch('is_visible') ?? true}
-                  onCheckedChange={(checked) => setValue('is_visible', checked === true)}
+                  onCheckedChange={checked =>
+                    setValue('is_visible', checked === true)
+                  }
                 />
               </div>
               <div className="space-y-2 pl-4 border-l-2">
                 <Label className="text-xs">Visible On</Label>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="visible_desktop" className="text-xs cursor-pointer">
+                    <Label
+                      htmlFor="visible_desktop"
+                      className="text-xs cursor-pointer"
+                    >
                       Desktop
                     </Label>
                     <Checkbox
                       id="visible_desktop"
                       checked={watch('visible_on.desktop') ?? true}
-                      onCheckedChange={(checked) =>
+                      onCheckedChange={checked =>
                         setValue('visible_on.desktop', checked === true)
                       }
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="visible_tablet" className="text-xs cursor-pointer">
+                    <Label
+                      htmlFor="visible_tablet"
+                      className="text-xs cursor-pointer"
+                    >
                       Tablet
                     </Label>
                     <Checkbox
                       id="visible_tablet"
                       checked={watch('visible_on.tablet') ?? true}
-                      onCheckedChange={(checked) =>
+                      onCheckedChange={checked =>
                         setValue('visible_on.tablet', checked === true)
                       }
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="visible_mobile" className="text-xs cursor-pointer">
+                    <Label
+                      htmlFor="visible_mobile"
+                      className="text-xs cursor-pointer"
+                    >
                       Mobile
                     </Label>
                     <Checkbox
                       id="visible_mobile"
                       checked={watch('visible_on.mobile') ?? true}
-                      onCheckedChange={(checked) =>
+                      onCheckedChange={checked =>
                         setValue('visible_on.mobile', checked === true)
                       }
                     />
@@ -357,7 +395,11 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
         </div>
 
         <div className="border-t p-4">
-          <Button type="submit" className="w-full" disabled={updateBlockMutation.isPending}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={updateBlockMutation.isPending}
+          >
             {updateBlockMutation.isPending ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>

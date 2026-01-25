@@ -2,7 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { format, isPast, isToday, isTomorrow } from 'date-fns';
-import { Bell, X, CheckCircle2, Clock, AlertCircle, Calendar, User, Briefcase } from 'lucide-react';
+import {
+  Bell,
+  X,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  Calendar,
+  User,
+  Briefcase,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -45,8 +54,8 @@ export function NotificationsPanel({
 
     // Process follow-ups
     followUps
-      .filter((f) => !f.is_completed)
-      .forEach((followUp) => {
+      .filter(f => !f.is_completed)
+      .forEach(followUp => {
         const dueDate = new Date(followUp.due_date);
         const isOverdue = isPast(dueDate);
         const isDueToday = isToday(dueDate);
@@ -63,8 +72,8 @@ export function NotificationsPanel({
             link: followUp.contact_id
               ? `/crm/contacts/${followUp.contact_id}`
               : followUp.deal_id
-              ? `/crm/pipeline`
-              : undefined,
+                ? `/crm/pipeline`
+                : undefined,
             metadata: {
               follow_up_id: followUp.id,
               contact_id: followUp.contact_id || undefined,
@@ -76,8 +85,8 @@ export function NotificationsPanel({
 
     // Process activities with due dates
     activities
-      .filter((a) => !a.is_completed && a.due_date)
-      .forEach((activity) => {
+      .filter(a => !a.is_completed && a.due_date)
+      .forEach(activity => {
         const dueDate = new Date(activity.due_date);
         const isOverdue = isPast(dueDate);
         const isDueToday = isToday(dueDate);
@@ -94,8 +103,8 @@ export function NotificationsPanel({
             link: activity.contact_id
               ? `/crm/contacts/${activity.contact_id}`
               : activity.deal_id
-              ? `/crm/pipeline`
-              : undefined,
+                ? `/crm/pipeline`
+                : undefined,
             metadata: {
               activity_id: activity.id,
               contact_id: activity.contact_id || undefined,
@@ -108,7 +117,8 @@ export function NotificationsPanel({
     // Sort by priority and due date
     newNotifications.sort((a, b) => {
       const priorityOrder = { high: 0, medium: 1, low: 2 };
-      const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+      const priorityDiff =
+        priorityOrder[a.priority] - priorityOrder[b.priority];
       if (priorityDiff !== 0) return priorityDiff;
       return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
     });
@@ -117,26 +127,46 @@ export function NotificationsPanel({
   }, [followUps, activities]);
 
   const handleDismiss = (notificationId: string) => {
-    setDismissedIds((prev) => new Set([...prev, notificationId]));
+    setDismissedIds(prev => new Set([...prev, notificationId]));
     onDismiss?.(notificationId);
   };
 
   const handleMarkRead = (notificationId: string) => {
-    setDismissedIds((prev) => new Set([...prev, notificationId]));
+    setDismissedIds(prev => new Set([...prev, notificationId]));
     onMarkRead?.(notificationId);
   };
 
-  const visibleNotifications = notifications.filter((n) => !dismissedIds.has(n.id));
+  const visibleNotifications = notifications.filter(
+    n => !dismissedIds.has(n.id)
+  );
 
   const getDueDateStatus = (dueDate: string) => {
     const date = new Date(dueDate);
-    if (isPast(date)) return { label: 'Overdue', color: 'bg-red-100 text-red-800 border-red-200' };
-    if (isToday(date)) return { label: 'Today', color: 'bg-orange-100 text-orange-800 border-orange-200' };
-    if (isTomorrow(date)) return { label: 'Tomorrow', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' };
-    return { label: format(date, 'MMM d'), color: 'bg-blue-100 text-blue-800 border-blue-200' };
+    if (isPast(date))
+      return {
+        label: 'Overdue',
+        color: 'bg-red-100 text-red-800 border-red-200',
+      };
+    if (isToday(date))
+      return {
+        label: 'Today',
+        color: 'bg-orange-100 text-orange-800 border-orange-200',
+      };
+    if (isTomorrow(date))
+      return {
+        label: 'Tomorrow',
+        color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      };
+    return {
+      label: format(date, 'MMM d'),
+      color: 'bg-blue-100 text-blue-800 border-blue-200',
+    };
   };
 
-  const getNotificationIcon = (type: Notification['type'], priority: Notification['priority']) => {
+  const getNotificationIcon = (
+    type: Notification['type'],
+    priority: Notification['priority']
+  ) => {
     if (priority === 'high') return AlertCircle;
     if (type === 'follow_up') return Calendar;
     if (type === 'activity') return Clock;
@@ -148,16 +178,21 @@ export function NotificationsPanel({
       <div className="rounded-lg border p-6 text-center">
         <Bell className="mx-auto h-12 w-12 text-muted-foreground" />
         <p className="mt-2 text-sm font-medium">All caught up!</p>
-        <p className="text-xs text-muted-foreground">No pending notifications</p>
+        <p className="text-xs text-muted-foreground">
+          No pending notifications
+        </p>
       </div>
     );
   }
 
   return (
     <div className="space-y-2">
-      {visibleNotifications.map((notification) => {
+      {visibleNotifications.map(notification => {
         const status = getDueDateStatus(notification.dueDate);
-        const Icon = getNotificationIcon(notification.type, notification.priority);
+        const Icon = getNotificationIcon(
+          notification.type,
+          notification.priority
+        );
 
         return (
           <div
@@ -165,7 +200,8 @@ export function NotificationsPanel({
             className={cn(
               'flex items-start gap-3 rounded-lg border p-3',
               notification.priority === 'high' && 'border-red-200 bg-red-50/50',
-              notification.priority === 'medium' && 'border-orange-200 bg-orange-50/50'
+              notification.priority === 'medium' &&
+                'border-orange-200 bg-orange-50/50'
             )}
           >
             <div
@@ -174,25 +210,34 @@ export function NotificationsPanel({
                 notification.priority === 'high'
                   ? 'bg-red-100 text-red-600'
                   : notification.priority === 'medium'
-                  ? 'bg-orange-100 text-orange-600'
-                  : 'bg-blue-100 text-blue-600'
+                    ? 'bg-orange-100 text-orange-600'
+                    : 'bg-blue-100 text-blue-600'
               )}
             >
               <Icon className="h-4 w-4" />
             </div>
             <div className="flex-1 space-y-1">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-sm">{notification.title}</span>
-                <Badge variant="outline" className={cn('text-xs', status.color)}>
+                <span className="font-medium text-sm">
+                  {notification.title}
+                </span>
+                <Badge
+                  variant="outline"
+                  className={cn('text-xs', status.color)}
+                >
                   {status.label}
                 </Badge>
               </div>
               {notification.description && (
-                <p className="text-xs text-muted-foreground">{notification.description}</p>
+                <p className="text-xs text-muted-foreground">
+                  {notification.description}
+                </p>
               )}
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="h-3 w-3" />
-                <span>{format(new Date(notification.dueDate), 'MMM d, yyyy h:mm a')}</span>
+                <span>
+                  {format(new Date(notification.dueDate), 'MMM d, yyyy h:mm a')}
+                </span>
               </div>
             </div>
             <div className="flex gap-1">

@@ -134,7 +134,9 @@ export class CRMEnhancedService {
       );
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
@@ -269,7 +271,10 @@ export class CRMEnhancedService {
     return data;
   }
 
-  async updatePipeline(id: string, updates: Partial<Pipeline>): Promise<Pipeline> {
+  async updatePipeline(
+    id: string,
+    updates: Partial<Pipeline>
+  ): Promise<Pipeline> {
     const { data, error } = await this.supabase
       .from('crm_pipelines')
       .update({ ...updates, updated_at: new Date().toISOString() })
@@ -282,7 +287,10 @@ export class CRMEnhancedService {
   }
 
   async deletePipeline(id: string): Promise<void> {
-    const { error } = await this.supabase.from('crm_pipelines').delete().eq('id', id);
+    const { error } = await this.supabase
+      .from('crm_pipelines')
+      .delete()
+      .eq('id', id);
 
     if (error) throw error;
   }
@@ -298,7 +306,9 @@ export class CRMEnhancedService {
       query = query.eq('pipeline_id', pipelineId);
     }
 
-    const { data, error } = await query.order('sort_order', { ascending: true });
+    const { data, error } = await query.order('sort_order', {
+      ascending: true,
+    });
 
     if (error) throw error;
     return data || [];
@@ -412,7 +422,9 @@ export class CRMEnhancedService {
       query = query.overlaps('label_ids', filters.label_ids);
     }
 
-    const { data, error } = await query.order('stage_order', { ascending: true });
+    const { data, error } = await query.order('stage_order', {
+      ascending: true,
+    });
 
     if (error) throw error;
     return data || [];
@@ -496,7 +508,11 @@ export class CRMEnhancedService {
     if (error) throw error;
   }
 
-  async moveDeal(dealId: string, stageId: string, stageOrder: number): Promise<Deal> {
+  async moveDeal(
+    dealId: string,
+    stageId: string,
+    stageOrder: number
+  ): Promise<Deal> {
     return this.updateDeal(dealId, {
       stage_id: stageId,
       stage_order: stageOrder,
@@ -653,7 +669,9 @@ export class CRMEnhancedService {
       query = query.eq('is_done', filters.is_done);
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
@@ -703,7 +721,9 @@ export class CRMEnhancedService {
   // LABELS
   // ===========================================
 
-  async getLabels(entityType: 'person' | 'organization' | 'deal' | 'lead'): Promise<LabelType[]> {
+  async getLabels(
+    entityType: 'person' | 'organization' | 'deal' | 'lead'
+  ): Promise<LabelType[]> {
     const { data, error } = await this.supabase
       .from('crm_labels')
       .select('*')
@@ -763,7 +783,9 @@ export class CRMEnhancedService {
       query = query.overlaps('label_ids', filters.label_ids);
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
@@ -786,8 +808,12 @@ export class CRMEnhancedService {
     if (lead.person_name || lead.email) {
       person = await this.createPerson({
         name: lead.person_name || lead.email || 'Unknown',
-        emails: lead.email ? [{ value: lead.email, label: 'work', primary: true }] : [],
-        phones: lead.phone ? [{ value: lead.phone, label: 'work', primary: true }] : [],
+        emails: lead.email
+          ? [{ value: lead.email, label: 'work', primary: true }]
+          : [],
+        phones: lead.phone
+          ? [{ value: lead.phone, label: 'work', primary: true }]
+          : [],
       });
     }
 
@@ -831,7 +857,10 @@ export class CRMEnhancedService {
   }
 
   async deleteLead(id: string): Promise<void> {
-    const { error } = await this.supabase.from('crm_leads').delete().eq('id', id);
+    const { error } = await this.supabase
+      .from('crm_leads')
+      .delete()
+      .eq('id', id);
 
     if (error) throw error;
   }
@@ -873,7 +902,10 @@ export class CRMEnhancedService {
   }
 
   async deleteNote(id: string): Promise<void> {
-    const { error } = await this.supabase.from('crm_notes').delete().eq('id', id);
+    const { error } = await this.supabase
+      .from('crm_notes')
+      .delete()
+      .eq('id', id);
 
     if (error) throw error;
   }
@@ -908,7 +940,10 @@ export class CRMEnhancedService {
     if (error) throw error;
   }
 
-  async updateLabel(id: string, updates: Partial<LabelType>): Promise<LabelType> {
+  async updateLabel(
+    id: string,
+    updates: Partial<LabelType>
+  ): Promise<LabelType> {
     const { data, error } = await this.supabase
       .from('crm_labels')
       .update(updates)
@@ -921,7 +956,10 @@ export class CRMEnhancedService {
   }
 
   async deleteLabel(id: string): Promise<void> {
-    const { error } = await this.supabase.from('crm_labels').delete().eq('id', id);
+    const { error } = await this.supabase
+      .from('crm_labels')
+      .delete()
+      .eq('id', id);
 
     if (error) throw error;
   }
@@ -1025,7 +1063,9 @@ export class CRMEnhancedService {
       query = query.eq('lead_id', filters.lead_id);
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];

@@ -16,7 +16,9 @@ export function ThemeToggle() {
   const t = useTranslations('common.theme');
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
-  const [currentTheme, setCurrentTheme] = React.useState<'light' | 'dark'>('light');
+  const [currentTheme, setCurrentTheme] = React.useState<'light' | 'dark'>(
+    'light'
+  );
 
   // Avoid hydration mismatch and detect current theme
   React.useEffect(() => {

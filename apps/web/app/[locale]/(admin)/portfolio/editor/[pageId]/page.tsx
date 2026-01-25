@@ -7,7 +7,11 @@ import { createClient } from '@/lib/supabase/server';
 import { PortfolioService } from '@/lib/services/portfolio';
 import { EditorLayout } from '@/components/portfolio/editor/EditorLayout';
 import { notFound, redirect } from 'next/navigation';
-import { QueryClient, dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import {
+  QueryClient,
+  dehydrate,
+  HydrationBoundary,
+} from '@tanstack/react-query';
 
 interface PageProps {
   params: Promise<{ locale: string; pageId: string }>;

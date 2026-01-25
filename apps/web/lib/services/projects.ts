@@ -96,7 +96,10 @@ export class ProjectService {
     }
 
     if (filters?.offset) {
-      query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
+      query = query.range(
+        filters.offset,
+        filters.offset + (filters.limit || 10) - 1
+      );
     }
 
     const { data, error, count } = await query;
@@ -268,16 +271,15 @@ export class ProjectService {
   // Task methods
   async getTasks(projectId: string, columnId?: string): Promise<Task[]> {
     const supabase = await this.getSupabase();
-    let query = supabase
-      .from('tasks')
-      .select('*')
-      .eq('project_id', projectId);
+    let query = supabase.from('tasks').select('*').eq('project_id', projectId);
 
     if (columnId) {
       query = query.eq('column_id', columnId);
     }
 
-    const { data, error } = await query.order('sort_order', { ascending: true });
+    const { data, error } = await query.order('sort_order', {
+      ascending: true,
+    });
 
     if (error) throw error;
     return data || [];
@@ -356,7 +358,11 @@ export class ProjectService {
     if (error) throw error;
   }
 
-  async moveTask(taskId: string, columnId: string, sortOrder: number): Promise<Task> {
+  async moveTask(
+    taskId: string,
+    columnId: string,
+    sortOrder: number
+  ): Promise<Task> {
     return this.updateTask(taskId, {
       column_id: columnId,
       sort_order: sortOrder,
@@ -366,10 +372,7 @@ export class ProjectService {
   async reorderTasks(taskIds: string[]): Promise<void> {
     const supabase = await this.getSupabase();
     const updates = taskIds.map((id, index) =>
-      supabase
-        .from('tasks')
-        .update({ sort_order: index })
-        .eq('id', id)
+      supabase.from('tasks').update({ sort_order: index }).eq('id', id)
     );
 
     await Promise.all(updates);

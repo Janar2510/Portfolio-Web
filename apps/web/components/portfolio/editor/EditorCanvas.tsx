@@ -6,16 +6,23 @@
 'use client';
 
 import { useState } from 'react';
+import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
 import {
-  SortableContext,
-  rectSortingStrategy,
-} from '@dnd-kit/sortable';
-import { useBlocksStore, useEditorStore, useStylesStore } from '@/stores/portfolio';
+  useBlocksStore,
+  useEditorStore,
+  useStylesStore,
+} from '@/stores/portfolio';
 import { BlockRenderer } from './BlockRenderer';
 import { SortableBlockWrapper } from './SortableBlockWrapper';
 import { BlockPlaceholder } from './BlockPlaceholder';
 import { BlockToolbar } from './BlockToolbar';
-import { useAddBlock, useUpdateBlock, useDeleteBlock, useDuplicateBlock } from '@/hooks/portfolio/use-editor';
+import {
+  useAddBlock,
+  useUpdateBlock,
+  useDeleteBlock,
+  useDuplicateBlock,
+} from '@/hooks/portfolio/use-editor';
 import { AddBlockModal } from './AddBlockModal';
 import { cn } from '@/lib/utils';
 import { Monitor, Tablet, Smartphone } from 'lucide-react';
@@ -30,20 +37,33 @@ interface EditorCanvasProps {
 }
 
 export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
-  const { blocks, moveBlock, setSelectedBlock, selectedBlock, setHoveredBlockId, duplicateBlock } = useBlocksStore();
+  const {
+    blocks,
+    moveBlock,
+    setSelectedBlock,
+    selectedBlock,
+    setHoveredBlockId,
+    duplicateBlock,
+  } = useBlocksStore();
   const { selectedBlockId, setSelectedBlockId } = useEditorStore();
   const { styles } = useStylesStore();
 
-  const cssVariables = styles?.colors ? {
-    '--primary': styles.colors.primary,
-    '--secondary': styles.colors.secondary,
-    '--accent': styles.colors.accent,
-    '--background': styles.colors.background,
-    '--foreground': styles.colors.text,
-    '--muted': styles.colors.surface,
-    '--muted-foreground': styles.colors.textSecondary || '#64748b',
-    '--border': styles.colors.border || '#e2e8f0',
-  } as React.CSSProperties : {};
+  const cssVariables = styles?.colors
+    ? ({
+        '--primary': styles.colors.primary,
+        '--secondary': styles.colors.secondary,
+        '--accent': styles.colors.accent,
+        '--background': styles.colors.background,
+        '--foreground': styles.colors.text,
+        '--muted': styles.colors.surface,
+        '--muted-foreground': styles.colors.textSecondary || '#64748b',
+        '--border': styles.colors.border || '#e2e8f0',
+      } as React.CSSProperties)
+    : {};
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: 'canvas-droppable',
+  });
 
   /* Drag functionality moved to Layout */
 
@@ -55,7 +75,7 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
   const deleteBlockMutation = useDeleteBlock();
   const duplicateBlockMutation = useDuplicateBlock();
 
-  const blockIds = blocks.map((block) => getDragId(block.id));
+  const blockIds = blocks.map(block => getDragId(block.id));
 
   // Preview mode styles
   const previewStyles = {
@@ -85,12 +105,13 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
       )}
 
       {/* Canvas Area */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto" ref={setNodeRef}>
         <div
           className={cn(
             'min-h-full bg-background transition-all duration-300',
             view === 'preview' && previewStyles[previewMode],
-            view === 'split' && 'max-w-6xl mx-auto'
+            view === 'split' && 'max-w-6xl mx-auto',
+            isOver && 'ring-2 ring-primary ring-inset'
           )}
           style={{
             ...cssVariables,
@@ -99,18 +120,19 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
             fontFamily: (styles?.typography as any)?.fontFamily || 'inherit',
           }}
         >
-          <SortableContext
-            items={blockIds}
-            strategy={rectSortingStrategy}
-          >
-            <div className={cn(
-              "p-4 min-h-[500px]",
-              previewMode === 'mobile' ? 'flex flex-col space-y-4' : 'grid grid-cols-12 auto-rows-min gap-4'
-            )}>
+          <SortableContext items={blockIds} strategy={rectSortingStrategy}>
+            <div
+              className={cn(
+                'p-4 min-h-[500px]',
+                previewMode === 'mobile'
+                  ? 'flex flex-col space-y-4'
+                  : 'grid grid-cols-12 auto-rows-min gap-4'
+              )}
+            >
               {blocks.length === 0 ? (
                 <div className="col-span-12">
                   <BlockPlaceholder
-                    onAddBlock={(blockType) => {
+                    onAddBlock={blockType => {
                       addBlockMutation.mutate({
                         blockType,
                         afterBlockId: undefined,
@@ -119,7 +141,7 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
                   />
                 </div>
               ) : (
-                blocks.map((block) => (
+                blocks.map(block => (
                   <SortableBlockWrapper
                     key={block.id}
                     blockId={block.id}
@@ -129,23 +151,33 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
                     onResize={() => {
                       // Cycle through common grid widths: 12 (full) -> 6 (half) -> 4 (third) -> 3 (quarter) -> 8 (two-thirds) -> 12
                       const current = block.layout?.colSpan || 12;
-                      const next = current === 12 ? 6 : current === 6 ? 4 : current === 4 ? 3 : current === 3 ? 8 : 12;
+                      const next =
+                        current === 12
+                          ? 6
+                          : current === 6
+                            ? 4
+                            : current === 4
+                              ? 3
+                              : current === 3
+                                ? 8
+                                : 12;
 
                       updateBlockMutation.mutate({
                         blockId: block.id,
                         updates: {
                           layout: {
                             ...block.layout,
-                            colSpan: next
-                          }
-                        }
+                            colSpan: next,
+                          },
+                        },
                       });
                     }}
                   >
                     <div
                       className={cn(
                         'group relative',
-                        selectedBlockId === block.id && 'ring-2 ring-primary ring-offset-2'
+                        selectedBlockId === block.id &&
+                          'ring-2 ring-primary ring-offset-2'
                       )}
                       onMouseEnter={() => setHoveredBlockId(block.id)}
                       onMouseLeave={() => setHoveredBlockId(null)}
@@ -159,13 +191,17 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
                         <BlockToolbar
                           block={block}
                           onMoveUp={() => {
-                            const index = blocks.findIndex((b) => b.id === block.id);
+                            const index = blocks.findIndex(
+                              b => b.id === block.id
+                            );
                             if (index > 0) {
                               moveBlock(block.id, index - 1);
                             }
                           }}
                           onMoveDown={() => {
-                            const index = blocks.findIndex((b) => b.id === block.id);
+                            const index = blocks.findIndex(
+                              b => b.id === block.id
+                            );
                             if (index < blocks.length - 1) {
                               moveBlock(block.id, index + 1);
                             }
@@ -189,7 +225,7 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
                       <BlockRenderer
                         block={block}
                         isEditing={view !== 'preview'}
-                        onUpdate={(updates) => {
+                        onUpdate={updates => {
                           updateBlockMutation.mutate({
                             blockId: block.id,
                             updates,
@@ -198,7 +234,7 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
                         onDelete={() => {
                           deleteBlockMutation.mutate(block.id);
                         }}
-                        onAddAfter={(blockType) => {
+                        onAddAfter={blockType => {
                           addBlockMutation.mutate({
                             blockType,
                             afterBlockId: block.id,
@@ -237,7 +273,7 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
             setShowAddBlockModal(false);
             setAddBlockAfterId(undefined);
           }}
-          onSelect={(blockType) => {
+          onSelect={blockType => {
             addBlockMutation.mutate({
               blockType,
               afterBlockId: addBlockAfterId,

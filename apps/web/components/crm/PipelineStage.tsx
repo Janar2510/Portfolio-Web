@@ -2,12 +2,18 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { Plus, GripVertical, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DealCard } from './DealCard';
 import { cn } from '@/lib/utils';
-import type { PipelineStage as PipelineStageType, Deal } from '@/lib/services/crm';
+import type {
+  PipelineStage as PipelineStageType,
+  Deal,
+} from '@/lib/services/crm';
 
 interface PipelineStageProps {
   stage: PipelineStageType;
@@ -44,7 +50,7 @@ export function PipelineStage({
     transition,
   };
 
-  const dealIds = deals.map((deal) => getDealDragId(deal.id));
+  const dealIds = deals.map(deal => getDealDragId(deal.id));
 
   // Calculate total value for this stage
   const totalValue = deals.reduce((sum, deal) => {
@@ -112,7 +118,7 @@ export function PipelineStage({
       {/* Deals */}
       <SortableContext items={dealIds} strategy={verticalListSortingStrategy}>
         <div className="flex-1 space-y-2 overflow-y-auto p-3">
-          {deals.map((deal) => (
+          {deals.map(deal => (
             <DealCard
               key={deal.id}
               deal={deal}

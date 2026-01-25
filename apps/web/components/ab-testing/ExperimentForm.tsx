@@ -39,14 +39,23 @@ interface ExperimentFormProps {
   }) => Promise<void>;
 }
 
-export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFormProps) {
+export function ExperimentForm({
+  siteId,
+  pages,
+  blocks,
+  onCreate,
+}: ExperimentFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [targetType, setTargetType] = useState<'page' | 'block' | 'style'>('page');
+  const [targetType, setTargetType] = useState<'page' | 'block' | 'style'>(
+    'page'
+  );
   const [targetId, setTargetId] = useState<string>('');
   const [trafficSplit, setTrafficSplit] = useState<number>(50);
-  const [goalType, setGoalType] = useState<'pageview' | 'click' | 'form_submit'>('pageview');
+  const [goalType, setGoalType] = useState<
+    'pageview' | 'click' | 'form_submit'
+  >('pageview');
   const [goalTarget, setGoalTarget] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -104,7 +113,7 @@ export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFo
             <Input
               id="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               placeholder="e.g., Homepage Hero CTA Test"
               required
             />
@@ -115,7 +124,7 @@ export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFo
             <Textarea
               id="description"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={e => setDescription(e.target.value)}
               placeholder="What are you testing and why?"
               rows={3}
             />
@@ -123,7 +132,10 @@ export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFo
 
           <div className="space-y-2">
             <Label htmlFor="target_type">What to Test *</Label>
-            <Select value={targetType} onValueChange={(v) => setTargetType(v as any)}>
+            <Select
+              value={targetType}
+              onValueChange={v => setTargetType(v as any)}
+            >
               <SelectTrigger id="target_type">
                 <SelectValue />
               </SelectTrigger>
@@ -143,7 +155,7 @@ export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFo
                   <SelectValue placeholder="Select a page" />
                 </SelectTrigger>
                 <SelectContent>
-                  {filteredPages.map((page) => (
+                  {filteredPages.map(page => (
                     <SelectItem key={page.id} value={page.id}>
                       {page.title} ({page.slug})
                     </SelectItem>
@@ -161,9 +173,15 @@ export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFo
                   <SelectValue placeholder="Select a block" />
                 </SelectTrigger>
                 <SelectContent>
-                  {filteredBlocks.map((block) => (
+                  {filteredBlocks.map(block => (
                     <SelectItem key={block.id} value={block.id}>
-                      {block.block_type} (Page: {pages.find((p) => blocks.find((b) => b.id === block.id && b.page_id === p.id))?.title || 'Unknown'})
+                      {block.block_type} (Page:{' '}
+                      {pages.find(p =>
+                        blocks.find(
+                          b => b.id === block.id && b.page_id === p.id
+                        )
+                      )?.title || 'Unknown'}
+                      )
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -179,17 +197,18 @@ export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFo
               min="1"
               max="99"
               value={trafficSplit}
-              onChange={(e) => setTrafficSplit(parseInt(e.target.value) || 50)}
+              onChange={e => setTrafficSplit(parseInt(e.target.value) || 50)}
               required
             />
             <p className="text-xs text-muted-foreground">
-              Percentage of traffic to send to variant B (remaining goes to control)
+              Percentage of traffic to send to variant B (remaining goes to
+              control)
             </p>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="goal_type">Conversion Goal *</Label>
-            <Select value={goalType} onValueChange={(v) => setGoalType(v as any)}>
+            <Select value={goalType} onValueChange={v => setGoalType(v as any)}>
               <SelectTrigger id="goal_type">
                 <SelectValue />
               </SelectTrigger>
@@ -207,7 +226,7 @@ export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFo
               <Input
                 id="goal_target"
                 value={goalTarget}
-                onChange={(e) => setGoalTarget(e.target.value)}
+                onChange={e => setGoalTarget(e.target.value)}
                 placeholder="e.g., .cta-button, #signup-form"
               />
             </div>
@@ -219,17 +238,24 @@ export function ExperimentForm({ siteId, pages, blocks, onCreate }: ExperimentFo
               <Input
                 id="goal_target"
                 value={goalTarget}
-                onChange={(e) => setGoalTarget(e.target.value)}
+                onChange={e => setGoalTarget(e.target.value)}
                 placeholder="e.g., contact-form, #newsletter-form"
               />
             </div>
           )}
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || !name || !targetType}>
+            <Button
+              type="submit"
+              disabled={isSubmitting || !name || !targetType}
+            >
               {isSubmitting ? 'Creating...' : 'Create Experiment'}
             </Button>
           </DialogFooter>

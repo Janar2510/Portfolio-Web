@@ -14,7 +14,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { EmailAccount, EmailTemplate } from '@/lib/services/email';
@@ -59,7 +65,9 @@ export function EmailCompose({
   const [subject, setSubject] = useState<string>(initialSubject || '');
   const [body, setBody] = useState<string>(initialBody || '');
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
-  const [templateVariables, setTemplateVariables] = useState<Record<string, string>>({});
+  const [templateVariables, setTemplateVariables] = useState<
+    Record<string, string>
+  >({});
   const [isSending, setIsSending] = useState(false);
   const [showCc, setShowCc] = useState(false);
   const [showBcc, setShowBcc] = useState(false);
@@ -93,19 +101,19 @@ export function EmailCompose({
       return;
     }
 
-    const template = templates.find((t) => t.id === templateId);
+    const template = templates.find(t => t.id === templateId);
     if (!template) return;
 
     setSelectedTemplateId(templateId);
-    
+
     // Extract variables from template
     const variableMatches = [
       ...template.subject.matchAll(/\{\{(\w+)\}\}/g),
       ...template.body_html.matchAll(/\{\{(\w+)\}\}/g),
     ];
-    
+
     const variables = new Set<string>();
-    variableMatches.forEach((match) => {
+    variableMatches.forEach(match => {
       if (match[1]) {
         variables.add(match[1]);
       }
@@ -113,7 +121,7 @@ export function EmailCompose({
 
     // Initialize template variables
     const vars: Record<string, string> = {};
-    variables.forEach((varName) => {
+    variables.forEach(varName => {
       vars[varName] = '';
     });
     setTemplateVariables(vars);
@@ -126,7 +134,7 @@ export function EmailCompose({
   const handleApplyTemplate = () => {
     if (!selectedTemplateId) return;
 
-    const template = templates.find((t) => t.id === selectedTemplateId);
+    const template = templates.find(t => t.id === selectedTemplateId);
     if (!template) return;
 
     // Replace variables
@@ -135,7 +143,10 @@ export function EmailCompose({
 
     Object.entries(templateVariables).forEach(([key, value]) => {
       const placeholder = `{{${key}}}`;
-      renderedSubject = renderedSubject.replace(new RegExp(placeholder, 'g'), value);
+      renderedSubject = renderedSubject.replace(
+        new RegExp(placeholder, 'g'),
+        value
+      );
       renderedBody = renderedBody.replace(new RegExp(placeholder, 'g'), value);
     });
 
@@ -150,9 +161,22 @@ export function EmailCompose({
 
     setIsSending(true);
     try {
-      const toAddresses = to.split(',').map((email) => email.trim()).filter(Boolean);
-      const ccAddresses = cc ? cc.split(',').map((email) => email.trim()).filter(Boolean) : undefined;
-      const bccAddresses = bcc ? bcc.split(',').map((email) => email.trim()).filter(Boolean) : undefined;
+      const toAddresses = to
+        .split(',')
+        .map(email => email.trim())
+        .filter(Boolean);
+      const ccAddresses = cc
+        ? cc
+            .split(',')
+            .map(email => email.trim())
+            .filter(Boolean)
+        : undefined;
+      const bccAddresses = bcc
+        ? bcc
+            .split(',')
+            .map(email => email.trim())
+            .filter(Boolean)
+        : undefined;
 
       await onSend({
         account_id: selectedAccountId,
@@ -173,7 +197,7 @@ export function EmailCompose({
     }
   };
 
-  const selectedTemplate = templates.find((t) => t.id === selectedTemplateId);
+  const selectedTemplate = templates.find(t => t.id === selectedTemplateId);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -189,12 +213,15 @@ export function EmailCompose({
           {/* Account Selection */}
           <div className="space-y-2">
             <Label htmlFor="account">From *</Label>
-            <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
+            <Select
+              value={selectedAccountId}
+              onValueChange={setSelectedAccountId}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select account" />
               </SelectTrigger>
               <SelectContent>
-                {accounts.map((account) => (
+                {accounts.map(account => (
                   <SelectItem key={account.id} value={account.id}>
                     {account.display_name || account.email_address}
                   </SelectItem>
@@ -207,13 +234,16 @@ export function EmailCompose({
           {templates.length > 0 && (
             <div className="space-y-2">
               <Label htmlFor="template">Template (optional)</Label>
-              <Select value={selectedTemplateId} onValueChange={handleTemplateSelect}>
+              <Select
+                value={selectedTemplateId}
+                onValueChange={handleTemplateSelect}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select template" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="__none__">None</SelectItem>
-                  {templates.map((template) => (
+                  {templates.map(template => (
                     <SelectItem key={template.id} value={template.id}>
                       {template.name}
                     </SelectItem>
@@ -227,7 +257,9 @@ export function EmailCompose({
           {selectedTemplate && Object.keys(templateVariables).length > 0 && (
             <div className="space-y-2 rounded-lg border p-3">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Template Variables</Label>
+                <Label className="text-sm font-medium">
+                  Template Variables
+                </Label>
                 <Button
                   type="button"
                   variant="outline"
@@ -238,7 +270,7 @@ export function EmailCompose({
                 </Button>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {Object.keys(templateVariables).map((varName) => (
+                {Object.keys(templateVariables).map(varName => (
                   <div key={varName} className="space-y-1">
                     <Label htmlFor={`var-${varName}`} className="text-xs">
                       {varName}
@@ -246,7 +278,7 @@ export function EmailCompose({
                     <Input
                       id={`var-${varName}`}
                       value={templateVariables[varName]}
-                      onChange={(e) =>
+                      onChange={e =>
                         setTemplateVariables({
                           ...templateVariables,
                           [varName]: e.target.value,
@@ -266,7 +298,7 @@ export function EmailCompose({
             <Input
               id="to"
               value={to}
-              onChange={(e) => setTo(e.target.value)}
+              onChange={e => setTo(e.target.value)}
               placeholder="recipient@example.com"
               required
             />
@@ -279,7 +311,7 @@ export function EmailCompose({
               <Input
                 id="cc"
                 value={cc}
-                onChange={(e) => setCc(e.target.value)}
+                onChange={e => setCc(e.target.value)}
                 placeholder="cc@example.com"
               />
             </div>
@@ -292,7 +324,7 @@ export function EmailCompose({
               <Input
                 id="bcc"
                 value={bcc}
-                onChange={(e) => setBcc(e.target.value)}
+                onChange={e => setBcc(e.target.value)}
                 placeholder="bcc@example.com"
               />
             </div>
@@ -328,7 +360,7 @@ export function EmailCompose({
             <Input
               id="subject"
               value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              onChange={e => setSubject(e.target.value)}
               placeholder="Email subject"
               required
             />
@@ -340,7 +372,7 @@ export function EmailCompose({
             <Textarea
               id="body"
               value={body}
-              onChange={(e) => setBody(e.target.value)}
+              onChange={e => setBody(e.target.value)}
               placeholder="Your message..."
               rows={12}
               required
@@ -355,7 +387,13 @@ export function EmailCompose({
           <Button
             type="button"
             onClick={handleSend}
-            disabled={!selectedAccountId || !to.trim() || !subject.trim() || !body.trim() || isSending}
+            disabled={
+              !selectedAccountId ||
+              !to.trim() ||
+              !subject.trim() ||
+              !body.trim() ||
+              isSending
+            }
           >
             {isSending ? (
               <>

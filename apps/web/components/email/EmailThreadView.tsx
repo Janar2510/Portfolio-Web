@@ -2,7 +2,16 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { Mail, Reply, ReplyAll, Forward, User, Building2, Briefcase, Send } from 'lucide-react';
+import {
+  Mail,
+  Reply,
+  ReplyAll,
+  Forward,
+  User,
+  Building2,
+  Briefcase,
+  Send,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -30,7 +39,9 @@ export function EmailThreadView({
   onForward,
   onCompose,
 }: EmailThreadViewProps) {
-  const [expandedEmails, setExpandedEmails] = useState<Set<string>>(new Set([emails[0]?.id]));
+  const [expandedEmails, setExpandedEmails] = useState<Set<string>>(
+    new Set([emails[0]?.id])
+  );
 
   const toggleEmail = (emailId: string) => {
     const newExpanded = new Set(expandedEmails);
@@ -72,7 +83,9 @@ export function EmailThreadView({
                 </div>
               )}
               <span>•</span>
-              <span>{emails.length} {emails.length === 1 ? 'message' : 'messages'}</span>
+              <span>
+                {emails.length} {emails.length === 1 ? 'message' : 'messages'}
+              </span>
             </div>
           </div>
           <div className="flex gap-2">
@@ -129,9 +142,7 @@ export function EmailThreadView({
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <span className="font-medium">
-                              {isOutbound
-                                ? accountEmail
-                                : email.from_address}
+                              {isOutbound ? accountEmail : email.from_address}
                             </span>
                             {isOutbound && (
                               <Badge variant="outline" className="text-xs">
@@ -139,7 +150,10 @@ export function EmailThreadView({
                               </Badge>
                             )}
                             {!email.is_read && !isOutbound && (
-                              <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                              <Badge
+                                variant="outline"
+                                className="bg-blue-100 text-blue-800"
+                              >
                                 New
                               </Badge>
                             )}
@@ -149,11 +163,12 @@ export function EmailThreadView({
                             {isOutbound
                               ? email.to_addresses.join(', ')
                               : email.from_address}
-                            {email.cc_addresses && email.cc_addresses.length > 0 && (
-                              <>
-                                {' • '}CC: {email.cc_addresses.join(', ')}
-                              </>
-                            )}
+                            {email.cc_addresses &&
+                              email.cc_addresses.length > 0 && (
+                                <>
+                                  {' • '}CC: {email.cc_addresses.join(', ')}
+                                </>
+                              )}
                           </div>
                         </div>
                       </div>
@@ -174,7 +189,7 @@ export function EmailThreadView({
                               variant="ghost"
                               size="icon"
                               className="h-7 w-7"
-                              onClick={(e) => {
+                              onClick={e => {
                                 e.stopPropagation();
                                 onReply(email);
                               }}
@@ -187,7 +202,7 @@ export function EmailThreadView({
                               variant="ghost"
                               size="icon"
                               className="h-7 w-7"
-                              onClick={(e) => {
+                              onClick={e => {
                                 e.stopPropagation();
                                 onReplyAll(email);
                               }}
@@ -200,7 +215,7 @@ export function EmailThreadView({
                               variant="ghost"
                               size="icon"
                               className="h-7 w-7"
-                              onClick={(e) => {
+                              onClick={e => {
                                 e.stopPropagation();
                                 onForward(email);
                               }}
@@ -214,7 +229,7 @@ export function EmailThreadView({
                         variant="ghost"
                         size="icon"
                         className="h-7 w-7"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           toggleEmail(email.id);
                         }}

@@ -25,7 +25,12 @@ export function WelcomeStep({
 }: WelcomeStepProps) {
   const t = useTranslations('onboarding.welcome');
 
-  const userTypes: Array<{ id: UserType; icon: React.ReactNode; label: string; desc: string }> = [
+  const userTypes: Array<{
+    id: UserType;
+    icon: React.ReactNode;
+    label: string;
+    desc: string;
+  }> = [
     {
       id: 'freelancer',
       icon: <User className="h-6 w-6" />,
@@ -83,12 +88,13 @@ export function WelcomeStep({
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">{t('userType.label')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {userTypes.map((type) => (
+          {userTypes.map(type => (
             <Card
               key={type.id}
               className={cn(
                 'cursor-pointer transition-all hover:shadow-md',
-                userType === type.id && 'ring-2 ring-primary-500 border-primary-500'
+                userType === type.id &&
+                  'ring-2 ring-primary-500 border-primary-500'
               )}
               onClick={() => onUserTypeSelect(type.id)}
             >
@@ -119,12 +125,13 @@ export function WelcomeStep({
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">{t('goal.label')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {goals.map((goal) => (
+          {goals.map(goal => (
             <Card
               key={goal.id}
               className={cn(
                 'cursor-pointer transition-all hover:shadow-md',
-                primaryGoal === goal.id && 'ring-2 ring-primary-500 border-primary-500'
+                primaryGoal === goal.id &&
+                  'ring-2 ring-primary-500 border-primary-500'
               )}
               onClick={() => onGoalSelect(goal.id)}
             >

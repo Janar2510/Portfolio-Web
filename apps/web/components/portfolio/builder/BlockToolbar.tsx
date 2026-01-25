@@ -17,7 +17,10 @@ interface BlockToolbarProps {
   disabled?: boolean;
 }
 
-export function BlockToolbar({ onBlockAdd, disabled = false }: BlockToolbarProps) {
+export function BlockToolbar({
+  onBlockAdd,
+  disabled = false,
+}: BlockToolbarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const blocksByCategory = {
@@ -49,7 +52,7 @@ export function BlockToolbar({ onBlockAdd, disabled = false }: BlockToolbarProps
                   {categoryLabels[category as keyof typeof categoryLabels]}
                 </div>
                 <div className="space-y-1">
-                  {blockTypes.map((blockType) => {
+                  {blockTypes.map(blockType => {
                     const metadata = blockRegistry[blockType];
                     const Icon = iconMap[blockType] || FileText;
                     return (

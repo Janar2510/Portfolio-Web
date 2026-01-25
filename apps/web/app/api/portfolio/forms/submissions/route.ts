@@ -21,7 +21,7 @@ const querySchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-    
+
     // Check authentication
     const {
       data: { user },

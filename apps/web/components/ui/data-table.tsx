@@ -39,11 +39,7 @@ const DataTableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead
-    ref={ref}
-    className={cn('bg-muted/50', className)}
-    {...props}
-  />
+  <thead ref={ref} className={cn('bg-muted/50', className)} {...props} />
 ));
 DataTableHeader.displayName = 'DataTableHeader';
 
@@ -51,11 +47,7 @@ const DataTableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tbody
-    ref={ref}
-    className={cn(className)}
-    {...props}
-  />
+  <tbody ref={ref} className={cn(className)} {...props} />
 ));
 DataTableBody.displayName = 'DataTableBody';
 

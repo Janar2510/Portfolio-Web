@@ -21,7 +21,11 @@ import {
 } from 'lucide-react';
 import { useEditorStore, useHistoryStore } from '@/stores/portfolio';
 import { useRouter } from 'next/navigation';
-import { useSavePage, usePublishSite, useUnpublishSite } from '@/hooks/portfolio/use-editor';
+import {
+  useSavePage,
+  usePublishSite,
+  useUnpublishSite,
+} from '@/hooks/portfolio/use-editor';
 import { Loader2 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -85,11 +89,7 @@ export function EditorToolbar({ page, siteId }: EditorToolbarProps) {
     <div className="h-14 border-b bg-background flex items-center justify-between px-4">
       {/* Left Section */}
       <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => router.back()}
-        >
+        <Button variant="ghost" size="sm" onClick={() => router.back()}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
@@ -167,20 +167,10 @@ export function EditorToolbar({ page, siteId }: EditorToolbarProps) {
         )}
 
         {/* Undo/Redo */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={undo}
-          disabled={!canUndo()}
-        >
+        <Button variant="ghost" size="sm" onClick={undo} disabled={!canUndo()}>
           <Undo2 className="h-4 w-4" />
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={redo}
-          disabled={!canRedo()}
-        >
+        <Button variant="ghost" size="sm" onClick={redo} disabled={!canRedo()}>
           <Redo2 className="h-4 w-4" />
         </Button>
 
@@ -219,14 +209,24 @@ export function EditorToolbar({ page, siteId }: EditorToolbarProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={handlePublish} disabled={publishMutation.isPending}>
+            <DropdownMenuItem
+              onClick={handlePublish}
+              disabled={publishMutation.isPending}
+            >
               Publish Site
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleUnpublish} disabled={unpublishMutation.isPending}>
-              {unpublishMutation.isPending ? 'Unpublishing...' : 'Unpublish Site'}
+            <DropdownMenuItem
+              onClick={handleUnpublish}
+              disabled={unpublishMutation.isPending}
+            >
+              {unpublishMutation.isPending
+                ? 'Unpublishing...'
+                : 'Unpublish Site'}
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => window.open(`http://${siteId}.yourdomain.com`, '_blank')}
+              onClick={() =>
+                window.open(`http://${siteId}.yourdomain.com`, '_blank')
+              }
             >
               View Live Site
             </DropdownMenuItem>

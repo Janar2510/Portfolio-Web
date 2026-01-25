@@ -32,7 +32,7 @@ export function CustomFieldRenderer({
         return (
           <Input
             value={(value as string) || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={field.field_name}
             required={field.is_required}
           />
@@ -42,7 +42,7 @@ export function CustomFieldRenderer({
         return (
           <Textarea
             value={(value as string) || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={field.field_name}
             required={field.is_required}
             rows={4}
@@ -55,7 +55,9 @@ export function CustomFieldRenderer({
           <Input
             type="number"
             value={(value as number) || ''}
-            onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)}
+            onChange={e =>
+              onChange(e.target.value ? Number(e.target.value) : null)
+            }
             placeholder={field.field_name}
             required={field.is_required}
             step={field.field_type === 'monetary' ? '0.01' : '1'}
@@ -67,7 +69,7 @@ export function CustomFieldRenderer({
           <Input
             type="date"
             value={(value as string) || ''}
-            onChange={(e) => onChange(e.target.value || null)}
+            onChange={e => onChange(e.target.value || null)}
             required={field.is_required}
           />
         );
@@ -77,7 +79,7 @@ export function CustomFieldRenderer({
           <Input
             type="datetime-local"
             value={(value as string) || ''}
-            onChange={(e) => onChange(e.target.value || null)}
+            onChange={e => onChange(e.target.value || null)}
             required={field.is_required}
           />
         );
@@ -87,7 +89,7 @@ export function CustomFieldRenderer({
           <Input
             type="email"
             value={(value as string) || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={field.field_name}
             required={field.is_required}
           />
@@ -98,7 +100,7 @@ export function CustomFieldRenderer({
           <Input
             type="tel"
             value={(value as string) || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={field.field_name}
             required={field.is_required}
           />
@@ -109,7 +111,7 @@ export function CustomFieldRenderer({
           <Input
             type="url"
             value={(value as string) || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={field.field_name}
             required={field.is_required}
           />
@@ -121,7 +123,7 @@ export function CustomFieldRenderer({
             <Checkbox
               id={field.field_key}
               checked={(value as boolean) || false}
-              onCheckedChange={(checked) => onChange(checked)}
+              onCheckedChange={checked => onChange(checked)}
             />
             <Label htmlFor={field.field_key} className="font-normal">
               {field.field_name}
@@ -133,14 +135,14 @@ export function CustomFieldRenderer({
         return (
           <Select
             value={(value as string) || ''}
-            onValueChange={(val) => onChange(val || null)}
+            onValueChange={val => onChange(val || null)}
             required={field.is_required}
           >
             <SelectTrigger>
               <SelectValue placeholder={`Select ${field.field_name}`} />
             </SelectTrigger>
             <SelectContent>
-              {field.options.map((option) => (
+              {field.options.map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
@@ -153,16 +155,16 @@ export function CustomFieldRenderer({
         const selectedValues = (value as string[]) || [];
         return (
           <div className="space-y-2">
-            {field.options.map((option) => (
+            {field.options.map(option => (
               <div key={option.value} className="flex items-center space-x-2">
                 <Checkbox
                   id={`${field.field_key}-${option.value}`}
                   checked={selectedValues.includes(option.value)}
-                  onCheckedChange={(checked) => {
+                  onCheckedChange={checked => {
                     if (checked) {
                       onChange([...selectedValues, option.value]);
                     } else {
-                      onChange(selectedValues.filter((v) => v !== option.value));
+                      onChange(selectedValues.filter(v => v !== option.value));
                     }
                   }}
                 />
@@ -181,7 +183,7 @@ export function CustomFieldRenderer({
         return (
           <Input
             value={String(value || '')}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={e => onChange(e.target.value)}
             placeholder={field.field_name}
             required={field.is_required}
           />

@@ -1,12 +1,15 @@
 /**
  * Test IMAP Connection
- * 
+ *
  * Server-side route to test IMAP credentials
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { decryptCredentials, type IMAPCredentials } from '@/lib/email/encryption';
+import {
+  decryptCredentials,
+  type IMAPCredentials,
+} from '@/lib/email/encryption';
 
 // Note: This requires an IMAP library like 'imap' or 'node-imap'
 // For now, this is a placeholder that validates credentials structure
@@ -62,11 +65,17 @@ export async function POST(request: NextRequest) {
 
     // Placeholder: return success for now
     // TODO: Implement actual IMAP connection test
-    return NextResponse.json({ success: true, message: 'IMAP test not yet implemented' });
+    return NextResponse.json({
+      success: true,
+      message: 'IMAP test not yet implemented',
+    });
   } catch (error) {
     console.error('IMAP test error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to test connection' },
+      {
+        error:
+          error instanceof Error ? error.message : 'Failed to test connection',
+      },
       { status: 500 }
     );
   }

@@ -19,7 +19,9 @@ export async function createClientWithUser(): Promise<CreateClientResult> {
   let accessToken: string | undefined;
   let refreshToken: string | undefined;
 
-  const authCookie = allCookies.find(c => c.name.includes('auth-token') && !c.name.includes('.'));
+  const authCookie = allCookies.find(
+    c => c.name.includes('auth-token') && !c.name.includes('.')
+  );
   if (authCookie?.value) {
     try {
       const decoded = decodeURIComponent(authCookie.value);
@@ -37,13 +39,17 @@ export async function createClientWithUser(): Promise<CreateClientResult> {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       global: {
-        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        headers: accessToken
+          ? { Authorization: `Bearer ${accessToken}` }
+          : undefined,
       },
       cookies: {
         getAll() {
           return allCookies;
         },
-        setAll(cookiesToSet: Array<{ name: string; value: string; options?: any }>) {
+        setAll(
+          cookiesToSet: Array<{ name: string; value: string; options?: any }>
+        ) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, {
@@ -66,35 +72,48 @@ export async function createClientWithUser(): Promise<CreateClientResult> {
   try {
     // 1. Primary method: Use getUser()
     console.log('[Supabase Server] 🔍 Attempting getUser()...');
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
     if (user) {
       console.log('[Supabase Server] ✅ getUser() successful! User:', user.id);
       recoveredUser = user;
     } else if (accessToken && refreshToken) {
       // 2. Manual fallback if getUser failed but we have tokens
-      console.log('[Supabase Server] ⚠️ getUser failed, attempting manual setSession...');
+      console.log(
+        '[Supabase Server] ⚠️ getUser failed, attempting manual setSession...'
+      );
       const { data, error: setError } = await supabase.auth.setSession({
         access_token: accessToken,
         refresh_token: refreshToken,
       });
 
       if (data.user) {
-        console.log('[Supabase Server] ✅ manual setSession successful! User:', data.user.id);
+        console.log(
+          '[Supabase Server] ✅ manual setSession successful! User:',
+          data.user.id
+        );
         recoveredUser = data.user;
       } else {
-        console.log('[Supabase Server] ❌ manual setSession failed:', setError?.message);
+        console.log(
+          '[Supabase Server] ❌ manual setSession failed:',
+          setError?.message
+        );
       }
     } else {
       console.log('[Supabase Server] ❌ No user and no tokens for recovery');
     }
   } catch (error) {
-    console.error('[Supabase Server] ❌ Unexpected error during session recovery:', error);
+    console.error(
+      '[Supabase Server] ❌ Unexpected error during session recovery:',
+      error
+    );
   }
 
   return { supabase, user: recoveredUser };
 }
-
 
 /**
  * Creates a Supabase client (backward compatible).

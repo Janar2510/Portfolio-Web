@@ -26,7 +26,13 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { createClient } from '@/lib/supabase/client';
 import type { PipelineStage, Deal, Contact, Company } from '@/lib/services/crm';
 
@@ -35,7 +41,9 @@ export default function PipelinePage() {
   const [isDealModalOpen, setIsDealModalOpen] = useState(false);
   const [isStageSettingsOpen, setIsStageSettingsOpen] = useState(false);
   const [isCreateDealOpen, setIsCreateDealOpen] = useState(false);
-  const [createDealStageId, setCreateDealStageId] = useState<string | null>(null);
+  const [createDealStageId, setCreateDealStageId] = useState<string | null>(
+    null
+  );
   const queryClient = useQueryClient();
 
   // Fetch pipeline stages
@@ -113,7 +121,15 @@ export default function PipelinePage() {
 
   // Move deal mutation
   const moveDealMutation = useMutation({
-    mutationFn: async ({ dealId, stageId, sortOrder }: { dealId: string; stageId: string; sortOrder: number }) => {
+    mutationFn: async ({
+      dealId,
+      stageId,
+      sortOrder,
+    }: {
+      dealId: string;
+      stageId: string;
+      sortOrder: number;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('deals')
@@ -148,7 +164,7 @@ export default function PipelinePage() {
         .insert({
           ...deal,
           currency: deal.currency || 'EUR',
-          sort_order: deals.filter((d) => d.stage_id === deal.stage_id).length,
+          sort_order: deals.filter(d => d.stage_id === deal.stage_id).length,
         })
         .select()
         .single();
@@ -164,7 +180,13 @@ export default function PipelinePage() {
 
   // Update deal mutation
   const updateDealMutation = useMutation({
-    mutationFn: async ({ dealId, updates }: { dealId: string; updates: Partial<Deal> }) => {
+    mutationFn: async ({
+      dealId,
+      updates,
+    }: {
+      dealId: string;
+      updates: Partial<Deal>;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('deals')
@@ -213,7 +235,13 @@ export default function PipelinePage() {
 
   // Update stage mutation
   const updateStageMutation = useMutation({
-    mutationFn: async ({ stageId, updates }: { stageId: string; updates: Partial<PipelineStage> }) => {
+    mutationFn: async ({
+      stageId,
+      updates,
+    }: {
+      stageId: string;
+      updates: Partial<PipelineStage>;
+    }) => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('pipeline_stages')
@@ -233,7 +261,10 @@ export default function PipelinePage() {
   const deleteStageMutation = useMutation({
     mutationFn: async (stageId: string) => {
       const supabase = createClient();
-      const { error } = await supabase.from('pipeline_stages').delete().eq('id', stageId);
+      const { error } = await supabase
+        .from('pipeline_stages')
+        .delete()
+        .eq('id', stageId);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -260,11 +291,20 @@ export default function PipelinePage() {
     await createDealMutation.mutateAsync({
       stage_id: createDealStageId,
       title: formData.get('title') as string,
-      contact_id: formData.get('contact_id')?.toString() === '__none__' ? undefined : formData.get('contact_id')?.toString() || undefined,
-      company_id: formData.get('company_id')?.toString() === '__none__' ? undefined : formData.get('company_id')?.toString() || undefined,
-      value: formData.get('value') ? parseFloat(formData.get('value') as string) : undefined,
+      contact_id:
+        formData.get('contact_id')?.toString() === '__none__'
+          ? undefined
+          : formData.get('contact_id')?.toString() || undefined,
+      company_id:
+        formData.get('company_id')?.toString() === '__none__'
+          ? undefined
+          : formData.get('company_id')?.toString() || undefined,
+      value: formData.get('value')
+        ? parseFloat(formData.get('value') as string)
+        : undefined,
       currency: formData.get('currency')?.toString() || 'EUR',
-      expected_close_date: formData.get('expected_close_date')?.toString() || undefined,
+      expected_close_date:
+        formData.get('expected_close_date')?.toString() || undefined,
       probability: formData.get('probability')
         ? parseInt(formData.get('probability') as string)
         : undefined,
@@ -273,7 +313,7 @@ export default function PipelinePage() {
   };
 
   // Get default stage for new deals
-  const defaultStage = stages.find((s) => !s.is_won && !s.is_lost) || stages[0];
+  const defaultStage = stages.find(s => !s.is_won && !s.is_lost) || stages[0];
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
@@ -301,11 +341,23 @@ export default function PipelinePage() {
           <div className="flex h-full items-center justify-center animate-fade-in">
             <div className="text-center animate-scale-in">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
                 </svg>
               </div>
-              <p className="text-lg font-semibold text-foreground">No pipeline stages</p>
+              <p className="text-lg font-semibold text-foreground">
+                No pipeline stages
+              </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Create your first pipeline stage to get started
               </p>
@@ -321,15 +373,19 @@ export default function PipelinePage() {
           <PipelineBoard
             stages={stages}
             deals={deals}
-            onStagesReorder={async (newStages) => {
+            onStagesReorder={async newStages => {
               await reorderStagesMutation.mutateAsync(newStages);
             }}
             onDealMove={async (dealId, stageId, sortOrder) => {
-              await moveDealMutation.mutateAsync({ dealId, stageId, sortOrder });
+              await moveDealMutation.mutateAsync({
+                dealId,
+                stageId,
+                sortOrder,
+              });
             }}
             onDealClick={handleDealClick}
             onAddDeal={handleAddDeal}
-            onStageSettings={(stage) => {
+            onStageSettings={stage => {
               // Could open a focused edit dialog for this stage
               setIsStageSettingsOpen(true);
             }}
@@ -368,7 +424,7 @@ export default function PipelinePage() {
               setSelectedDeal(updatedDeal);
             }
           }}
-          onDelete={async (dealId) => {
+          onDelete={async dealId => {
             await deleteDealMutation.mutateAsync(dealId);
           }}
         />
@@ -380,21 +436,22 @@ export default function PipelinePage() {
           <DialogHeader>
             <DialogTitle>Customize Pipeline Stages</DialogTitle>
             <DialogDescription>
-              Manage your sales pipeline stages. Drag to reorder or edit to customize.
+              Manage your sales pipeline stages. Drag to reorder or edit to
+              customize.
             </DialogDescription>
           </DialogHeader>
           <StageCustomization
             stages={stages}
-            onStageCreate={async (data) => {
+            onStageCreate={async data => {
               await createStageMutation.mutateAsync(data);
             }}
             onStageUpdate={async (stageId, data) => {
               await updateStageMutation.mutateAsync({ stageId, data });
             }}
-            onStageDelete={async (stageId) => {
+            onStageDelete={async stageId => {
               await deleteStageMutation.mutateAsync(stageId);
             }}
-            onStagesReorder={async (newStages) => {
+            onStagesReorder={async newStages => {
               await reorderStagesMutation.mutateAsync(newStages);
             }}
           />
@@ -402,7 +459,10 @@ export default function PipelinePage() {
       </Dialog>
 
       {/* Create Deal Dialog */}
-      <CreateDealDialog open={isCreateDealOpen} onOpenChange={setIsCreateDealOpen}>
+      <CreateDealDialog
+        open={isCreateDealOpen}
+        onOpenChange={setIsCreateDealOpen}
+      >
         <CreateDealDialogContent>
           <form onSubmit={handleCreateDeal}>
             <CreateDealDialogHeader>
@@ -460,7 +520,7 @@ export default function PipelinePage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="__none__">None</SelectItem>
-                      {contacts.map((contact) => (
+                      {contacts.map(contact => (
                         <SelectItem key={contact.id} value={contact.id}>
                           {contact.first_name} {contact.last_name}
                         </SelectItem>
@@ -476,7 +536,7 @@ export default function PipelinePage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="__none__">None</SelectItem>
-                      {companies.map((company) => (
+                      {companies.map(company => (
                         <SelectItem key={company.id} value={company.id}>
                           {company.name}
                         </SelectItem>
@@ -487,7 +547,11 @@ export default function PipelinePage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="expected_close_date">Expected Close Date</Label>
-                <Input id="expected_close_date" name="expected_close_date" type="date" />
+                <Input
+                  id="expected_close_date"
+                  name="expected_close_date"
+                  type="date"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="notes">Notes</Label>

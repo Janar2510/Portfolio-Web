@@ -6,13 +6,19 @@ import { PortfolioService } from '@/lib/services/portfolio';
 import { BaseBlock } from './BaseBlock';
 import { cn } from '@/lib/utils';
 import type { PortfolioBlock } from '@/lib/services/portfolio';
-import type { ProjectsBlockContent, ProjectsBlockSettings } from '@/lib/blocks/schema';
+import type {
+  ProjectsBlockContent,
+  ProjectsBlockSettings,
+} from '@/lib/blocks/schema';
 import { useEditorStore } from '@/stores/portfolio';
 
 interface ProjectsBlockProps {
   block: PortfolioBlock;
   isEditing?: boolean;
-  onUpdate?: (content: Record<string, unknown>, settings?: Record<string, unknown>) => void;
+  onUpdate?: (
+    content: Record<string, unknown>,
+    settings?: Record<string, unknown>
+  ) => void;
   onDelete?: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
@@ -93,10 +99,11 @@ export function ProjectsBlock({
               'grid gap-6',
               settings.layout === 'grid' && gridCols[settings.columns || 3],
               settings.layout === 'list' && 'grid-cols-1',
-              settings.layout === 'masonry' && 'columns-1 md:columns-2 lg:columns-3'
+              settings.layout === 'masonry' &&
+                'columns-1 md:columns-2 lg:columns-3'
             )}
           >
-            {projects.map((project) => (
+            {projects.map(project => (
               <div
                 key={project.id}
                 className="group rounded-lg border bg-card p-4 transition-shadow hover:shadow-lg"
@@ -111,23 +118,27 @@ export function ProjectsBlock({
                   </div>
                 )}
                 <h3 className="mb-2 text-xl font-semibold">{project.title}</h3>
-                {settings.show_description && (project.excerpt || project.description) && (
-                  <p className="mb-3 text-sm text-muted-foreground">
-                    {project.excerpt || project.description}
-                  </p>
-                )}
-                {settings.show_tags && project.tags && Array.isArray(project.tags) && project.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag: string) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-muted px-2 py-1 text-xs"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                {settings.show_description &&
+                  (project.excerpt || project.description) && (
+                    <p className="mb-3 text-sm text-muted-foreground">
+                      {project.excerpt || project.description}
+                    </p>
+                  )}
+                {settings.show_tags &&
+                  project.tags &&
+                  Array.isArray(project.tags) &&
+                  project.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag: string) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-muted px-2 py-1 text-xs"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 {settings.show_category && project.category && (
                   <div className="mt-2">
                     <span className="text-xs text-muted-foreground">

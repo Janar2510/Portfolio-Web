@@ -106,7 +106,7 @@ export default function SignUpPage() {
                 type="email"
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 required
                 disabled={loading}
                 autoComplete="email"
@@ -118,13 +118,14 @@ export default function SignUpPage() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 required
                 disabled={loading}
                 autoComplete="new-password"
               />
               <p className="text-xs text-muted-foreground">
-                Must be at least 8 characters with uppercase, lowercase, and number
+                Must be at least 8 characters with uppercase, lowercase, and
+                number
               </p>
             </div>
             <div className="space-y-2">
@@ -133,7 +134,7 @@ export default function SignUpPage() {
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={e => setConfirmPassword(e.target.value)}
                 required
                 disabled={loading}
                 autoComplete="new-password"

@@ -9,10 +9,15 @@ import { PortfolioService } from '@/lib/services/portfolio';
 import { z } from 'zod';
 
 const createPageSchema = z.object({
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/),
+  slug: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/),
   title: z.string().min(1),
   is_homepage: z.boolean().optional(),
-  page_type: z.enum(['home', 'page', 'project', 'blog_post', 'legal']).optional(),
+  page_type: z
+    .enum(['home', 'page', 'project', 'blog_post', 'legal'])
+    .optional(),
   seo_title: z.string().optional(),
   seo_description: z.string().optional(),
   show_in_nav: z.boolean().optional(),
@@ -134,7 +139,8 @@ export async function POST(request: NextRequest) {
       {
         error: {
           code: 'INTERNAL_ERROR',
-          message: error instanceof Error ? error.message : 'Failed to create page',
+          message:
+            error instanceof Error ? error.message : 'Failed to create page',
         },
       },
       { status: 500 }

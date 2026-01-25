@@ -8,7 +8,13 @@
 import { useState } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   Edit,
@@ -17,7 +23,8 @@ import {
   ExternalLink,
   Settings,
   FileText,
-  Globe
+  Globe,
+  Trash,
 } from 'lucide-react';
 import type { PortfolioSite, PortfolioPage } from '@/lib/services/portfolio';
 import {
@@ -39,7 +46,11 @@ interface PortfolioSiteViewProps {
   locale: string;
 }
 
-export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProps) {
+export function PortfolioSiteView({
+  site,
+  pages,
+  locale,
+}: PortfolioSiteViewProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isCreatePageOpen, setIsCreatePageOpen] = useState(false);
@@ -56,7 +67,7 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
     mutationFn: async (data: { title: string; slug: string }) => {
       return await portfolioService.createPage(site.id, data);
     },
-    onSuccess: (newPage) => {
+    onSuccess: newPage => {
       queryClient.invalidateQueries({ queryKey: ['portfolio-pages', site.id] });
       setIsCreatePageOpen(false);
       setNewPageTitle('');
@@ -73,6 +84,45 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
       title: newPageTitle,
       slug: newPageSlug.toLowerCase().replace(/\s+/g, '-'),
     });
+  };
+
+  const deletePageMutation = useMutation({
+    mutationFn: async (pageId: string) => {
+      return await portfolioService.deletePage(pageId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolio-pages', site.id] });
+    },
+  });
+
+  const deleteSiteMutation = useMutation({
+    mutationFn: async () => {
+      return await portfolioService.deleteSite(site.id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolio-site'] });
+      // Since current flow is 1 site per user, if we delete it, we should probably
+      // trigger a fresh fetch or redirect. However, parent component handles "NoSiteView"
+      // so invalidating should be enough to show "Create Site" again if parent re-renders.
+      router.refresh();
+    },
+  });
+
+  const handleDeletePage = (e: React.MouseEvent, pageId: string) => {
+    e.stopPropagation();
+    if (confirm('Are you sure you want to delete this page?')) {
+      deletePageMutation.mutate(pageId);
+    }
+  };
+
+  const handleDeleteSite = () => {
+    if (
+      confirm(
+        'Are you sure you want to delete your entire site? This cannot be undone.'
+      )
+    ) {
+      deleteSiteMutation.mutate();
+    }
   };
 
   const siteUrl = site.custom_domain
@@ -106,6 +156,14 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
           </div>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+            onClick={handleDeleteSite}
+            disabled={deleteSiteMutation.isPending}
+          >
+            {deleteSiteMutation.isPending ? 'Deleting...' : 'Delete Site'}
+          </Button>
           <Button
             variant="outline"
             onClick={() => router.push(`/portfolio/settings`)}
@@ -144,7 +202,8 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
             <div className="text-center py-12">
               <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground mb-4">
-                No pages yet. Create your first page to start building your portfolio.
+                No pages yet. Create your first page to start building your
+                portfolio.
               </p>
               <Button onClick={() => setIsCreatePageOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
@@ -153,10 +212,10 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {pages.map((page) => (
+              {pages.map(page => (
                 <Card
                   key={page.id}
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="cursor-pointer hover:bg-muted/50 transition-colors group relative"
                   onClick={() => router.push(`/portfolio/editor/${page.id}`)}
                 >
                   <CardHeader>
@@ -175,7 +234,7 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           router.push(`/portfolio/editor/${page.id}`);
                         }}
@@ -187,13 +246,23 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           window.open(`${siteUrl}/${page.slug}`, '_blank');
                         }}
                       >
                         <Eye className="h-4 w-4 mr-2" />
                         View
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={e => handleDeletePage(e, page.id)}
+                        disabled={deletePageMutation.isPending}
+                      >
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </div>
                   </CardContent>
@@ -220,7 +289,7 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
                 <Input
                   id="page-title"
                   value={newPageTitle}
-                  onChange={(e) => {
+                  onChange={e => {
                     setNewPageTitle(e.target.value);
                     if (!newPageSlug || newPageSlug === '') {
                       setNewPageSlug(
@@ -237,7 +306,7 @@ export function PortfolioSiteView({ site, pages, locale }: PortfolioSiteViewProp
                 <Input
                   id="page-slug"
                   value={newPageSlug}
-                  onChange={(e) => setNewPageSlug(e.target.value)}
+                  onChange={e => setNewPageSlug(e.target.value)}
                   placeholder="about-me"
                   required
                 />

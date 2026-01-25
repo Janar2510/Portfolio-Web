@@ -15,7 +15,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import type { Company } from '@/lib/services/crm';
 
@@ -56,7 +62,7 @@ export function CompanyList({
       name: formData.get('name') as string,
       website: formData.get('website')?.toString() || undefined,
       industry: formData.get('industry')?.toString() || undefined,
-      size: formData.get('size')?.toString() as Company['size'] || undefined,
+      size: (formData.get('size')?.toString() as Company['size']) || undefined,
       address: Object.values(address).some(Boolean) ? address : undefined,
       notes: formData.get('notes')?.toString() || undefined,
     });
@@ -80,7 +86,7 @@ export function CompanyList({
       name: formData.get('name') as string,
       website: formData.get('website')?.toString() || undefined,
       industry: formData.get('industry')?.toString() || undefined,
-      size: formData.get('size')?.toString() as Company['size'] || undefined,
+      size: (formData.get('size')?.toString() as Company['size']) || undefined,
       address: Object.values(address).some(Boolean) ? address : undefined,
       notes: formData.get('notes')?.toString() || undefined,
     });
@@ -89,7 +95,11 @@ export function CompanyList({
   };
 
   const handleDeleteCompany = async (companyId: string) => {
-    if (!confirm('Are you sure you want to delete this company? Associated contacts will be unlinked.')) {
+    if (
+      !confirm(
+        'Are you sure you want to delete this company? Associated contacts will be unlinked.'
+      )
+    ) {
       return;
     }
     await onCompanyDelete(companyId);
@@ -122,11 +132,20 @@ export function CompanyList({
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="website">Website</Label>
-                    <Input id="website" name="website" type="url" placeholder="https://..." />
+                    <Input
+                      id="website"
+                      name="website"
+                      type="url"
+                      placeholder="https://..."
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="industry">Industry</Label>
-                    <Input id="industry" name="industry" placeholder="e.g., Technology" />
+                    <Input
+                      id="industry"
+                      name="industry"
+                      placeholder="e.g., Technology"
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -139,7 +158,9 @@ export function CompanyList({
                       <SelectItem value="small">Small (1-50)</SelectItem>
                       <SelectItem value="medium">Medium (51-200)</SelectItem>
                       <SelectItem value="large">Large (201-1000)</SelectItem>
-                      <SelectItem value="enterprise">Enterprise (1000+)</SelectItem>
+                      <SelectItem value="enterprise">
+                        Enterprise (1000+)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -180,7 +201,7 @@ export function CompanyList({
           </div>
         ) : (
           <div className="p-2">
-            {companies.map((company) => (
+            {companies.map(company => (
               <div
                 key={company.id}
                 className={cn(
@@ -204,9 +225,7 @@ export function CompanyList({
                           {company.website}
                         </div>
                       )}
-                      {company.industry && (
-                        <span>{company.industry}</span>
-                      )}
+                      {company.industry && <span>{company.industry}</span>}
                       {contactCounts[company.id] !== undefined && (
                         <div className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
@@ -221,7 +240,7 @@ export function CompanyList({
                     size="icon"
                     variant="ghost"
                     className="h-7 w-7"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       setEditingCompany(company);
                       setIsEditDialogOpen(true);
@@ -233,7 +252,7 @@ export function CompanyList({
                     size="icon"
                     variant="ghost"
                     className="h-7 w-7 text-destructive hover:text-destructive"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDeleteCompany(company.id);
                     }}
@@ -297,7 +316,9 @@ export function CompanyList({
                       <SelectItem value="small">Small (1-50)</SelectItem>
                       <SelectItem value="medium">Medium (51-200)</SelectItem>
                       <SelectItem value="large">Large (201-1000)</SelectItem>
-                      <SelectItem value="enterprise">Enterprise (1000+)</SelectItem>
+                      <SelectItem value="enterprise">
+                        Enterprise (1000+)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

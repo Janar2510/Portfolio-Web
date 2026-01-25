@@ -25,8 +25,10 @@ export function EditorSidebar({ className }: EditorSidebarProps) {
     <div className={cn('bg-background border-r flex flex-col', className)}>
       <Tabs
         value={sidebarTab}
-        onValueChange={(value) =>
-          setSidebarTab(value as 'blocks' | 'styles' | 'pages' | 'settings' | 'templates')
+        onValueChange={value =>
+          setSidebarTab(
+            value as 'blocks' | 'styles' | 'pages' | 'settings' | 'templates'
+          )
         }
         className="flex flex-col h-full"
       >

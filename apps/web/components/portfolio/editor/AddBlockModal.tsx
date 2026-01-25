@@ -5,13 +5,25 @@
 
 'use client';
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { blockRegistry } from '@/lib/portfolio/blocks/registry';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 const BLOCK_CATEGORIES = [
@@ -40,7 +52,7 @@ export function AddBlockModal({ onClose, onSelect }: AddBlockModalProps) {
     // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(
-        (block) => block.metadata.category === selectedCategory
+        block => block.metadata.category === selectedCategory
       );
     }
 
@@ -48,7 +60,7 @@ export function AddBlockModal({ onClose, onSelect }: AddBlockModalProps) {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (block) =>
+        block =>
           block.metadata.name.toLowerCase().includes(query) ||
           block.metadata.description?.toLowerCase().includes(query)
       );
@@ -74,17 +86,19 @@ export function AddBlockModal({ onClose, onSelect }: AddBlockModalProps) {
             <Input
               placeholder="Search blocks..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="pl-9"
             />
           </div>
 
           {/* Categories */}
           <div className="flex flex-wrap gap-2">
-            {BLOCK_CATEGORIES.map((category) => (
+            {BLOCK_CATEGORIES.map(category => (
               <Button
                 key={category.id}
-                variant={selectedCategory === category.id ? 'default' : 'outline'}
+                variant={
+                  selectedCategory === category.id ? 'default' : 'outline'
+                }
                 size="sm"
                 onClick={() => setSelectedCategory(category.id)}
               >
@@ -101,11 +115,12 @@ export function AddBlockModal({ onClose, onSelect }: AddBlockModalProps) {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {filteredBlocks.map((entry) => {
+                {filteredBlocks.map(entry => {
                   const { metadata } = entry;
-                  const Icon = typeof metadata.icon === 'string'
-                    ? () => <span>{metadata.icon}</span>
-                    : metadata.icon;
+                  const Icon =
+                    typeof metadata.icon === 'string'
+                      ? () => <span>{metadata.icon}</span>
+                      : metadata.icon;
 
                   return (
                     <Card
@@ -117,7 +132,9 @@ export function AddBlockModal({ onClose, onSelect }: AddBlockModalProps) {
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
                             <Icon className="h-5 w-5 text-muted-foreground" />
-                            <CardTitle className="text-sm">{metadata.name}</CardTitle>
+                            <CardTitle className="text-sm">
+                              {metadata.name}
+                            </CardTitle>
                           </div>
                           {metadata.isPremium && (
                             <Badge variant="secondary" className="text-xs">

@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import {
+  Home,
   LayoutDashboard,
   Briefcase,
   FolderKanban,
@@ -43,6 +44,11 @@ export function Sidebar({ locale, collapsed = false, onToggle }: SidebarProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
   const navItems: NavItem[] = [
+    {
+      label: 'Home',
+      href: '/',
+      icon: Home,
+    },
     {
       label: t('nav.dashboard'),
       href: '/dashboard',
@@ -141,9 +147,9 @@ export function Sidebar({ locale, collapsed = false, onToggle }: SidebarProps) {
   };
 
   const toggleExpanded = (label: string) => {
-    setExpandedItems((prev) =>
+    setExpandedItems(prev =>
       prev.includes(label)
-        ? prev.filter((item) => item !== label)
+        ? prev.filter(item => item !== label)
         : [...prev, label]
     );
   };
@@ -161,7 +167,8 @@ export function Sidebar({ locale, collapsed = false, onToggle }: SidebarProps) {
             className={cn(
               'w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
               'hover:bg-neutral-100 dark:hover:bg-dark-bg-2',
-              active && 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
+              active &&
+              'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
               !active && 'text-neutral-700 dark:text-dark-text-secondary',
               level > 0 && 'pl-8'
             )}
@@ -181,7 +188,7 @@ export function Sidebar({ locale, collapsed = false, onToggle }: SidebarProps) {
           </button>
           {!collapsed && isExpanded && (
             <div className="ml-4 mt-1 space-y-1">
-              {item.children?.map((child) => renderNavItem(child, level + 1))}
+              {item.children?.map(child => renderNavItem(child, level + 1))}
             </div>
           )}
         </div>
@@ -195,7 +202,8 @@ export function Sidebar({ locale, collapsed = false, onToggle }: SidebarProps) {
         className={cn(
           'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
           'hover:bg-neutral-100 dark:hover:bg-dark-bg-2',
-          active && 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
+          active &&
+          'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
           !active && 'text-neutral-700 dark:text-dark-text-secondary',
           level > 0 && 'pl-8',
           collapsed && 'justify-center'
@@ -242,7 +250,7 @@ export function Sidebar({ locale, collapsed = false, onToggle }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-          {navItems.map((item) => renderNavItem(item))}
+          {navItems.map(item => renderNavItem(item))}
         </nav>
 
         {/* Status */}

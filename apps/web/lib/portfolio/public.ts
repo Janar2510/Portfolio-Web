@@ -62,11 +62,15 @@ export class PublicPortfolioService {
     return await createClient();
   }
 
-  async getSiteBySubdomain(subdomain: string): Promise<PublicPortfolioSite | null> {
+  async getSiteBySubdomain(
+    subdomain: string
+  ): Promise<PublicPortfolioSite | null> {
     const supabase = await this.getSupabase();
     const { data, error } = await supabase
       .from('portfolio_sites')
-      .select('id, name, subdomain, custom_domain, seo_title, seo_description, favicon_url, analytics_id')
+      .select(
+        'id, name, subdomain, custom_domain, seo_title, seo_description, favicon_url, analytics_id'
+      )
       .eq('subdomain', subdomain)
       .eq('is_published', true)
       .single();
@@ -80,7 +84,9 @@ export class PublicPortfolioService {
     const supabase = await this.getSupabase();
     const { data, error } = await supabase
       .from('portfolio_pages')
-      .select('id, site_id, slug, title, is_homepage, is_published, seo_title, seo_description, sort_order')
+      .select(
+        'id, site_id, slug, title, is_homepage, is_published, seo_title, seo_description, sort_order'
+      )
       .eq('site_id', siteId)
       .eq('is_published', true)
       .order('sort_order', { ascending: true });
@@ -89,11 +95,16 @@ export class PublicPortfolioService {
     return data || [];
   }
 
-  async getPageBySlug(siteId: string, slug: string): Promise<PublicPortfolioPage | null> {
+  async getPageBySlug(
+    siteId: string,
+    slug: string
+  ): Promise<PublicPortfolioPage | null> {
     const supabase = await this.getSupabase();
     const { data, error } = await supabase
       .from('portfolio_pages')
-      .select('id, site_id, slug, title, is_homepage, is_published, seo_title, seo_description, sort_order')
+      .select(
+        'id, site_id, slug, title, is_homepage, is_published, seo_title, seo_description, sort_order'
+      )
       .eq('site_id', siteId)
       .eq('slug', slug)
       .eq('is_published', true)

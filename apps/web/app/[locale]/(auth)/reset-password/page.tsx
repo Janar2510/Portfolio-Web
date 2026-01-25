@@ -108,13 +108,14 @@ export default function ResetPasswordPage() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 required
                 disabled={loading}
                 autoComplete="new-password"
               />
               <p className="text-xs text-muted-foreground">
-                Must be at least 8 characters with uppercase, lowercase, and number
+                Must be at least 8 characters with uppercase, lowercase, and
+                number
               </p>
             </div>
             <div className="space-y-2">
@@ -123,7 +124,7 @@ export default function ResetPasswordPage() {
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={e => setConfirmPassword(e.target.value)}
                 required
                 disabled={loading}
                 autoComplete="new-password"
@@ -134,7 +135,10 @@ export default function ResetPasswordPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Loading...' : t('resetPassword')}
             </Button>
-            <Link href="/sign-in" className="text-sm text-primary hover:underline">
+            <Link
+              href="/sign-in"
+              className="text-sm text-primary hover:underline"
+            >
               {t('backToSignIn')}
             </Link>
           </CardFooter>

@@ -34,7 +34,9 @@ export function PagesPanel() {
   const [newPageSlug, setNewPageSlug] = useState('');
 
   // Get site ID - try from current page, or fetch from site
-  const [siteId, setSiteId] = useState<string | null>(currentPage?.site_id || null);
+  const [siteId, setSiteId] = useState<string | null>(
+    currentPage?.site_id || null
+  );
 
   useEffect(() => {
     if (currentPage?.site_id) {
@@ -78,7 +80,7 @@ export function PagesPanel() {
         slug: data.slug,
       });
     },
-    onSuccess: (newPage) => {
+    onSuccess: newPage => {
       queryClient.invalidateQueries({ queryKey: ['portfolio-pages', siteId] });
       setCurrentPage(newPage);
       setIsCreateDialogOpen(false);
@@ -95,8 +97,8 @@ export function PagesPanel() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['portfolio-pages', siteId] });
-      if (currentPage && pages.find((p) => p.id === currentPage.id)) {
-        const remainingPages = pages.filter((p) => p.id !== currentPage.id);
+      if (currentPage && pages.find(p => p.id === currentPage.id)) {
+        const remainingPages = pages.filter(p => p.id !== currentPage.id);
         if (remainingPages.length > 0) {
           setCurrentPage(remainingPages[0]);
           router.push(`/portfolio/editor/${remainingPages[0].id}`);
@@ -149,13 +151,14 @@ export function PagesPanel() {
             No pages yet. Create your first page!
           </div>
         ) : (
-          pages.map((page) => (
+          pages.map(page => (
             <div
               key={page.id}
-              className={`flex items-center justify-between p-2 rounded border cursor-pointer transition-colors ${currentPage?.id === page.id
-                ? 'bg-primary/10 border-primary'
-                : 'hover:bg-muted/50'
-                }`}
+              className={`flex items-center justify-between p-2 rounded border cursor-pointer transition-colors ${
+                currentPage?.id === page.id
+                  ? 'bg-primary/10 border-primary'
+                  : 'hover:bg-muted/50'
+              }`}
               onClick={() => handlePageSelect(page)}
             >
               <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -165,15 +168,19 @@ export function PagesPanel() {
                   <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                 )}
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-medium truncate">{page.title}</div>
-                  <div className="text-xs text-muted-foreground">/{page.slug}</div>
+                  <div className="text-sm font-medium truncate">
+                    {page.title}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    /{page.slug}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     handlePageSelect(page);
                   }}
@@ -184,7 +191,7 @@ export function PagesPanel() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       if (confirm('Delete this page?')) {
                         deletePageMutation.mutate(page.id);
@@ -216,7 +223,7 @@ export function PagesPanel() {
                 <Input
                   id="page-title"
                   value={newPageTitle}
-                  onChange={(e) => {
+                  onChange={e => {
                     setNewPageTitle(e.target.value);
                     // Auto-generate slug
                     if (!newPageSlug || newPageSlug === '') {
@@ -234,7 +241,7 @@ export function PagesPanel() {
                 <Input
                   id="page-slug"
                   value={newPageSlug}
-                  onChange={(e) => setNewPageSlug(e.target.value)}
+                  onChange={e => setNewPageSlug(e.target.value)}
                   placeholder="about-me"
                   required
                 />

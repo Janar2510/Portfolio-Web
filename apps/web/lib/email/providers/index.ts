@@ -1,6 +1,6 @@
 /**
  * Email Provider Factory
- * 
+ *
  * Creates and manages email provider instances
  */
 

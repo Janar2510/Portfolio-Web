@@ -2,8 +2,24 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Eye, Users, Mail, Clock, TrendingUp, Globe, Monitor, Smartphone, Tablet } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Eye,
+  Users,
+  Mail,
+  Clock,
+  TrendingUp,
+  Globe,
+  Monitor,
+  Smartphone,
+  Tablet,
+} from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { MetricCard } from '@/components/analytics/MetricCard';
 import { SimpleChart } from '@/components/analytics/SimpleChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -46,7 +62,7 @@ export default function PortfolioAnalyticsPage() {
       const endDate = new Date();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
-      
+
       const { data, error } = await supabase
         .from('analytics_daily')
         .select('*')
@@ -54,7 +70,7 @@ export default function PortfolioAnalyticsPage() {
         .gte('date', startDate.toISOString().split('T')[0])
         .lte('date', endDate.toISOString().split('T')[0])
         .order('date', { ascending: true });
-      
+
       if (error) throw error;
       return (data || []) as AnalyticsDaily[];
     },
@@ -69,14 +85,14 @@ export default function PortfolioAnalyticsPage() {
       const supabase = createClient();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
-      
+
       const { data: daily, error } = await supabase
         .from('analytics_daily')
         .select('*')
         .eq('site_id', selectedSiteId)
         .gte('date', startDate.toISOString().split('T')[0])
         .order('date', { ascending: true });
-      
+
       if (error) throw error;
       if (!daily || daily.length === 0) {
         return {
@@ -87,27 +103,33 @@ export default function PortfolioAnalyticsPage() {
           bounceRate: null,
         };
       }
-      
+
       const totalPageviews = daily.reduce((sum, d) => sum + d.pageviews, 0);
-      const totalUniqueVisitors = daily.reduce((sum, d) => sum + d.unique_visitors, 0);
-      const totalFormSubmissions = daily.reduce((sum, d) => sum + d.form_submissions, 0);
-      
+      const totalUniqueVisitors = daily.reduce(
+        (sum, d) => sum + d.unique_visitors,
+        0
+      );
+      const totalFormSubmissions = daily.reduce(
+        (sum, d) => sum + d.form_submissions,
+        0
+      );
+
       const durations = daily
-        .map((d) => d.avg_session_duration)
+        .map(d => d.avg_session_duration)
         .filter((d): d is number => d !== null);
       const avgSessionDuration =
         durations.length > 0
           ? durations.reduce((sum, d) => sum + d, 0) / durations.length
           : null;
-      
+
       const bounceRates = daily
-        .map((d) => d.bounce_rate)
+        .map(d => d.bounce_rate)
         .filter((r): r is number => r !== null);
       const bounceRate =
         bounceRates.length > 0
           ? bounceRates.reduce((sum, r) => sum + r, 0) / bounceRates.length
           : null;
-      
+
       return {
         totalPageviews,
         totalUniqueVisitors,
@@ -139,7 +161,7 @@ export default function PortfolioAnalyticsPage() {
 
       // Count pageviews by page_id
       const pageCounts: Record<string, number> = {};
-      events.forEach((event) => {
+      events.forEach(event => {
         if (event.page_id) {
           pageCounts[event.page_id] = (pageCounts[event.page_id] || 0) + 1;
         }
@@ -153,7 +175,7 @@ export default function PortfolioAnalyticsPage() {
         .in('id', pageIds);
 
       return (pages || [])
-        .map((page) => ({
+        .map(page => ({
           page_id: page.id,
           title: page.title,
           slug: page.slug,
@@ -184,7 +206,7 @@ export default function PortfolioAnalyticsPage() {
       if (!events) return {};
 
       const devices: Record<string, number> = {};
-      events.forEach((event) => {
+      events.forEach(event => {
         if (event.device_type) {
           devices[event.device_type] = (devices[event.device_type] || 0) + 1;
         }
@@ -215,7 +237,7 @@ export default function PortfolioAnalyticsPage() {
       if (!events) return {};
 
       const referrers: Record<string, number> = {};
-      events.forEach((event) => {
+      events.forEach(event => {
         if (event.referrer) {
           try {
             const domain = new URL(event.referrer).hostname;
@@ -232,26 +254,28 @@ export default function PortfolioAnalyticsPage() {
   });
 
   // Prepare chart data
-  const pageviewChartData = dailyAnalytics.map((daily) => ({
+  const pageviewChartData = dailyAnalytics.map(daily => ({
     date: daily.date,
     value: daily.pageviews,
     label: format(new Date(daily.date), 'MMM d'),
   }));
 
-  const visitorChartData = dailyAnalytics.map((daily) => ({
+  const visitorChartData = dailyAnalytics.map(daily => ({
     date: daily.date,
     value: daily.unique_visitors,
     label: format(new Date(daily.date), 'MMM d'),
   }));
 
-  const selectedSite = sites.find((s) => s.id === selectedSiteId);
+  const selectedSite = sites.find(s => s.id === selectedSiteId);
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border bg-card/50 backdrop-blur-sm p-4 animate-slide-down">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Portfolio Analytics</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Portfolio Analytics
+          </h1>
           <p className="text-sm text-muted-foreground">
             Track and analyze your portfolio site performance
           </p>
@@ -265,14 +289,17 @@ export default function PortfolioAnalyticsPage() {
               <SelectValue placeholder="Select site" />
             </SelectTrigger>
             <SelectContent>
-              {sites.map((site) => (
+              {sites.map(site => (
                 <SelectItem key={site.id} value={site.id}>
                   {site.name} ({site.subdomain})
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <Select value={days.toString()} onValueChange={(v) => setDays(parseInt(v))}>
+          <Select
+            value={days.toString()}
+            onValueChange={v => setDays(parseInt(v))}
+          >
             <SelectTrigger className="w-32">
               <SelectValue />
             </SelectTrigger>
@@ -294,7 +321,9 @@ export default function PortfolioAnalyticsPage() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
-              <p className="text-lg font-semibold text-foreground">No site selected</p>
+              <p className="text-lg font-semibold text-foreground">
+                No site selected
+              </p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Select a portfolio site to view analytics
               </p>
@@ -355,17 +384,21 @@ export default function PortfolioAnalyticsPage() {
                 </CardHeader>
                 <CardContent>
                   {topPages.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No page data available</p>
+                    <p className="text-sm text-muted-foreground">
+                      No page data available
+                    </p>
                   ) : (
                     <div className="space-y-2">
-                      {topPages.map((page) => (
+                      {topPages.map(page => (
                         <div
                           key={page.page_id}
                           className="flex items-center justify-between rounded-lg border p-3"
                         >
                           <div className="flex-1">
                             <div className="font-medium">{page.title}</div>
-                            <div className="text-xs text-muted-foreground">/{page.slug}</div>
+                            <div className="text-xs text-muted-foreground">
+                              /{page.slug}
+                            </div>
                           </div>
                           <Badge variant="outline">{page.views} views</Badge>
                         </div>
@@ -382,27 +415,34 @@ export default function PortfolioAnalyticsPage() {
                 </CardHeader>
                 <CardContent>
                   {Object.keys(deviceBreakdown).length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No device data available</p>
+                    <p className="text-sm text-muted-foreground">
+                      No device data available
+                    </p>
                   ) : (
                     <div className="space-y-3">
                       {Object.entries(deviceBreakdown)
                         .sort(([, a], [, b]) => b - a)
                         .map(([device, count]) => {
-                          const total = Object.values(deviceBreakdown).reduce((a, b) => a + b, 0);
+                          const total = Object.values(deviceBreakdown).reduce(
+                            (a, b) => a + b,
+                            0
+                          );
                           const percentage = ((count / total) * 100).toFixed(1);
                           const Icon =
                             device === 'desktop'
                               ? Monitor
                               : device === 'mobile'
-                              ? Smartphone
-                              : Tablet;
+                                ? Smartphone
+                                : Tablet;
 
                           return (
                             <div key={device} className="space-y-1">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                   <Icon className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm font-medium capitalize">{device}</span>
+                                  <span className="text-sm font-medium capitalize">
+                                    {device}
+                                  </span>
                                 </div>
                                 <span className="text-sm text-muted-foreground">
                                   {count} ({percentage}%)
@@ -441,7 +481,9 @@ export default function PortfolioAnalyticsPage() {
                         >
                           <div className="flex items-center gap-2">
                             <Globe className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm font-medium">{referrer}</span>
+                            <span className="text-sm font-medium">
+                              {referrer}
+                            </span>
                           </div>
                           <Badge variant="outline">{count} visits</Badge>
                         </div>

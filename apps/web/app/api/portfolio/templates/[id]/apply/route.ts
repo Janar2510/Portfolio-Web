@@ -63,7 +63,8 @@ export async function POST(
       {
         error: {
           code: 'INTERNAL_ERROR',
-          message: error instanceof Error ? error.message : 'Failed to apply template',
+          message:
+            error instanceof Error ? error.message : 'Failed to apply template',
         },
       },
       { status: 500 }

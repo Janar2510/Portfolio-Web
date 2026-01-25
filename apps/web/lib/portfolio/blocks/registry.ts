@@ -14,6 +14,9 @@ import type { PortfolioBlock } from '@/lib/portfolio/types';
 export type BlockType =
   // Layout
   | 'hero'
+  | 'split-hero'
+  | 'cyber-hero'
+  | 'organic-hero'
   | 'section'
   | 'columns'
   | 'container'
@@ -56,7 +59,12 @@ export type BlockType =
   | 'stats'
   | 'awards';
 
-export type BlockCategory = 'layout' | 'content' | 'media' | 'interactive' | 'portfolio';
+export type BlockCategory =
+  | 'layout'
+  | 'content'
+  | 'media'
+  | 'interactive'
+  | 'portfolio';
 
 // ===========================================
 // BLOCK METADATA
@@ -92,7 +100,10 @@ export interface BlockVariant {
 
 export interface BlockEditProps {
   block: PortfolioBlock;
-  onChange: (content: Record<string, unknown>, settings?: Record<string, unknown>) => void;
+  onChange: (
+    content: Record<string, unknown>,
+    settings?: Record<string, unknown>
+  ) => void;
   onDelete?: () => void;
   isSelected?: boolean;
 }
@@ -152,7 +163,7 @@ class BlockRegistry {
    */
   getByCategory(category: BlockCategory): BlockRegistryEntry[] {
     return Array.from(this.blocks.values()).filter(
-      (entry) => entry.metadata.category === category
+      entry => entry.metadata.category === category
     );
   }
 
@@ -173,7 +184,10 @@ class BlockRegistry {
   /**
    * Validate block content against schema
    */
-  validate(type: BlockType, content: unknown): { success: boolean; error?: z.ZodError } {
+  validate(
+    type: BlockType,
+    content: unknown
+  ): { success: boolean; error?: z.ZodError } {
     const entry = this.get(type);
     if (!entry) {
       return { success: false, error: new z.ZodError([]) };
@@ -268,8 +282,14 @@ export function createBlock(
 /**
  * Validate a block's content
  */
-export function validateBlock(block: PortfolioBlock): { valid: boolean; errors?: z.ZodError } {
-  const result = blockRegistry.validate(block.block_type as BlockType, block.content);
+export function validateBlock(block: PortfolioBlock): {
+  valid: boolean;
+  errors?: z.ZodError;
+} {
+  const result = blockRegistry.validate(
+    block.block_type as BlockType,
+    block.content
+  );
   return {
     valid: result.success,
     errors: result.error,

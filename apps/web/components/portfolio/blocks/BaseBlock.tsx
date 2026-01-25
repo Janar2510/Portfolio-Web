@@ -11,7 +11,10 @@ interface BaseBlockProps {
   isEditing?: boolean;
   children: React.ReactNode;
   className?: string;
-  onUpdate?: (content: Record<string, unknown>, settings?: Record<string, unknown>) => void;
+  onUpdate?: (
+    content: Record<string, unknown>,
+    settings?: Record<string, unknown>
+  ) => void;
   onDelete?: () => void;
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
@@ -37,6 +40,7 @@ export function BaseBlock({
 
   return (
     <div
+      id={block.anchor_id}
       className={cn('group relative', className)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -46,13 +50,13 @@ export function BaseBlock({
 
       {/* Editing Controls */}
       {showControls && isHovered && (
-        <div className="absolute right-2 top-2 z-20 flex gap-1 rounded-md bg-background/90 p-1 shadow-lg backdrop-blur-sm">
+        <div className="absolute right-2 top-2 z-[100] flex gap-1 rounded-md bg-background/90 p-1 shadow-lg backdrop-blur-sm">
           {onEdit && (
             <Button
               variant="ghost"
               size="icon"
               className="h-7 w-7"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onEdit(block);
               }}

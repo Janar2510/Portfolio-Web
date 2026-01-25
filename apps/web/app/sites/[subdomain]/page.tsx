@@ -13,7 +13,7 @@ export async function generateStaticParams() {
   const service = new PublicPortfolioService();
   try {
     const sites = await service.getAllPublishedSites();
-    return sites.map((site) => ({
+    return sites.map(site => ({
       subdomain: site.subdomain,
     }));
   } catch (error) {
@@ -39,7 +39,7 @@ export default async function PortfolioSitePage({ params }: PageProps) {
 
     // Get homepage
     const pages = await service.getPagesBySite(site.id);
-    const homepage = pages.find((p) => p.is_homepage) || pages[0] || null;
+    const homepage = pages.find(p => p.is_homepage) || pages[0] || null;
 
     if (!homepage) {
       return (

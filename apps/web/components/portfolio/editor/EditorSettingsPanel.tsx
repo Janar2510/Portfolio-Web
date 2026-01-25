@@ -18,7 +18,12 @@ interface EditorSettingsPanelProps {
 }
 
 export function EditorSettingsPanel({ className }: EditorSettingsPanelProps) {
-  const { settingsPanelOpen, setSettingsPanelOpen, selectedBlockId, setSettingsPanelOpen: setPanelOpen } = useEditorStore();
+  const {
+    settingsPanelOpen,
+    setSettingsPanelOpen,
+    selectedBlockId,
+    setSettingsPanelOpen: setPanelOpen,
+  } = useEditorStore();
   const { selectedBlock } = useBlocksStore();
 
   // Auto-open panel when block is selected

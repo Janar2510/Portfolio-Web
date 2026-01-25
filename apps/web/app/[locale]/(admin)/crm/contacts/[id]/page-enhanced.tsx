@@ -32,7 +32,10 @@ export default function PersonDetailPageEnhanced() {
   // Fetch organization if linked
   const { data: organization } = useQuery({
     queryKey: ['crm-organization', person?.organization_id],
-    queryFn: () => person?.organization_id ? crmService.getOrganizationById(person.organization_id) : null,
+    queryFn: () =>
+      person?.organization_id
+        ? crmService.getOrganizationById(person.organization_id)
+        : null,
     enabled: !!person?.organization_id,
   });
 
@@ -115,8 +118,8 @@ export default function PersonDetailPageEnhanced() {
     );
   }
 
-  const primaryEmail = person.emails.find((e) => e.primary) || person.emails[0];
-  const primaryPhone = person.phones.find((p) => p.primary) || person.phones[0];
+  const primaryEmail = person.emails.find(e => e.primary) || person.emails[0];
+  const primaryPhone = person.phones.find(p => p.primary) || person.phones[0];
 
   return (
     <div className="space-y-6">
@@ -156,7 +159,10 @@ export default function PersonDetailPageEnhanced() {
             {person.last_activity_at && (
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                <span>Last activity: {format(new Date(person.last_activity_at), 'MMM d, yyyy')}</span>
+                <span>
+                  Last activity:{' '}
+                  {format(new Date(person.last_activity_at), 'MMM d, yyyy')}
+                </span>
               </div>
             )}
           </div>
@@ -172,7 +178,7 @@ export default function PersonDetailPageEnhanced() {
           <LabelPicker
             labels={labels}
             selectedLabelIds={person.label_ids || []}
-            onLabelsChange={async (labelIds) => {
+            onLabelsChange={async labelIds => {
               await updatePersonMutation.mutateAsync({ label_ids: labelIds });
             }}
             onCreateLabel={async (name, color) => {
@@ -191,13 +197,13 @@ export default function PersonDetailPageEnhanced() {
         <CardContent>
           <NotesList
             notes={notes}
-            onCreateNote={async (note) => {
+            onCreateNote={async note => {
               await createNoteMutation.mutateAsync(note);
             }}
             onUpdateNote={async (id, updates) => {
               await updateNoteMutation.mutateAsync({ id, updates });
             }}
-            onDeleteNote={async (id) => {
+            onDeleteNote={async id => {
               await deleteNoteMutation.mutateAsync(id);
             }}
             entityType="person"
@@ -213,7 +219,7 @@ export default function PersonDetailPageEnhanced() {
         </CardHeader>
         <CardContent>
           <ActivityTimeline
-            activities={activities.map((a) => ({
+            activities={activities.map(a => ({
               id: a.id,
               user_id: a.user_id,
               contact_id: a.person_id || undefined,
@@ -227,7 +233,7 @@ export default function PersonDetailPageEnhanced() {
               completed_at: a.done_at || undefined,
               created_at: a.created_at,
             }))}
-            onActivityCreate={async (activity) => {
+            onActivityCreate={async activity => {
               await crmService.createActivity({
                 activity_type: activity.activity_type as any,
                 subject: activity.title || 'Activity',
@@ -235,7 +241,9 @@ export default function PersonDetailPageEnhanced() {
                 due_date: activity.due_date,
                 person_id: personId,
               });
-              queryClient.invalidateQueries({ queryKey: ['crm-activities', personId] });
+              queryClient.invalidateQueries({
+                queryKey: ['crm-activities', personId],
+              });
             }}
             onActivityUpdate={async (id, updates) => {
               await crmService.updateActivity(id, {
@@ -243,11 +251,15 @@ export default function PersonDetailPageEnhanced() {
                 note: updates.description,
                 is_done: updates.is_completed,
               });
-              queryClient.invalidateQueries({ queryKey: ['crm-activities', personId] });
+              queryClient.invalidateQueries({
+                queryKey: ['crm-activities', personId],
+              });
             }}
-            onActivityDelete={async (id) => {
+            onActivityDelete={async id => {
               await crmService.deleteActivity(id);
-              queryClient.invalidateQueries({ queryKey: ['crm-activities', personId] });
+              queryClient.invalidateQueries({
+                queryKey: ['crm-activities', personId],
+              });
             }}
             contactId={personId}
           />

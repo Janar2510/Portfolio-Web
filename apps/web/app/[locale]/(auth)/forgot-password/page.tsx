@@ -39,9 +39,12 @@ export default function ForgotPasswordPage() {
     }
 
     try {
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+        email,
+        {
+          redirectTo: `${window.location.origin}/reset-password`,
+        }
+      );
 
       if (resetError) {
         setError(getAuthErrorMessage(resetError));
@@ -67,12 +70,15 @@ export default function ForgotPasswordPage() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              We've sent a password reset link to <strong>{email}</strong>. Please
-              check your email and click the link to reset your password.
+              We've sent a password reset link to <strong>{email}</strong>.
+              Please check your email and click the link to reset your password.
             </p>
           </CardContent>
           <CardFooter>
-            <Link href="/sign-in" className="text-sm text-primary hover:underline">
+            <Link
+              href="/sign-in"
+              className="text-sm text-primary hover:underline"
+            >
               {t('backToSignIn')}
             </Link>
           </CardFooter>
@@ -87,7 +93,8 @@ export default function ForgotPasswordPage() {
         <CardHeader>
           <CardTitle>{t('resetPassword')}</CardTitle>
           <CardDescription>
-            Enter your email address and we'll send you a link to reset your password.
+            Enter your email address and we'll send you a link to reset your
+            password.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -104,7 +111,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 required
                 disabled={loading}
                 autoComplete="email"
@@ -115,7 +122,10 @@ export default function ForgotPasswordPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Loading...' : t('sendResetLink')}
             </Button>
-            <Link href="/sign-in" className="text-sm text-primary hover:underline">
+            <Link
+              href="/sign-in"
+              className="text-sm text-primary hover:underline"
+            >
               {t('backToSignIn')}
             </Link>
           </CardFooter>

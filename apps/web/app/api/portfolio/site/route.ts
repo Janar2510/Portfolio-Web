@@ -29,14 +29,21 @@ export async function OPTIONS() {
 
 const createSiteSchema = z.object({
   name: z.string().min(1),
-  subdomain: z.string().min(1).regex(/^[a-z0-9-]+$/),
+  subdomain: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/),
   templateId: z.string().uuid().optional(),
 });
 
 const updateSiteSchema = z.object({
   name: z.string().min(1).optional(),
   tagline: z.string().optional(),
-  subdomain: z.string().min(1).regex(/^[a-z0-9-]+$/).optional(),
+  subdomain: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/)
+    .optional(),
   custom_domain: z.string().optional(),
   is_published: z.boolean().optional(),
   seo_title: z.string().optional(),
@@ -53,7 +60,9 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient();
 
     // Get user to pass to PortfolioService
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     const portfolioService = new PortfolioService(supabase, user);
 
     const site = await portfolioService.getSite();
@@ -108,26 +117,27 @@ export async function POST(request: NextRequest) {
     const { supabase, user } = await createClientWithUser();
 
     if (!user) {
-      console.error('Authentication failed in /api/portfolio/site: No user recovered');
+      console.error(
+        'Authentication failed in /api/portfolio/site: No user recovered'
+      );
       return NextResponse.json(
         {
           error: {
             code: 'UNAUTHORIZED',
-            message: 'Authentication required. Please make sure you are logged in.',
+            message:
+              'Authentication required. Please make sure you are logged in.',
           },
         },
         {
           status: 401,
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
         }
       );
     }
 
     const body = await request.json();
-
-
 
     const validated = createSiteSchema.parse(body);
 
@@ -193,7 +203,6 @@ export async function POST(request: NextRequest) {
         // Actually, just creating them in order should be enough if sort_order handles it,
         // but let's assume createBlock appends or we can rely on creation order.
         // We can explicitly update sort_order if needed, but for now loop is fine.
-
       } catch (err) {
         console.error('Failed to apply template:', err);
         // Continue, don't fail the request, just return empty site
@@ -233,7 +242,8 @@ export async function POST(request: NextRequest) {
       {
         error: {
           code: 'INTERNAL_ERROR',
-          message: error instanceof Error ? error.message : 'Failed to create site',
+          message:
+            error instanceof Error ? error.message : 'Failed to create site',
         },
       },
       {

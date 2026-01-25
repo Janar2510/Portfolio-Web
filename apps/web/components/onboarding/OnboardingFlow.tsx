@@ -37,7 +37,9 @@ export function OnboardingFlow() {
   useEffect(() => {
     if (progress && !isLoading) {
       const stepIndex = progress.current_step - 1;
-      setCurrentStepIndex(Math.max(0, Math.min(stepIndex, ONBOARDING_STEPS.length - 1)));
+      setCurrentStepIndex(
+        Math.max(0, Math.min(stepIndex, ONBOARDING_STEPS.length - 1))
+      );
     }
   }, [progress, isLoading]);
 
@@ -181,10 +183,7 @@ export function OnboardingFlow() {
         )}
 
         {currentStep.id === 'profile' && (
-          <ProfileStep
-            onContinue={handleNext}
-            onSkip={handleSkip}
-          />
+          <ProfileStep onContinue={handleNext} onSkip={handleSkip} />
         )}
 
         {currentStep.id === 'template' && (
@@ -205,24 +204,15 @@ export function OnboardingFlow() {
         )}
 
         {currentStep.id === 'content' && (
-          <ContentStep
-            onContinue={handleNext}
-            onSkip={handleSkip}
-          />
+          <ContentStep onContinue={handleNext} onSkip={handleSkip} />
         )}
 
         {currentStep.id === 'tour' && (
-          <TourStep
-            onContinue={handleNext}
-            onSkip={handleSkip}
-          />
+          <TourStep onContinue={handleNext} onSkip={handleSkip} />
         )}
 
         {currentStep.id === 'publish' && (
-          <PublishStep
-            onPublish={handleNext}
-            onSkip={handleSkip}
-          />
+          <PublishStep onPublish={handleNext} onSkip={handleSkip} />
         )}
 
         {currentStep.id !== 'welcome' && (

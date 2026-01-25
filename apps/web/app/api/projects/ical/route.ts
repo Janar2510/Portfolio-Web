@@ -33,12 +33,13 @@ export async function GET(request: Request) {
       });
     }
 
-    const projectIds = projects.map((p) => p.id);
+    const projectIds = projects.map(p => p.id);
 
     // Get all tasks with due dates for the user's projects
     const { data: tasks, error } = await supabase
       .from('tasks')
-      .select(`
+      .select(
+        `
         id,
         title,
         description,
@@ -47,7 +48,8 @@ export async function GET(request: Request) {
         priority,
         project_id,
         projects(id, name)
-      `)
+      `
+      )
       .in('project_id', projectIds)
       .not('due_date', 'is', null)
       .is('completed_at', null)
@@ -100,7 +102,7 @@ function generateICal(tasks: any[]): string {
     `X-WR-TIMEZONE:UTC`,
   ];
 
-  tasks.forEach((task) => {
+  tasks.forEach(task => {
     if (!task.due_date) return;
 
     const dueDate = new Date(task.due_date);
@@ -112,11 +114,18 @@ function generateICal(tasks: any[]): string {
     }
 
     const dtStart = format(dueDate, "yyyyMMdd'T'HHmmss'Z'");
-    const dtEnd = format(new Date(dueDate.getTime() + 60 * 60 * 1000), "yyyyMMdd'T'HHmmss'Z'"); // 1 hour duration
+    const dtEnd = format(
+      new Date(dueDate.getTime() + 60 * 60 * 1000),
+      "yyyyMMdd'T'HHmmss'Z'"
+    ); // 1 hour duration
 
     const summary = escapeICalText(task.title);
     const description = escapeICalText(
-      [task.description, task.projects?.name, `Priority: ${task.priority || 'None'}`]
+      [
+        task.description,
+        task.projects?.name,
+        `Priority: ${task.priority || 'None'}`,
+      ]
         .filter(Boolean)
         .join('\\n')
     );

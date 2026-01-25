@@ -35,7 +35,9 @@ export default function OnboardingCompletePage() {
                   <h3 className="font-medium mb-2">{t('tips.addPages')}</h3>
                 </div>
                 <div className="p-4 border rounded-lg">
-                  <h3 className="font-medium mb-2">{t('tips.createProject')}</h3>
+                  <h3 className="font-medium mb-2">
+                    {t('tips.createProject')}
+                  </h3>
                 </div>
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-medium mb-2">{t('tips.addContact')}</h3>

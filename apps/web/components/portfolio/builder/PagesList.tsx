@@ -1,7 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, FileText, Home, MoreVertical, Trash2, Edit2 } from 'lucide-react';
+import {
+  Plus,
+  FileText,
+  Home,
+  MoreVertical,
+  Trash2,
+  Edit2,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,7 +28,11 @@ interface PagesListProps {
   pages: PortfolioPage[];
   currentPageId?: string;
   onPageSelect: (pageId: string) => void;
-  onPageCreate: (data: { slug: string; title: string; is_homepage?: boolean }) => Promise<void>;
+  onPageCreate: (data: {
+    slug: string;
+    title: string;
+    is_homepage?: boolean;
+  }) => Promise<void>;
   onPageUpdate: (pageId: string, data: Partial<PortfolioPage>) => Promise<void>;
   onPageDelete: (pageId: string) => Promise<void>;
 }
@@ -147,7 +158,7 @@ export function PagesList({
           </div>
         ) : (
           <div className="p-2">
-            {sortedPages.map((page) => (
+            {sortedPages.map(page => (
               <div
                 key={page.id}
                 className={cn(
@@ -176,7 +187,7 @@ export function PagesList({
                     size="icon"
                     variant="ghost"
                     className="h-7 w-7"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       setEditingPage(page);
                       setIsEditDialogOpen(true);
@@ -188,7 +199,7 @@ export function PagesList({
                     size="icon"
                     variant="ghost"
                     className="h-7 w-7 text-destructive hover:text-destructive"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDeletePage(page.id);
                     }}
@@ -210,9 +221,7 @@ export function PagesList({
             <form onSubmit={handleEditPage}>
               <DialogHeader>
                 <DialogTitle>Edit Page</DialogTitle>
-                <DialogDescription>
-                  Update page details.
-                </DialogDescription>
+                <DialogDescription>Update page details.</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
