@@ -7,7 +7,7 @@
 
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type ComponentType } from 'react';
 import { blockRegistry } from '@/lib/portfolio/blocks/registry';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { DraggableBlockItem } from './DraggableBlockItem';
+import { useAddBlock } from '@/hooks/portfolio/use-editor';
 
 const BLOCK_CATEGORIES = [
   { id: 'all', name: 'All' },
@@ -58,9 +59,12 @@ export function BlocksPanel() {
     return filtered;
   }, [allBlocks, selectedCategory, searchQuery]);
 
+  const addBlockMutation = useAddBlock();
+
   const handleAddBlock = (blockType: string) => {
-    // TODO: Implement add block
-    console.log('Add block:', blockType);
+    addBlockMutation.mutate({
+      blockType,
+    });
   };
 
   return (
@@ -99,10 +103,11 @@ export function BlocksPanel() {
         ) : (
           filteredBlocks.map(entry => {
             const { metadata } = entry;
-            const Icon =
+            const Icon = (
               typeof metadata.icon === 'string'
                 ? () => <span>{metadata.icon}</span>
-                : metadata.icon;
+                : metadata.icon
+            ) as ComponentType<any>;
 
             return (
               <DraggableBlockItem

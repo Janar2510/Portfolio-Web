@@ -22,6 +22,16 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
+import { ImageSlider } from '@/components/ui/ImageSlider';
+import { motion } from 'framer-motion';
+
+const sliderImages = [
+  '/templates/editorial-minimal-hero.png',
+  '/templates/playful-pop-hero.png',
+  '/templates/system-root-hero.png',
+  '/templates/system-root-hero-v2.png',
+];
+
 export default function SignInPage() {
   const t = useTranslations('auth');
   const router = useRouter();
@@ -60,7 +70,7 @@ export default function SignInPage() {
       setConfigError(
         'Supabase is not configured. Please check your environment variables.'
       );
-    } else if (key.length < 100) {
+    } else if (key && key.length < 100) {
       setConfigError('Supabase API key appears to be invalid or incomplete.');
     }
   }, []);
@@ -222,7 +232,6 @@ export default function SignInPage() {
         );
 
         // Give Supabase time to set cookies (createBrowserClient handles this automatically)
-        // Wait a bit longer to ensure cookies are written to the browser
         await new Promise(resolve => setTimeout(resolve, 300));
 
         // Double-check session is still available
@@ -241,44 +250,16 @@ export default function SignInPage() {
         const redirectUrl = `/${locale}/dashboard`;
         const fullUrl = `${window.location.origin}${redirectUrl}`;
 
-        console.log('Redirecting to:', redirectUrl);
-        console.log('Full URL:', fullUrl);
-        console.log(
-          'Cookies confirmed:',
-          document.cookie.includes('sb-pcltfprbgwqmymmveloj')
-        );
-
-        // Wait a bit longer to ensure cookies are fully written and available
+        // Wait a bit longer to ensure cookies are fully written
         await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Verify cookies one more time
-        const finalCookies = document.cookie;
-        const hasAuthCookie = finalCookies.includes(
-          'sb-pcltfprbgwqmymmveloj-auth-token'
-        );
-        console.log('Final cookie check:', {
-          hasAuthCookie,
-          cookieLength: finalCookies.length,
-        });
-
-        if (!hasAuthCookie) {
-          console.error('Auth cookie missing after wait!');
-          setError('Session cookie was not set. Please try again.');
-          setLoading(false);
-          return;
-        }
 
         // Reset loading state
         setLoading(false);
 
-        // Redirect - cookies should now be available for middleware
-        console.log('Executing final redirect to:', fullUrl);
+        // Redirect
         window.location.href = fullUrl;
-
-        // Return immediately
         return;
       } else {
-        // No session but no error - this shouldn't happen, but handle it
         console.error('Sign in succeeded but no session was returned', data);
         setError(
           'Sign in succeeded but no session was created. Please try again.'
@@ -299,89 +280,181 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>{t('signIn')}</CardTitle>
-          <CardDescription>{t('signInToAccount')}</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            {configError && (
-              <div className="rounded-md bg-yellow-500/15 p-3 text-sm text-yellow-600 dark:text-yellow-400">
-                <p className="font-semibold">Configuration Error:</p>
-                <p>{configError}</p>
+    <div className="flex min-h-screen bg-background overflow-hidden">
+      {/* Left Column: Image Slider (Visible on large screens) */}
+      <div className="hidden lg:block lg:w-1/2 xl:w-7/12 relative">
+        <ImageSlider images={sliderImages} className="h-full w-full" />
+        <div className="absolute inset-0 bg-navy-deep/20 z-[5]" />
+        <div className="absolute top-1/2 left-12 -translate-y-1/2 z-10 max-w-lg">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <h1 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg leading-tight">
+              Transforming portolios into{' '}
+              <span className="text-secondary">digital experiences</span>.
+            </h1>
+            <p className="text-xl text-white/90 drop-shadow-md">
+              Join thousands of stylists and creators building their
+              professional presence with our editorial-grade tools.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Logo/Brand Name */}
+        <div className="absolute top-10 left-12 z-20 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shadow-lg">
+            <span className="text-navy-deep font-bold text-xl">S</span>
+          </div>
+          <span className="text-white font-display font-bold text-2xl tracking-tight">
+            Supale
+          </span>
+        </div>
+      </div>
+
+      {/* Right Column: Sign In Form */}
+      <div className="w-full lg:w-1/2 xl:w-5/12 flex flex-col items-center justify-center p-8 sm:p-12 lg:p-20 bg-background relative">
+        <div className="w-full max-w-md space-y-8">
+          {/* Mobile Logo */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shadow-lg">
+                <span className="text-navy-deep font-bold text-xl">S</span>
               </div>
-            )}
-            {error && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive space-y-2">
-                <p>{error}</p>
-                {errorDetails?.isUnconfirmed && (
-                  <div className="mt-2">
-                    <p className="text-xs text-muted-foreground mb-2">
-                      Need to resend the verification email?
-                    </p>
+              <span className="text-foreground font-display font-bold text-2xl tracking-tight">
+                Supale
+              </span>
+            </div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="space-y-2 mb-8">
+              <h2 className="text-3xl font-display font-bold tracking-tight">
+                {t('signIn')}
+              </h2>
+              <p className="text-muted-foreground">{t('signInToAccount')}</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {configError && (
+                <div className="rounded-xl bg-yellow-50 dark:bg-yellow-900/20 p-4 text-sm text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800">
+                  <p className="font-semibold mb-1">Configuration Required</p>
+                  <p>{configError}</p>
+                </div>
+              )}
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="rounded-xl bg-destructive/10 p-4 text-sm text-destructive border border-destructive/20 space-y-3"
+                >
+                  <p className="font-medium">{error}</p>
+                  {errorDetails?.isUnconfirmed && (
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
                       onClick={handleResendVerification}
                       disabled={resending || !email}
-                      className="w-full"
+                      className="w-full bg-background"
                     >
                       {resending ? 'Sending...' : 'Resend Verification Email'}
                     </Button>
+                  )}
+                </motion.div>
+              )}
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-medium">
+                    {t('email')}
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                    autoComplete="email"
+                    className="h-12 px-4 rounded-xl border-border bg-muted/50 focus:bg-background transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">{t('password')}</Label>
+                    <Link
+                      href="/forgot-password"
+                      className="text-sm font-medium text-secondary hover:text-secondary/80 transition-colors"
+                    >
+                      {t('forgotPassword')}
+                    </Link>
                   </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                    autoComplete="current-password"
+                    className="h-12 px-4 rounded-xl border-border bg-muted/50 focus:bg-background transition-all"
+                  />
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full h-12 rounded-xl text-white font-semibold shadow-lg shadow-navy-deep/20 transition-all hover:scale-[1.02] active:scale-[0.98] bg-[#0F172A] hover:bg-[#1e293b]"
+                disabled={loading}
+              >
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Signing in...</span>
+                  </div>
+                ) : (
+                  t('signIn')
                 )}
+              </Button>
+
+              <div className="relative py-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border"></div>
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
               </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="email">{t('email')}</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                disabled={loading}
-                autoComplete="email"
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">{t('password')}</Label>
+
+              <p className="text-center text-sm text-muted-foreground">
+                {t('dontHaveAccount')}{' '}
                 <Link
-                  href="/forgot-password"
-                  className="text-sm text-primary hover:underline"
+                  href="/sign-up"
+                  className="font-semibold text-secondary hover:underline underline-offset-4"
                 >
-                  {t('forgotPassword')}
+                  {t('signUp')}
                 </Link>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                disabled={loading}
-                autoComplete="current-password"
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Loading...' : t('signIn')}
-            </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              {t('dontHaveAccount')}{' '}
-              <Link href="/sign-up" className="text-primary hover:underline">
-                {t('signUp')}
-              </Link>
-            </p>
-          </CardFooter>
-        </form>
-      </Card>
+              </p>
+            </form>
+          </motion.div>
+        </div>
+
+        {/* Footer info */}
+        <div className="absolute bottom-8 text-center text-xs text-muted-foreground w-full px-8">
+          &copy; {new Date().getFullYear()} Supale. All rights reserved.
+        </div>
+      </div>
     </div>
   );
 }

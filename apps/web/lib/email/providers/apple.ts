@@ -6,6 +6,7 @@
 
 import type { EmailProvider, SyncOptions, SendEmailOptions } from './base';
 import { decryptCredentials, type IMAPCredentials } from '../encryption';
+import type { Email } from '@/lib/services/email';
 
 // Note: IMAP operations need to run server-side
 // This is a client-side interface that will call API routes
@@ -16,7 +17,7 @@ export class AppleIMAPProvider implements EmailProvider {
 
   async initialize(credentialsEncrypted: string): Promise<void> {
     const decrypted = await decryptCredentials(credentialsEncrypted);
-    this.credentials = decrypted as IMAPCredentials;
+    this.credentials = decrypted as unknown as IMAPCredentials;
     this.emailAddress = this.credentials.username;
   }
 

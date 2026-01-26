@@ -43,9 +43,13 @@ export default function ContactsPage() {
   const createContactMutation = useMutation({
     mutationFn: async (data: Partial<Contact>) => {
       const supabase = createClient();
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const { data: contact, error } = await supabase
         .from('contacts')
-        .insert(data)
+        .insert({ ...data, user_id: user.id })
         .select()
         .single();
       if (error) throw error;

@@ -91,10 +91,10 @@ export function NotesList({
               Add Note
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent aria-describedby="add-note-description">
             <DialogHeader>
               <DialogTitle>Add Note</DialogTitle>
-              <DialogDescription>Add a note to this record</DialogDescription>
+              <DialogDescription id="add-note-description">Add a note to this record</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
@@ -240,10 +240,10 @@ export function NotesList({
       {/* Edit Dialog */}
       {editingNote && (
         <Dialog open={!!editingNote} onOpenChange={() => setEditingNote(null)}>
-          <DialogContent>
+          <DialogContent aria-describedby="edit-note-description">
             <DialogHeader>
               <DialogTitle>Edit Note</DialogTitle>
-              <DialogDescription>Update your note</DialogDescription>
+              <DialogDescription id="edit-note-description">Update your note</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">

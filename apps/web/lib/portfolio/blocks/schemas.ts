@@ -41,8 +41,12 @@ export const heroBlockSettingsSchema = z.object({
   overlay_opacity: z.number().min(0).max(1).default(0.5),
   height: z.enum(['small', 'medium', 'large', 'full']).default('medium'),
   text_color: z.string().optional(),
-  variant: z.enum(['centered', 'split', 'minimal', 'bold', 'script']).default('centered'),
-  headline_style: z.enum(['default', 'gradient', 'serif', 'script']).default('default'),
+  variant: z
+    .enum(['centered', 'split', 'minimal', 'bold', 'script'])
+    .default('centered'),
+  headline_style: z
+    .enum(['default', 'gradient', 'serif', 'script'])
+    .default('default'),
 });
 
 // Infinite Hero Block
@@ -140,11 +144,13 @@ export const splitHeroBlockContentSchema = z.object({
   cta_text: z.string().optional(),
   cta_link: z.string().optional(),
   image_url: z.string().url().optional(),
-  contact_info: z.object({
-    website: z.string().optional(),
-    phone: z.string().optional(),
-    address: z.string().optional(),
-  }).optional(),
+  contact_info: z
+    .object({
+      website: z.string().optional(),
+      phone: z.string().optional(),
+      address: z.string().optional(),
+    })
+    .optional(),
 });
 
 export const splitHeroBlockSettingsSchema = z.object({

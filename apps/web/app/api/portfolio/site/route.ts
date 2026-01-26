@@ -33,7 +33,7 @@ const createSiteSchema = z.object({
     .string()
     .min(1)
     .regex(/^[a-z0-9-]+$/),
-  templateId: z.string().uuid().optional(),
+  templateId: z.string().optional(),
 });
 
 const updateSiteSchema = z.object({
@@ -164,50 +164,8 @@ export async function POST(request: NextRequest) {
     const site = await portfolioService.createSite({
       name: validated.name,
       subdomain: validated.subdomain,
-      // Don't pass templateId to service, we handle it manually
+      templateId: validated.templateId,
     });
-
-    // Apply template manually if provided
-    if (validated.templateId) {
-      try {
-        const generated = generateSiteFromTemplate(validated.templateId);
-
-        // Apply styles
-        if (generated.styles && Object.keys(generated.styles).length > 0) {
-          await portfolioService.upsertStyles(site.id, {
-            color_palette: generated.styles.colors || {},
-            typography: generated.styles.typography || {},
-            spacing_scale: generated.styles.spacing?.scale || 'default',
-            custom_css: generated.styles.custom_css || null,
-          });
-        }
-
-        // Create homepage
-        const homepage = await portfolioService.createPage(site.id, {
-          slug: 'home',
-          title: 'Home',
-          is_homepage: true,
-        });
-
-        // Add blocks
-        for (const block of generated.blocks) {
-          await portfolioService.createBlock(homepage.id, {
-            block_type: block.block_type,
-            content: block.content,
-            settings: block.settings,
-            sort_order: block.sort_order, // Generator doesn't set sort_order usually, but loop order matters
-          });
-        }
-
-        // Reorder blocks to ensure correct order
-        // Actually, just creating them in order should be enough if sort_order handles it,
-        // but let's assume createBlock appends or we can rely on creation order.
-        // We can explicitly update sort_order if needed, but for now loop is fine.
-      } catch (err) {
-        console.error('Failed to apply template:', err);
-        // Continue, don't fail the request, just return empty site
-      }
-    }
 
     return NextResponse.json(
       { data: site },

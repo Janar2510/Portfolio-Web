@@ -189,7 +189,7 @@ const config: Config = {
       spacing: {
         // Design system spacing (4px base unit)
         '0': 'var(--space-0)',
-        'px': 'var(--space-px)',
+        px: 'var(--space-px)',
         '0.5': 'var(--space-0_5)',
         '1': 'var(--space-1)',
         '1.5': 'var(--space-1_5)',
@@ -217,9 +217,9 @@ const config: Config = {
         'card-gap': 'var(--card-gap, 1rem)',
       },
       maxWidth: {
-        'content': 'var(--content-max-width)',
-        'form': 'var(--form-max-width)',
-        'text': 'var(--text-max-width)',
+        content: 'var(--content-max-width)',
+        form: 'var(--form-max-width)',
+        text: 'var(--text-max-width)',
       },
       screens: {
         sm: 'var(--breakpoint-sm)',

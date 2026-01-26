@@ -6,6 +6,7 @@
 
 import type { EmailProvider, SyncOptions, SendEmailOptions } from './base';
 import { decryptCredentials, type OAuthCredentials } from '../encryption';
+import type { Email } from '@/lib/services/email';
 
 interface MicrosoftGraphMessage {
   id: string;
@@ -47,7 +48,7 @@ export class MicrosoftGraphProvider implements EmailProvider {
 
   async initialize(credentialsEncrypted: string): Promise<void> {
     const decrypted = await decryptCredentials(credentialsEncrypted);
-    this.credentials = decrypted as OAuthCredentials;
+    this.credentials = decrypted as unknown as OAuthCredentials;
 
     // Get user email from Microsoft Graph
     const user = await this.getUserProfile();

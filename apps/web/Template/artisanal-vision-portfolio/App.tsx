@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -22,20 +21,20 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#050505] text-slate-200 selection:bg-indigo-500/30">
       <Header isScrolled={isScrolled} />
-      
+
       <main>
         <section id="home">
           <Hero />
         </section>
-        
+
         <section id="services">
           <Services />
         </section>
-        
+
         <section id="work">
           <WorkGallery />
         </section>
-        
+
         <section id="contact">
           <Contact />
         </section>

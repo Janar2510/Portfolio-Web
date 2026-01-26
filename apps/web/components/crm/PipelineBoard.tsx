@@ -23,11 +23,15 @@ import { DealCard } from './DealCard';
 import type {
   PipelineStage as PipelineStageType,
   Deal,
+  Contact,
+  Company,
 } from '@/lib/services/crm';
 
 interface PipelineBoardProps {
   stages: PipelineStageType[];
   deals: Deal[];
+  contacts: Contact[];
+  companies: Company[];
   onStagesReorder: (stages: PipelineStageType[]) => void;
   onDealMove: (
     dealId: string,
@@ -58,6 +62,8 @@ function getDealIdFromDragId(dragId: string): string {
 export function PipelineBoard({
   stages,
   deals,
+  contacts,
+  companies,
   onStagesReorder,
   onDealMove,
   onDealClick,
@@ -68,7 +74,11 @@ export function PipelineBoard({
   const [activeDeal, setActiveDeal] = useState<Deal | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -181,20 +191,23 @@ export function PipelineBoard({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <div className="flex h-full gap-4 overflow-x-auto p-4">
+      <div className="flex h-full w-full gap-4 overflow-x-auto p-4 bg-muted/10">
         <SortableContext
           items={stageIds}
           strategy={horizontalListSortingStrategy}
         >
           {stages.map(stage => (
-            <PipelineStage
-              key={stage.id}
-              stage={stage}
-              deals={dealsByStage[stage.id] || []}
-              onDealClick={onDealClick}
-              onAddDeal={onAddDeal}
-              onStageSettings={onStageSettings}
-            />
+            <div key={stage.id} className="h-full flex-shrink-0">
+              <PipelineStage
+                stage={stage}
+                deals={dealsByStage[stage.id] || []}
+                contacts={contacts}
+                companies={companies}
+                onDealClick={onDealClick}
+                onAddDeal={onAddDeal}
+                onStageSettings={onStageSettings}
+              />
+            </div>
           ))}
         </SortableContext>
       </div>
@@ -202,7 +215,12 @@ export function PipelineBoard({
       <DragOverlay>
         {activeDeal && (
           <div className="w-64 rounded-lg border bg-background p-3 shadow-lg">
-            <DealCard deal={activeDeal} isDragging />
+            <DealCard
+              deal={activeDeal}
+              contact={contacts.find(c => c.id === activeDeal.contact_id)}
+              company={companies.find(c => c.id === activeDeal.company_id)}
+              isDragging
+            />
           </div>
         )}
       </DragOverlay>

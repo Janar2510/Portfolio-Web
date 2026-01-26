@@ -1,104 +1,208 @@
 'use client';
 
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { useRef } from 'react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Layout, Users, BarChart3, Mail, Globe, Shield } from 'lucide-react';
-
-gsap.registerPlugin(ScrollTrigger);
-
-const features = [
-    {
-        icon: Layout,
-        title: 'Portfolio Builder',
-        description: 'Create stunning portfolios with our drag-and-drop editor. Choose from 20+ professional templates.',
-    },
-    {
-        icon: Users,
-        title: 'Client Management',
-        description: 'Track leads, manage contacts, and organize client relationships in one simple CRM.',
-    },
-    {
-        icon: BarChart3,
-        title: 'Analytics & Insights',
-        description: 'Thoughful analytics to track views, clicks, and client engagement on your portfolio.',
-    },
-    {
-        icon: Mail,
-        title: 'Email Integration',
-        description: 'Connect with clients directly. Send proposals and updates without leaving the platform.',
-    },
-    {
-        icon: Globe,
-        title: 'Custom Domain',
-        description: 'Connect your own domain name to give your portfolio a professional identity.',
-    },
-    {
-        icon: Shield,
-        title: 'Secure Hosting',
-        description: 'Your portfolio is hosted on a secure, high-performance global CDN for maximum speed.',
-    },
-];
+import type React from 'react';
+import { Warp } from '@paper-design/shaders-react';
+import { motion } from 'framer-motion';
+import {
+  Layout,
+  Users,
+  BarChart3,
+  Mail,
+  Globe,
+  Shield,
+  ArrowUpRight,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 export function FeaturesSection() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const t = useTranslations('landing.features');
 
-    useGSAP(() => {
-        cardsRef.current.forEach((card, index) => {
-            if (!card) return;
+  const features = [
+    {
+      titleKey: 'portfolioBuilder',
+      icon: <Layout className="w-8 h-8 text-white" />,
+      className: 'md:col-span-2 md:row-span-2 min-h-[400px]',
+      shaderIndex: 0,
+    },
+    {
+      titleKey: 'clientCRM',
+      icon: <Users className="w-8 h-8 text-white" />,
+      className: 'md:col-span-1 md:row-span-1',
+      shaderIndex: 1,
+    },
+    {
+      titleKey: 'smartAnalytics',
+      icon: <BarChart3 className="w-8 h-8 text-white" />,
+      className: 'md:col-span-1 md:row-span-1',
+      shaderIndex: 2,
+    },
+    {
+      titleKey: 'emailMarketing',
+      icon: <Mail className="w-8 h-8 text-white" />,
+      className: 'md:col-span-2 md:row-span-1',
+      shaderIndex: 3,
+    },
+    {
+      titleKey: 'customDomain',
+      icon: <Globe className="w-8 h-8 text-white" />,
+      className: 'md:col-span-1 md:row-span-1',
+      shaderIndex: 4,
+    },
+  ];
 
-            gsap.from(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: 'top bottom-=100',
-                    toggleActions: 'play none none reverse',
-                },
-                y: 50,
-                opacity: 0,
-                duration: 0.6,
-                delay: index * 0.1,
-                ease: 'power3.out',
-            });
-        });
-    }, { scope: containerRef });
+  const getShaderConfig = (index: number) => {
+    const configs = [
+      {
+        proportion: 0.35,
+        softness: 0.9,
+        distortion: 0.15,
+        swirl: 0.7,
+        swirlIterations: 10,
+        shape: 'checks' as const,
+        shapeScale: 0.08,
+        colors: ['#06070B', '#121526', '#00E5BC', '#B066FF'],
+      },
+      {
+        proportion: 0.4,
+        softness: 1.2,
+        distortion: 0.2,
+        swirl: 0.9,
+        swirlIterations: 12,
+        shape: 'stripes' as const,
+        shapeScale: 0.12,
+        colors: ['#121526', '#00E5BC', '#B066FF', '#06070B'],
+      },
+      {
+        proportion: 0.38,
+        softness: 0.95,
+        distortion: 0.18,
+        swirl: 0.8,
+        swirlIterations: 11,
+        shape: 'checks' as const,
+        shapeScale: 0.1,
+        colors: ['#00E5BC', '#B066FF', '#06070B', '#121526'],
+      },
+      {
+        proportion: 0.45,
+        softness: 1.1,
+        distortion: 0.22,
+        swirl: 0.85,
+        swirlIterations: 14,
+        shape: 'stripes' as const,
+        shapeScale: 0.09,
+        colors: ['#B066FF', '#06070B', '#121526', '#00E5BC'],
+      },
+      {
+        proportion: 0.3,
+        softness: 0.85,
+        distortion: 0.16,
+        swirl: 0.75,
+        swirlIterations: 9,
+        shape: 'checks' as const,
+        shapeScale: 0.11,
+        colors: ['#06070B', '#00E5BC', '#121526', '#B066FF'],
+      },
+    ];
+    return configs[index % configs.length];
+  };
 
-    return (
-        <section id="features" className="py-24 bg-background relative overflow-hidden">
-            <div className="container mx-auto px-4 md:px-6 relative z-10">
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <h2 className="text-5xl md:text-7xl font-bold font-display text-navy-900 mb-6">
-                        Everything You Need to <span className="text-teal-600">Succeed</span>
-                    </h2>
-                    <p className="text-lg text-muted-foreground">
-                        Powerful tools designed specifically for freelancers and creative professionals to manage and grow their business.
+  return (
+    <section
+      id="features"
+      className="relative py-24 px-4 bg-background overflow-hidden"
+    >
+      {/* Background Decoration */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="text-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-7 : 6xl font-bold font-display text-white mb-6">
+              {t('title')}{' '}
+              <span className="text-primary drop-shadow-[0_0_10px_rgba(0,229,188,0.3)]">
+                {t('titleHighlight')}
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+              {t('subtitle')}
+            </p>
+          </motion.div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {features.map((feature, index) => {
+            const shaderConfig = getShaderConfig(feature.shaderIndex);
+            return (
+              <motion.div
+                key={index}
+                className={cn(
+                  'relative group rounded-[2.5rem] overflow-hidden border border-white/5 transition-all duration-500 hover:border-primary/30',
+                  feature.className
+                )}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                {/* Shader Background */}
+                <div className="absolute inset-0 z-0">
+                  <Warp
+                    style={{ height: '100%', width: '100%' }}
+                    proportion={shaderConfig.proportion}
+                    softness={shaderConfig.softness}
+                    distortion={shaderConfig.distortion}
+                    swirl={shaderConfig.swirl}
+                    swirlIterations={shaderConfig.swirlIterations}
+                    shape={shaderConfig.shape}
+                    shapeScale={shaderConfig.shapeScale}
+                    scale={1}
+                    rotation={0}
+                    speed={0.3}
+                    colors={shaderConfig.colors}
+                  />
+                  <div className="absolute inset-0 bg-background/80 group-hover:bg-background/70 transition-colors duration-500" />
+                </div>
+
+                {/* Content */}
+                <div className="relative z-10 p-8 md:p-12 h-full flex flex-col">
+                  <div className="p-4 bg-white/5 w-fit rounded-2xl backdrop-blur-md border border-white/10 group-hover:bg-primary/20 group-hover:border-primary/30 transition-all duration-500 mb-8">
+                    <div className="group-hover:scale-110 transition-transform duration-500">
+                      {feature.icon}
+                    </div>
+                  </div>
+
+                  <div className="mt-auto">
+                    <h3
+                      className={cn(
+                        'font-bold text-white group-hover:text-primary transition-colors duration-300 mb-4',
+                        feature.className?.includes('col-span-2')
+                          ? 'text-3xl md:text-5xl'
+                          : 'text-2xl md:text-3xl'
+                      )}
+                    >
+                      {t(`${feature.titleKey}.title`)}
+                    </h3>
+
+                    <p className="text-lg leading-relaxed text-muted-foreground font-light max-w-md">
+                      {t(`${feature.titleKey}.description`)}
                     </p>
-                </div>
+                  </div>
 
-                <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {features.map((feature, index) => (
-                        <div
-                            key={index}
-                            ref={(el) => { if (cardsRef.current) cardsRef.current[index] = el; }}
-                            className="group p-8 rounded-2xl bg-teal-600/90 backdrop-blur-md gradient-border hover:shadow-xl hover:shadow-teal-900/20 transition-all duration-300 hover:-translate-y-1"
-                        >
-                            <div className="mb-6 inline-flex p-4 rounded-xl bg-white/10 text-white group-hover:bg-white/20 group-hover:scale-110 transition-all duration-300">
-                                <feature.icon size={32} strokeWidth={1.5} />
-                            </div>
-                            <h3 className="text-xl font-bold text-white mb-3">
-                                {feature.title}
-                            </h3>
-                            <p className="text-teal-50 leading-relaxed">
-                                {feature.description}
-                            </p>
-                        </div>
-                    ))}
+                  <div className="absolute top-8 right-8 text-white/20 group-hover:text-primary/80 transition-all duration-500 transform group-hover:translate-x-1 group-hover:-translate-y-1">
+                    <ArrowUpRight className="w-8 h-8" />
+                  </div>
                 </div>
-            </div>
-
-            {/* Background decoration */}
-            <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-teal-200/50 to-transparent -z-10" />
-        </section>
-    );
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 }

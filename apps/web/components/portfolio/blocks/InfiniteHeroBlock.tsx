@@ -1,53 +1,53 @@
 'use client';
 
-import React, { useMemo, useRef, useEffect, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import * as THREE from "three";
-import { BaseBlock } from "./BaseBlock";
-import { cn } from "@/lib/utils";
-import type { PortfolioBlock } from "@/lib/services/portfolio";
+import React, { useMemo, useRef, useEffect, useState } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
+import * as THREE from 'three';
+import { BaseBlock } from './BaseBlock';
+import { cn } from '@/lib/utils';
+import type { PortfolioBlock } from '@/lib/services/portfolio';
 
 // ===========================================
 // SHADER COMPONENTS
 // ===========================================
 
 interface ShaderPlaneProps {
-    vertexShader: string;
-    fragmentShader: string;
-    uniforms: { [key: string]: { value: unknown } };
+  vertexShader: string;
+  fragmentShader: string;
+  uniforms: { [key: string]: { value: unknown } };
 }
 
 function ShaderPlane({
-    vertexShader,
-    fragmentShader,
-    uniforms,
+  vertexShader,
+  fragmentShader,
+  uniforms,
 }: ShaderPlaneProps) {
-    const meshRef = useRef<THREE.Mesh>(null);
-    const { size } = useThree();
+  const meshRef = useRef<THREE.Mesh>(null);
+  const { size } = useThree();
 
-    useFrame((state) => {
-        if (meshRef.current) {
-            const material = meshRef.current.material as THREE.ShaderMaterial;
-            material.uniforms.u_time.value = state.clock.elapsedTime * 0.5;
-            material.uniforms.u_resolution.value.set(size.width, size.height, 1.0);
-        }
-    });
+  useFrame(state => {
+    if (meshRef.current) {
+      const material = meshRef.current.material as THREE.ShaderMaterial;
+      material.uniforms.u_time.value = state.clock.elapsedTime * 0.5;
+      material.uniforms.u_resolution.value.set(size.width, size.height, 1.0);
+    }
+  });
 
-    return (
-        <mesh ref={meshRef}>
-            <planeGeometry args={[2, 2]} />
-            <shaderMaterial
-                vertexShader={vertexShader}
-                fragmentShader={fragmentShader}
-                uniforms={uniforms}
-                side={THREE.DoubleSide}
-                depthTest={false}
-                depthWrite={false}
-            />
-        </mesh>
-    );
+  return (
+    <mesh ref={meshRef}>
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
+        side={THREE.DoubleSide}
+        depthTest={false}
+        depthWrite={false}
+      />
+    </mesh>
+  );
 }
 
 const DEFAULT_VERTEX_SHADER = `
@@ -147,25 +147,25 @@ const DEFAULT_FRAGMENT_SHADER = `
 `;
 
 function ShaderBackground({ className }: { className?: string }) {
-    const shaderUniforms = useMemo(
-        () => ({
-            u_time: { value: 0 },
-            u_resolution: { value: new THREE.Vector3(1, 1, 1) },
-        }),
-        []
-    );
+  const shaderUniforms = useMemo(
+    () => ({
+      u_time: { value: 0 },
+      u_resolution: { value: new THREE.Vector3(1, 1, 1) },
+    }),
+    []
+  );
 
-    return (
-        <div className={className}>
-            <Canvas className={className}>
-                <ShaderPlane
-                    vertexShader={DEFAULT_VERTEX_SHADER}
-                    fragmentShader={DEFAULT_FRAGMENT_SHADER}
-                    uniforms={shaderUniforms}
-                />
-            </Canvas>
-        </div>
-    );
+  return (
+    <div className={className}>
+      <Canvas className={className}>
+        <ShaderPlane
+          vertexShader={DEFAULT_VERTEX_SHADER}
+          fragmentShader={DEFAULT_FRAGMENT_SHADER}
+          uniforms={shaderUniforms}
+        />
+      </Canvas>
+    </div>
+  );
 }
 
 // ===========================================
@@ -173,149 +173,159 @@ function ShaderBackground({ className }: { className?: string }) {
 // ===========================================
 
 export default function InfiniteHeroBlock({
-    block,
-    isEditing = false,
-    onUpdate,
-    onDelete,
-    onAddAfter,
-    onEdit,
+  block,
+  isEditing = false,
+  onUpdate,
+  onDelete,
+  onAddAfter,
+  onEdit,
 }: {
-    block: PortfolioBlock;
-    isEditing?: boolean;
-    onUpdate: (content: any, settings?: any) => void;
-    onDelete: () => void;
-    onAddAfter?: (type: string) => void;
-    onEdit?: (block: any) => void;
+  block: PortfolioBlock;
+  isEditing?: boolean;
+  onUpdate: (content: any, settings?: any) => void;
+  onDelete: () => void;
+  onAddAfter?: (type: string) => void;
+  onEdit?: (block: any) => void;
 }) {
-    const content = (block.content || {}) as any;
-    const settings = (block.settings || {}) as any;
+  const content = (block.content || {}) as any;
+  const settings = (block.settings || {}) as any;
 
-    const rootRef = useRef<HTMLDivElement>(null);
-    const bgRef = useRef<HTMLDivElement>(null);
-    const h1Ref = useRef<HTMLHeadingElement>(null);
-    const pRef = useRef<HTMLParagraphElement>(null);
-    const ctaRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+  const h1Ref = useRef<HTMLHeadingElement>(null);
+  const pRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
-    // Manual line splitting for GSAP animation
-    const splitIntoLines = (text: string) => {
-        if (!text) return [];
-        return text.split('\n').filter(line => line.trim() !== '');
-    };
+  // Manual line splitting for GSAP animation
+  const splitIntoLines = (text: string) => {
+    if (!text) return [];
+    return text.split('\n').filter(line => line.trim() !== '');
+  };
 
-    const headlineLines = splitIntoLines(content.headline || "The road dissolves in light, the horizon remains unseen.");
-    const descriptionLines = splitIntoLines(content.subheadline || "Minimal structures fade into a vast horizon where presence and absence merge.");
+  const headlineLines = splitIntoLines(
+    content.headline ||
+      'The road dissolves in light, the horizon remains unseen.'
+  );
+  const descriptionLines = splitIntoLines(
+    content.subheadline ||
+      'Minimal structures fade into a vast horizon where presence and absence merge.'
+  );
 
-    useGSAP(
-        () => {
-            const ctas = ctaRef.current ? Array.from(ctaRef.current.children) : [];
-            const h1Lines = h1Ref.current ? Array.from(h1Ref.current.children) : [];
-            const pLines = pRef.current ? Array.from(pRef.current.children) : [];
+  useGSAP(
+    () => {
+      const ctas = ctaRef.current ? Array.from(ctaRef.current.children) : [];
+      const h1Lines = h1Ref.current ? Array.from(h1Ref.current.children) : [];
+      const pLines = pRef.current ? Array.from(pRef.current.children) : [];
 
-            gsap.set(bgRef.current, { filter: "blur(28px)" });
-            gsap.set(h1Lines, {
-                opacity: 0,
-                y: 24,
-                filter: "blur(8px)",
-            });
-            gsap.set(pLines, {
-                opacity: 0,
-                y: 16,
-                filter: "blur(6px)",
-            });
-            if (ctas.length) gsap.set(ctas, { opacity: 0, y: 16 });
+      gsap.set(bgRef.current, { filter: 'blur(28px)' });
+      gsap.set(h1Lines, {
+        opacity: 0,
+        y: 24,
+        filter: 'blur(8px)',
+      });
+      gsap.set(pLines, {
+        opacity: 0,
+        y: 16,
+        filter: 'blur(6px)',
+      });
+      if (ctas.length) gsap.set(ctas, { opacity: 0, y: 16 });
 
-            const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-            tl.to(bgRef.current, { filter: "blur(0px)", duration: 1.2 }, 0)
-                .to(
-                    h1Lines,
-                    {
-                        opacity: 1,
-                        y: 0,
-                        filter: "blur(0px)",
-                        duration: 0.8,
-                        stagger: 0.1,
-                    },
-                    0.3,
-                )
-                .to(
-                    pLines,
-                    {
-                        opacity: 1,
-                        y: 0,
-                        filter: "blur(0px)",
-                        duration: 0.6,
-                        stagger: 0.08,
-                    },
-                    "-=0.3",
-                )
-                .to(ctas, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 }, "-=0.2");
-        },
-        { scope: rootRef }
-    );
+      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+      tl.to(bgRef.current, { filter: 'blur(0px)', duration: 1.2 }, 0)
+        .to(
+          h1Lines,
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.8,
+            stagger: 0.1,
+          },
+          0.3
+        )
+        .to(
+          pLines,
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.6,
+            stagger: 0.08,
+          },
+          '-=0.3'
+        )
+        .to(ctas, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 }, '-=0.2');
+    },
+    { scope: rootRef }
+  );
 
-    return (
-        <BaseBlock
-            block={block}
-            isEditing={isEditing}
-            onUpdate={onUpdate}
-            onDelete={onDelete}
-            onAddAfter={onAddAfter}
-            onEdit={onEdit}
-        >
-            <div
-                ref={rootRef}
-                className="relative h-screen w-full overflow-hidden bg-black text-white"
+  return (
+    <BaseBlock
+      block={block}
+      isEditing={isEditing}
+      onUpdate={onUpdate}
+      onDelete={onDelete}
+      onAddAfter={onAddAfter}
+      onEdit={onEdit}
+    >
+      <div
+        ref={rootRef}
+        className="relative h-screen w-full overflow-hidden bg-black text-white"
+      >
+        <div className="absolute inset-0" ref={bgRef}>
+          <ShaderBackground className="h-full w-full" />
+        </div>
+
+        <div className="pointer-events-none absolute inset-0 [background:radial-gradient(120%_80%_at_50%_50%,_transparent_40%,_black_100%)]" />
+
+        <div className="relative z-10 flex h-full w-full items-center justify-center px-6">
+          <div className="text-center">
+            <h1
+              ref={h1Ref}
+              className="mx-auto max-w-2xl lg:max-w-4xl text-[clamp(2.25rem,6vw,4rem)] font-extralight leading-[1.1] tracking-tight"
             >
-                <div className="absolute inset-0" ref={bgRef}>
-                    <ShaderBackground className="h-full w-full" />
-                </div>
+              {headlineLines.map((line, i) => (
+                <span key={i} className="block mb-2">
+                  {line}
+                </span>
+              ))}
+            </h1>
+            <p
+              ref={pRef}
+              className="mx-auto mt-6 max-w-2xl text-sm/6 md:text-base/7 font-light tracking-tight text-white/70"
+            >
+              {descriptionLines.map((line, i) => (
+                <span key={i} className="block">
+                  {line}
+                </span>
+              ))}
+            </p>
 
-                <div className="pointer-events-none absolute inset-0 [background:radial-gradient(120%_80%_at_50%_50%,_transparent_40%,_black_100%)]" />
+            <div
+              ref={ctaRef}
+              className="mt-10 flex flex-row items-center justify-center gap-4"
+            >
+              {content.cta_text && (
+                <button
+                  type="button"
+                  className="group relative overflow-hidden border border-white/30 bg-gradient-to-r from-white/20 to-white/10 px-6 py-3 text-sm rounded-lg font-medium tracking-wide text-white backdrop-blur-sm transition-all duration-500 hover:border-white/50 hover:bg-white/20 hover:shadow-lg hover:shadow-white/10"
+                >
+                  {content.cta_text}
+                </button>
+              )}
 
-                <div className="relative z-10 flex h-full w-full items-center justify-center px-6">
-                    <div className="text-center">
-                        <h1
-                            ref={h1Ref}
-                            className="mx-auto max-w-2xl lg:max-w-4xl text-[clamp(2.25rem,6vw,4rem)] font-extralight leading-[1.1] tracking-tight"
-                        >
-                            {headlineLines.map((line, i) => (
-                                <span key={i} className="block mb-2">{line}</span>
-                            ))}
-                        </h1>
-                        <p
-                            ref={pRef}
-                            className="mx-auto mt-6 max-w-2xl text-sm/6 md:text-base/7 font-light tracking-tight text-white/70"
-                        >
-                            {descriptionLines.map((line, i) => (
-                                <span key={i} className="block">{line}</span>
-                            ))}
-                        </p>
-
-                        <div
-                            ref={ctaRef}
-                            className="mt-10 flex flex-row items-center justify-center gap-4"
-                        >
-                            {content.cta_text && (
-                                <button
-                                    type="button"
-                                    className="group relative overflow-hidden border border-white/30 bg-gradient-to-r from-white/20 to-white/10 px-6 py-3 text-sm rounded-lg font-medium tracking-wide text-white backdrop-blur-sm transition-all duration-500 hover:border-white/50 hover:bg-white/20 hover:shadow-lg hover:shadow-white/10"
-                                >
-                                    {content.cta_text}
-                                </button>
-                            )}
-
-                            {content.cta_secondary_text && (
-                                <button
-                                    type="button"
-                                    className="group relative px-6 py-3 text-sm font-medium tracking-wide text-white/90 transition-all duration-500 hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.6)] hover:text-white"
-                                >
-                                    {content.cta_secondary_text}
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </div>
+              {content.cta_secondary_text && (
+                <button
+                  type="button"
+                  className="group relative px-6 py-3 text-sm font-medium tracking-wide text-white/90 transition-all duration-500 hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.6)] hover:text-white"
+                >
+                  {content.cta_secondary_text}
+                </button>
+              )}
             </div>
-        </BaseBlock>
-    );
+          </div>
+        </div>
+      </div>
+    </BaseBlock>
+  );
 }

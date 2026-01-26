@@ -1,263 +1,188 @@
 'use client';
 
-import {
-    forwardRef,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-    type MouseEvent,
-} from "react";
-import {
-    AnimatePresence,
-    motion,
-    useMotionTemplate,
-    useMotionValue,
-    type MotionStyle,
-    type MotionValue,
-    type Variants,
-} from "framer-motion";
-import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
-
-// --- Types ---
-type WrapperStyle = MotionStyle & {
-    "--x": MotionValue<string>;
-    "--y": MotionValue<string>;
-};
-
-interface Step {
-    id: string;
-    name: string;
-    title: string;
-    description: string;
-    image: string;
-}
-
-// --- Constants ---
-const steps: readonly Step[] = [
-    {
-        id: "1",
-        name: "Step 1",
-        title: "Connect Your Portfolio",
-        description: "Import your existing projects or start from scratch with our intuitive builder. We support all major media formats and file types.",
-        image: "/images/how-it-works/step1.png",
-    },
-    {
-        id: "2",
-        name: "Step 2",
-        title: "Powerful Customization",
-        description: "Gain full control over your aesthetic with advanced color palettes, typography, and layout blocks designed by top creatives.",
-        image: "/images/how-it-works/step2.png",
-    },
-    {
-        id: "3",
-        name: "Step 3",
-        title: "Manage Your Business",
-        description: "Use our integrated CRM to track leads, manage projects, and communicate with clients directly through your dashboard.",
-        image: "/images/how-it-works/step3.png",
-    },
-    {
-        id: "4",
-        name: "Step 4",
-        title: "Scale and Automate",
-        description: "Automate boring tasks and scale your outreach. Focus on what you do best while we handle the technical heavy lifting.",
-        image: "/images/how-it-works/step4.png",
-    },
-];
-
-const ANIMATION_PRESETS = {
-    fadeInScale: {
-        initial: { opacity: 0, scale: 0.95 },
-        animate: { opacity: 1, scale: 1 },
-        exit: { opacity: 0, scale: 0.95 },
-        transition: { type: "spring", stiffness: 300, damping: 25, mass: 0.5 },
-    },
-} as const;
-
-// --- Hooks ---
-function useNumberCycler(totalSteps: number, interval: number = 8000) {
-    const [currentNumber, setCurrentNumber] = useState(0);
-
-    useEffect(() => {
-        const timerId = setTimeout(() => {
-            setCurrentNumber((prev) => (prev + 1) % totalSteps);
-        }, interval);
-        return () => clearTimeout(timerId);
-    }, [currentNumber, totalSteps, interval]);
-
-    const setStep = useCallback((stepIndex: number) => {
-        setCurrentNumber(stepIndex % totalSteps);
-    }, [totalSteps]);
-
-    return { currentNumber, setStep };
-}
-
-function useIsMobile() {
-    const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        const checkDevice = () => {
-            setIsMobile(window.matchMedia("(max-width: 768px)").matches);
-        };
-        checkDevice();
-        window.addEventListener("resize", checkDevice);
-        return () => window.removeEventListener("resize", checkDevice);
-    }, []);
-    return isMobile;
-}
-
-// --- Components ---
-const stepVariants: Variants = {
-    inactive: { scale: 0.9, opacity: 0.6 },
-    active: { scale: 1, opacity: 1 },
-};
-
-function FeatureCard({ step }: { step: number }) {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-    const isMobile = useIsMobile();
-
-    function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
-        if (isMobile) return;
-        const { left, top } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
-    }
-
-    return (
-        <motion.div
-            className="group relative w-full rounded-3xl"
-            onMouseMove={handleMouseMove}
-            style={{ "--x": useMotionTemplate`${mouseX}px`, "--y": useMotionTemplate`${mouseY}px` } as WrapperStyle}
-        >
-            <div className="relative w-full overflow-hidden rounded-3xl border border-[#354F6F]/30 bg-[#212D50]/40 backdrop-blur-xl transition-all duration-300 shadow-2xl">
-                <div className="flex flex-col lg:flex-row min-h-[500px]">
-                    {/* Text Content */}
-                    <div className="p-10 lg:p-16 lg:w-1/2 flex flex-col justify-center relative z-10 text-left">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={step}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 20 }}
-                                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                                className="space-y-6"
-                            >
-                                <div className="text-sm font-bold uppercase tracking-widest text-[#68A9A5]">
-                                    {steps[step].name}
-                                </div>
-                                <h3 className="text-3xl md:text-5xl font-bold font-display text-white italic">
-                                    {steps[step].title}
-                                </h3>
-                                <p className="text-lg leading-relaxed text-gray-400">
-                                    {steps[step].description}
-                                </p>
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-
-                    {/* Image Content */}
-                    <div className="lg:w-1/2 relative min-h-[400px] lg:min-h-full overflow-hidden flex items-center justify-center p-8 bg-black/20">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={step}
-                                className="w-full h-full relative"
-                                {...ANIMATION_PRESETS.fadeInScale}
-                            >
-                                <img
-                                    src={steps[step].image}
-                                    alt={steps[step].title}
-                                    className="w-full h-full object-contain rounded-2xl shadow-2xl ring-1 ring-[#68A9A5]/20"
-                                    style={{ userSelect: "none" }}
-                                />
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-                </div>
-            </div>
-        </motion.div>
-    );
-}
-
-function StepsNav({ current, onChange }: { current: number; onChange: (index: number) => void; }) {
-    return (
-        <nav aria-label="Progress" className="flex justify-center mt-12">
-            <ol className="flex w-full flex-wrap items-center justify-center gap-3" role="list">
-                {steps.map((step, stepIdx) => {
-                    const isCompleted = current > stepIdx;
-                    const isCurrent = current === stepIdx;
-                    return (
-                        <motion.li key={step.name} initial="inactive" animate={isCurrent ? "active" : "inactive"} variants={stepVariants} transition={{ duration: 0.3 }}>
-                            <button
-                                type="button"
-                                className={cn(
-                                    "group flex items-center gap-3 rounded-full px-5 py-2.5 text-sm font-bold transition-all duration-300 focus:outline-none",
-                                    isCurrent
-                                        ? "bg-gradient-to-r from-[#3D726E] to-[#68A9A5] text-white shadow-lg shadow-teal-500/20"
-                                        : "bg-[#212D50]/40 text-gray-400 hover:text-white border border-[#354F6F]/30"
-                                )}
-                                onClick={() => onChange(stepIdx)}
-                            >
-                                <span className={cn(
-                                    "flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-all duration-300",
-                                    isCompleted
-                                        ? "bg-white text-[#3D726E]"
-                                        : isCurrent
-                                            ? "bg-white/20 text-white"
-                                            : "bg-white/5 text-gray-500 group-hover:bg-white/10"
-                                )}>
-                                    {isCompleted ? <Check size={14} className="stroke-[3]" /> : <span>{stepIdx + 1}</span>}
-                                </span>
-                                <span className="hidden sm:inline-block">{step.name}</span>
-                            </button>
-                        </motion.li>
-                    );
-                })}
-            </ol>
-        </nav>
-    );
-}
+import type React from 'react';
+import { Warp } from '@paper-design/shaders-react';
+import { motion } from 'framer-motion';
+import { Check, Import, Palette, BarChart3, Rocket } from 'lucide-react';
+import { GradientButton } from '@/components/ui/gradient-button';
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 export function HowItWorksSection() {
-    const { currentNumber: step, setStep } = useNumberCycler(steps.length, 8000);
+  const t = useTranslations('landing.howItWorks');
 
-    return (
-        <section id="how-it-works" className="min-h-screen bg-[#141C33] relative overflow-hidden flex flex-col justify-center py-20 lg:py-12">
-            {/* Ambient Background Glows */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#3D726E]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-            <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-[#212D50]/20 rounded-full blur-[100px] -translate-x-1/2 pointer-events-none" />
+  const steps = [
+    {
+      stepKey: 'step1',
+      icon: <Import className="w-8 h-8 text-white" />,
+    },
+    {
+      stepKey: 'step2',
+      icon: <Palette className="w-8 h-8 text-white" />,
+    },
+    {
+      stepKey: 'step3',
+      icon: <BarChart3 className="w-8 h-8 text-white" />,
+    },
+    {
+      stepKey: 'step4',
+      icon: <Rocket className="w-8 h-8 text-white" />,
+    },
+  ];
 
-            <div className="container mx-auto px-4 md:px-6 relative z-10 flex flex-col h-full">
-                <div className="max-w-4xl mx-auto mb-10 lg:mb-8 text-center shrink-0">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display text-white mb-4">
-                            How It <span className="text-[#68A9A5]">Works</span>
-                        </h2>
-                        <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto italic">
-                            Building a world-class portfolio has never been easier.
-                        </p>
-                    </motion.div>
+  const getShaderConfig = (index: number) => {
+    const configs = [
+      {
+        proportion: 0.3,
+        softness: 0.8,
+        distortion: 0.15,
+        swirl: 0.6,
+        swirlIterations: 8,
+        shape: 'checks' as const,
+        shapeScale: 0.08,
+        colors: ['#141C33', '#212D50', '#354F6F', '#3D726E'],
+      },
+      {
+        proportion: 0.4,
+        softness: 1.2,
+        distortion: 0.2,
+        swirl: 0.9,
+        swirlIterations: 12,
+        shape: 'stripes' as const,
+        shapeScale: 0.12,
+        colors: ['#212D50', '#354F6F', '#3D726E', '#68A9A5'],
+      },
+      {
+        proportion: 0.35,
+        softness: 0.9,
+        distortion: 0.18,
+        swirl: 0.7,
+        swirlIterations: 10,
+        shape: 'checks' as const,
+        shapeScale: 0.1,
+        colors: ['#354F6F', '#3D726E', '#68A9A5', '#212D50'],
+      },
+      {
+        proportion: 0.45,
+        softness: 1.1,
+        distortion: 0.22,
+        swirl: 0.8,
+        swirlIterations: 15,
+        shape: 'stripes' as const,
+        shapeScale: 0.09,
+        colors: ['#3D726E', '#68A9A5', '#141C33', '#354F6F'],
+      },
+    ];
+    return configs[index % configs.length];
+  };
+
+  return (
+    <section
+      id="how-it-works"
+      className="relative py-32 px-4 bg-background overflow-hidden"
+    >
+      {/* Background Ambient Glow */}
+      <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[700px] h-[700px] bg-secondary/5 rounded-full blur-[150px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="text-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-5xl md:text-7xl font-bold font-display text-white mb-6 tracking-tighter">
+              {t('title')}{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                {t('titleHighlight')}
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+              {t('subtitle')}
+            </p>
+          </motion.div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          {steps.map((step, index) => {
+            const shaderConfig = getShaderConfig(index);
+            return (
+              <motion.div
+                key={index}
+                className="relative group"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <div className="relative h-80 rounded-[2.5rem] overflow-hidden border border-white/5 transition-all duration-500 group-hover:border-primary/30 glass-card">
+                  {/* Shader Background */}
+                  <div className="absolute inset-0 z-0">
+                    <Warp
+                      style={{ height: '100%', width: '100%' }}
+                      proportion={shaderConfig.proportion}
+                      softness={shaderConfig.softness}
+                      distortion={shaderConfig.distortion}
+                      swirl={shaderConfig.swirl}
+                      swirlIterations={shaderConfig.swirlIterations}
+                      shape={shaderConfig.shape}
+                      shapeScale={shaderConfig.shapeScale}
+                      scale={1}
+                      rotation={0}
+                      speed={0.4}
+                      colors={shaderConfig.colors}
+                    />
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-background/80 group-hover:bg-background/60 transition-colors duration-500" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative z-10 p-10 h-full flex flex-col">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="p-4 bg-white/5 rounded-2xl backdrop-blur-md border border-white/10 group-hover:bg-primary/20 group-hover:border-primary/30 transition-all duration-500">
+                        {step.icon}
+                      </div>
+                      <span className="text-6xl font-black text-white/5 font-display group-hover:text-primary/10 transition-colors duration-500 tracking-tighter">
+                        {t(`steps.${step.stepKey}.number` || String(index + 1))}
+                      </span>
+                    </div>
+
+                    <h3 className="text-3xl font-bold mb-4 text-white group-hover:text-primary transition-colors duration-300">
+                      {t(`steps.${step.stepKey}.title`)}
+                    </h3>
+
+                    <p className="text-lg leading-relaxed text-muted-foreground font-light max-w-sm">
+                      {t(`steps.${step.stepKey}.description`)}
+                    </p>
+
+                    <div className="mt-auto flex items-center text-sm font-bold text-white/50 group-hover:text-white transition-all duration-300 overflow-hidden">
+                      <span className="transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500">
+                        {t('getStarted')}
+                      </span>
+                      <div className="w-8 h-[2px] bg-[#68A9A5] ml-3 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 delay-100" />
+                    </div>
+                  </div>
                 </div>
+              </motion.div>
+            );
+          })}
+        </div>
 
-                <div className="max-w-6xl mx-auto flex flex-col items-center flex-1 justify-center gap-8">
-                    <FeatureCard step={step} />
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 }}
-                        className="shrink-0"
-                    >
-                        <StepsNav current={step} onChange={setStep} />
-                    </motion.div>
-                </div>
-            </div>
-        </section>
-    );
+        {/* Bottom CTA */}
+        <motion.div
+          className="mt-20 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+        >
+          <GradientButton asChild className="shadow-lg shadow-teal-500/20">
+            <Link href="/register">{t('cta')}</Link>
+          </GradientButton>
+        </motion.div>
+      </div>
+    </section>
+  );
 }

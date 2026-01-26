@@ -13,7 +13,9 @@ interface UseRealtimeSubscriptionOptions {
   enabled?: boolean;
 }
 
-export function useRealtimeSubscription(options: UseRealtimeSubscriptionOptions) {
+export function useRealtimeSubscription(
+  options: UseRealtimeSubscriptionOptions
+) {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const supabase = useMemo(() => createClient(), []);
   const enabled = options.enabled !== false;
@@ -45,17 +47,26 @@ export function useRealtimeSubscription(options: UseRealtimeSubscriptionOptions)
           table: options.table,
           filter: options.filter,
         },
-        (payload) => {
+        payload => {
           if (payload.eventType === 'INSERT' && callbacksRef.current.onInsert) {
             callbacksRef.current.onInsert(payload.new);
-          } else if (payload.eventType === 'UPDATE' && callbacksRef.current.onUpdate) {
-            callbacksRef.current.onUpdate({ new: payload.new, old: payload.old });
-          } else if (payload.eventType === 'DELETE' && callbacksRef.current.onDelete) {
+          } else if (
+            payload.eventType === 'UPDATE' &&
+            callbacksRef.current.onUpdate
+          ) {
+            callbacksRef.current.onUpdate({
+              new: payload.new,
+              old: payload.old,
+            });
+          } else if (
+            payload.eventType === 'DELETE' &&
+            callbacksRef.current.onDelete
+          ) {
             callbacksRef.current.onDelete(payload.old);
           }
         }
       )
-      .subscribe((status) => {
+      .subscribe(status => {
         if (status === 'SUBSCRIBED') {
           console.log(`Subscribed to ${options.channel}`);
         } else if (status === 'CHANNEL_ERROR') {

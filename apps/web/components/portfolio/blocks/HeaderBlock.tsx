@@ -74,16 +74,23 @@ export function HeaderBlock({
           'text-white' // Force white for Artisanal elite look
         )}
       >
-        <div
-          className="font-serif font-bold text-2xl tracking-tighter"
-        >
+        <div className="font-serif font-bold text-2xl tracking-tighter">
           {content.logo_image ? (
-            <img src={content.logo_image} alt="Logo" className="h-8 md:h-10 hover:opacity-80 transition-opacity" />
+            <img
+              src={content.logo_image}
+              alt="Logo"
+              className="h-8 md:h-10 hover:opacity-80 transition-opacity"
+            />
           ) : (
             <span className="text-white">
-              {content.logo_text === 'ELENA.VANCE' || content.logo_text === 'Elena Vance' ? (
-                <>ELENA<span className="text-primary">.</span>VANCE</>
-              ) : (content.logo_text || 'Portfolio')}
+              {content.logo_text === 'ELENA.VANCE' ||
+              content.logo_text === 'Elena Vance' ? (
+                <>
+                  ELENA<span className="text-primary">.</span>VANCE
+                </>
+              ) : (
+                content.logo_text || 'Portfolio'
+              )}
             </span>
           )}
         </div>
@@ -128,9 +135,14 @@ export function HeaderBlock({
         {/* Social Links on the right */}
         <div className="hidden sm:flex items-center gap-5">
           {content.social_links?.map((social: any, i: number) => {
-            const Icon = social.platform === 'instagram' ? Instagram :
-              social.platform === 'twitter' ? Twitter :
-                social.platform === 'linkedin' ? Linkedin : null;
+            const Icon =
+              social.platform === 'instagram'
+                ? Instagram
+                : social.platform === 'twitter'
+                  ? Twitter
+                  : social.platform === 'linkedin'
+                    ? Linkedin
+                    : null;
             if (!Icon) return null;
             return (
               <a

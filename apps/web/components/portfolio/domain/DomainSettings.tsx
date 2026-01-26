@@ -70,30 +70,28 @@ export function DomainSettings() {
       if (!siteId) throw new Error('No site ID');
       setIsVerifying(true);
       try {
-        // Get current site to check custom_domain
-        const site = await portfolioService.getSite();
-        if (!site?.custom_domain) {
-          throw new Error('No custom domain configured');
+        const response = await fetch('/api/portfolio/domain/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ site_id: siteId }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error?.message || 'Failed to verify domain');
         }
 
-        // TODO: Implement full DNS verification
-        // This requires:
-        // 1. DNS lookup to check CNAME/A records point to our server
-        // 2. SSL certificate validation
-        // 3. Domain ownership verification (TXT record or meta tag)
-        //
-        // For now, this is a placeholder that simulates verification
-        // In production, use a service like:
-        // - DNS lookup API (dns.resolve4, dns.resolveCname)
-        // - SSL checker API
-        // - Domain verification service
+        if (!result.data.verified) {
+          throw new Error(
+            result.data.error ||
+              'Verification failed. Please check your DNS settings.'
+          );
+        }
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Placeholder: Domain verification not yet implemented
-        // The domain is considered "configured" but not "verified"
-        // Users should manually verify DNS settings match the instructions
-        return site;
+        return result.data;
       } finally {
         setIsVerifying(false);
       }

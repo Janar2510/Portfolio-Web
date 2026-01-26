@@ -7,74 +7,60 @@
 @layer base {
   :root {
     /* ============================================
-       DESIGN SYSTEM - The Editorial Stylist Theme
+       DESIGN SYSTEM - Cyber-Zen Theme 2026
        ============================================ */
 
-    /* Palette: Mint Green (BG), Black (Text), Deep Blue (Accents) */
-    --mint-50: 160 100% 98%;
-    /* #F0FFF4 - Lightest Mint (Background) */
-    --mint-100: 160 84% 90%;
-    /* #D1FAE5 */
-    --mint-200: 160 84% 80%;
-    /* #A7F3D0 */
-    --mint-300: 160 70% 60%;
-    /* #6EE7B7 - Vibrant Mint (Hero Highlight) */
-    --mint-400: 160 60% 45%;
-    /* #34D399 */
+    /* Palette: Deep Indigo, Cyber Teal, Electric Violet, Zenith White */
+    --zen-dark: 230 45% 4%;
+    /* #06070B - Absolute Depth */
+    --zen-indigo: 231 40% 12%;
+    /* #121526 - Primary Background */
+    --zen-teal: 174 100% 45%;
+    /* #00E5BC - Core Accent */
+    --zen-violet: 265 100% 70%;
+    /* #B066FF - Secondary Accent */
+    --zen-white: 210 20% 98%;
+    /* #F8FAFC - Main Foreground */
 
-    --navy-deep: 222 47% 11%;
-    /* #0F172A - Deep Blue/Black (Text) */
-    --navy-800: 217 33% 17%;
-    /* #1E293B */
+    /* Semantic Colors - Mapped to Cyber-Zen Palette */
+    --background: var(--zen-dark);
+    --foreground: var(--zen-white);
 
-    --blue-accent: 221 83% 53%;
-    /* #3B82F6 - Deep Blue Detail */
-
-    /* Semantic Colors - Mapped to Editorial Palette */
-    --background: var(--mint-50);
-    /* Light Mint Background */
-    --foreground: var(--navy-deep);
-    /* Black/Deep Navy Text */
-
-    /* Dark Teal Glassmorphic Cards */
-    --card: 180 65% 29%;
-    /* Teal 500 Base */
-    --card-foreground: 0 0% 100%;
-    /* White Text */
+    /* Ultra-Glass Cards */
+    --card: 231 40% 6%;
+    --card-foreground: var(--zen-white);
+    --card-border: 231 30% 18%;
 
     --popover: var(--card);
     --popover-foreground: var(--card-foreground);
 
-    --primary: var(--navy-deep);
-    /* Primary actions Black/Deep Blue */
-    --primary-foreground: 0 0% 100%;
+    --primary: var(--zen-teal);
+    --primary-foreground: var(--zen-dark);
 
-    --secondary: 160 70% 60%;
-    /* Vibrant Mint for secondary/accents */
-    --secondary-foreground: var(--navy-deep);
+    --secondary: var(--zen-violet);
+    --secondary-foreground: var(--zen-dark);
 
-    --muted: 160 20% 94%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 231 20% 15%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: var(--blue-accent);
-    --accent-foreground: 0 0% 100%;
+    --accent: var(--zen-teal);
+    --accent-foreground: var(--zen-dark);
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Color from user image (Deep Blue) */
-    --navy-border: 222 47% 11%;
-    /* #0F172A */
-    --navy-highlight: 210 100% 50%;
-    /* Brighter blue for animation glow */
+    --border: var(--card-border);
+    --input: var(--card-border);
+    --ring: var(--zen-teal);
+    --radius: 1.25rem;
 
-    --border: 160 20% 90%;
-    --input: 160 20% 90%;
-    --ring: var(--navy-deep);
-    --radius: 0.5rem;
+    /* Lighting Effects */
+    --glow-teal: 0 0 20px hsla(174, 100%, 45%, 0.3);
+    --glow-violet: 0 0 20px hsla(265, 100%, 70%, 0.3);
 
     /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--mint-50)) 0%, hsl(var(--mint-100)) 100%);
+    --gradient-zen: radial-gradient(circle at center, hsl(var(--zen-indigo)) 0%, hsl(var(--zen-dark)) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(var(--zen-teal)) 0%, hsl(var(--zen-violet)) 100%);
 
     /* ============================================
        TYPOGRAPHY - Editorial Fonts
@@ -543,77 +529,39 @@ h6.text-xl {
 
   /* Modern Animation Utilities */
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.5s ease-out;
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  .animate-slide-down {
-    animation: slideDown 0.5s ease-out;
+  /* Grain Texture Overlay */
+  .noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: "";
+    opacity: 0.05;
+    z-index: 9999;
+    pointer-events: none;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    filter: contrast(120%) brightness(120%);
   }
 
-  .animate-scale-in {
-    animation: scaleIn 0.3s ease-out;
+  /* Deep Glassmorphism Card */
+  .glass-card {
+    background: rgba(18, 21, 38, 0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
   }
 
-  .animate-delay-100 {
-    animation-delay: 100ms;
-  }
-
-  .animate-delay-200 {
-    animation-delay: 200ms;
-  }
-
-  .animate-delay-300 {
-    animation-delay: 300ms;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+  .glass-card:hover {
+    border-color: rgba(0, 229, 188, 0.3);
+    box-shadow: 0 15px 50px -10px rgba(0, 229, 188, 0.15);
   }
 
   /* Hover animations */

@@ -1,5 +1,9 @@
 import { create } from 'zustand';
-import type { OnboardingStepId, UserType, PrimaryGoal } from '@/lib/onboarding/steps';
+import type {
+  OnboardingStepId,
+  UserType,
+  PrimaryGoal,
+} from '@/lib/onboarding/steps';
 
 export interface OnboardingProgress {
   status: 'not_started' | 'in_progress' | 'completed' | 'skipped';
@@ -46,12 +50,12 @@ const defaultProgress: OnboardingProgress = {
   steps_skipped: [],
 };
 
-export const useOnboardingStore = create<OnboardingStore>((set) => ({
+export const useOnboardingStore = create<OnboardingStore>(set => ({
   progress: null,
   isLoading: true,
-  setProgress: (progress) => set({ progress, isLoading: false }),
+  setProgress: progress => set({ progress, isLoading: false }),
   updateStep: (stepId, completed) =>
-    set((state) => {
+    set(state => {
       if (!state.progress) return state;
       return {
         progress: {
@@ -63,8 +67,8 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
         },
       };
     }),
-  setCurrentStep: (step) =>
-    set((state) => {
+  setCurrentStep: step =>
+    set(state => {
       if (!state.progress) return state;
       return {
         progress: {
@@ -74,8 +78,8 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
         },
       };
     }),
-  setUserType: (type) =>
-    set((state) => {
+  setUserType: type =>
+    set(state => {
       if (!state.progress) return state;
       return {
         progress: {
@@ -84,8 +88,8 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
         },
       };
     }),
-  setPrimaryGoal: (goal) =>
-    set((state) => {
+  setPrimaryGoal: goal =>
+    set(state => {
       if (!state.progress) return state;
       return {
         progress: {
@@ -94,8 +98,8 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
         },
       };
     }),
-  setSelectedTemplate: (templateId) =>
-    set((state) => {
+  setSelectedTemplate: templateId =>
+    set(state => {
       if (!state.progress) return state;
       return {
         progress: {
@@ -104,8 +108,8 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
         },
       };
     }),
-  skipStep: (stepId) =>
-    set((state) => {
+  skipStep: stepId =>
+    set(state => {
       if (!state.progress) return state;
       return {
         progress: {
@@ -115,7 +119,7 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
       };
     }),
   completeOnboarding: () =>
-    set((state) => {
+    set(state => {
       if (!state.progress) return state;
       return {
         progress: {
@@ -125,7 +129,7 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
       };
     }),
   skipOnboarding: () =>
-    set((state) => {
+    set(state => {
       if (!state.progress) return state;
       return {
         progress: {

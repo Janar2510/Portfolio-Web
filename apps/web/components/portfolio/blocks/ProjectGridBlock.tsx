@@ -39,7 +39,7 @@ export function ProjectGridBlock({
   const supabase = createClient();
   const portfolioService = new PortfolioService(supabase);
 
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const content = block.content as {
     title?: string;
@@ -95,11 +95,17 @@ export function ProjectGridBlock({
   });
 
   // Calculate distinct categories from fetched projects
-  const categories = ["All", ...Array.from(new Set(projects.map((p: any) => p.category).filter(Boolean)))];
+  const categories = [
+    'All',
+    ...Array.from(
+      new Set(projects.map((p: any) => p.category).filter(Boolean))
+    ),
+  ];
 
-  const filteredProjects = activeCategory === "All"
-    ? projects
-    : projects.filter((p: any) => p.category === activeCategory);
+  const filteredProjects =
+    activeCategory === 'All'
+      ? projects
+      : projects.filter((p: any) => p.category === activeCategory);
 
   const gridCols = {
     1: 'grid-cols-1',
@@ -130,7 +136,9 @@ export function ProjectGridBlock({
     >
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-sm font-bold tracking-[0.4em] uppercase text-primary mb-4">Portfolio</h2>
+          <h2 className="text-sm font-bold tracking-[0.4em] uppercase text-primary mb-4">
+            Portfolio
+          </h2>
           {content.title && (
             <h3 className="text-4xl md:text-5xl font-serif font-bold text-white mb-10">
               {content.title}
@@ -145,7 +153,7 @@ export function ProjectGridBlock({
                   key={cat as string}
                   onClick={() => setActiveCategory(cat as string)}
                   className={cn(
-                    "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                    'px-6 py-2 rounded-full text-sm font-medium transition-all duration-300',
                     activeCategory === cat
                       ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                       : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
@@ -183,7 +191,7 @@ export function ProjectGridBlock({
               <div
                 key={project.id}
                 className={cn(
-                  "group relative overflow-hidden rounded-[2rem] bg-slate-900 border border-white/5 transition-all duration-700 animate-slide-up",
+                  'group relative overflow-hidden rounded-[2rem] bg-slate-900 border border-white/5 transition-all duration-700 animate-slide-up',
                   aspectRatios[settings.aspect_ratio || 'portrait']
                 )}
                 style={{ animationDelay: `${i * 100}ms` }}

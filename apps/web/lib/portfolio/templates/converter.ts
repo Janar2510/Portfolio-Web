@@ -12,7 +12,10 @@ export function convertTemplateDefToPortfolioTemplate(
   blocks.push({
     block_type: 'header',
     content: {
-      logo_text: def.sections.footer?.logo_text || def.title.split(' ')[0] || 'Portfolio',
+      logo_text:
+        def.sections.footer?.logo_text ||
+        def.title.split(' ')[0] ||
+        'Portfolio',
       links: [
         { label: 'HOME', url: '#home' },
         { label: 'SERVICES', url: '#services' },
@@ -49,8 +52,12 @@ export function convertTemplateDefToPortfolioTemplate(
       },
       settings: {
         alignment: def.sections.hero.alignment || 'center',
-        background: def.sections.hero.backgroundImage ? 'image' : (def.sections.hero.backgroundStyle || 'solid'),
-        overlay: def.sections.hero.settings?.overlay ?? !!def.sections.hero.backgroundImage,
+        background: def.sections.hero.backgroundImage
+          ? 'image'
+          : def.sections.hero.backgroundStyle || 'solid',
+        overlay:
+          def.sections.hero.settings?.overlay ??
+          !!def.sections.hero.backgroundImage,
         height: def.sections.hero.height || 'full',
         headline_style: def.sections.hero.settings?.headline_style || 'serif',
       },
@@ -175,11 +182,12 @@ export function convertTemplateDefToPortfolioTemplate(
       content: {
         title: def.sections.services.title || 'What I Do',
         description: def.sections.services.description,
-        features: def.sections.services.items?.map(s => ({
-          title: s.title,
-          description: s.description,
-          icon: s.icon || 'Star',
-        })) || [],
+        features:
+          def.sections.services.items?.map(s => ({
+            title: s.title,
+            description: s.description,
+            icon: s.icon || 'Star',
+          })) || [],
       },
       settings: {
         layout: def.sections.services.settings?.layout || 'grid',
@@ -205,7 +213,8 @@ export function convertTemplateDefToPortfolioTemplate(
         columns: def.sections.projects.settings?.columns || 3,
         show_description: true,
         show_tags: false,
-        aspect_ratio: def.sections.projects.settings?.aspect_ratio || 'portrait',
+        aspect_ratio:
+          def.sections.projects.settings?.aspect_ratio || 'portrait',
       },
       sort_order: sortOrder++,
     });

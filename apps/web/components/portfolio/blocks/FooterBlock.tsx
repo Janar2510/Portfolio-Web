@@ -3,7 +3,15 @@
 import { BaseBlock } from './BaseBlock';
 import { cn } from '@/lib/utils';
 import type { PortfolioBlock } from '@/lib/services/portfolio';
-import { Github, Twitter, Linkedin, Instagram, Youtube, Facebook, ArrowUp } from 'lucide-react';
+import {
+  Github,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Youtube,
+  Facebook,
+  ArrowUp,
+} from 'lucide-react';
 
 interface FooterBlockProps {
   block: PortfolioBlock;
@@ -72,21 +80,28 @@ export function FooterBlock({
                   className="text-3xl font-serif font-bold text-white mb-4 block tracking-tighter"
                 >
                   {content.logo_text === 'ELENA.VANCE' ? (
-                    <>ELENA<span className="text-primary">.</span>VANCE</>
-                  ) : (content.logo_text || 'ELENA.VANCE')}
+                    <>
+                      ELENA<span className="text-primary">.</span>VANCE
+                    </>
+                  ) : (
+                    content.logo_text || 'ELENA.VANCE'
+                  )}
                 </a>
                 <p className="text-slate-500 max-w-xs text-sm">
-                  {content.bio_text || 'Exploring the boundaries of visual expression.'}
+                  {content.bio_text ||
+                    'Exploring the boundaries of visual expression.'}
                 </p>
               </div>
 
               <div className="flex gap-6 mt-10 md:mt-0">
-                {(content.social_links || [
-                  { platform: 'instagram', url: '#' },
-                  { platform: 'twitter', url: '#' },
-                  { platform: 'linkedin', url: '#' },
-                  { platform: 'facebook', url: '#' },
-                ]).map((link: any, i: number) => {
+                {(
+                  content.social_links || [
+                    { platform: 'instagram', url: '#' },
+                    { platform: 'twitter', url: '#' },
+                    { platform: 'linkedin', url: '#' },
+                    { platform: 'facebook', url: '#' },
+                  ]
+                ).map((link: any, i: number) => {
                   const Icon = socialIcons[link.platform] || Github;
                   return (
                     <a
@@ -102,18 +117,29 @@ export function FooterBlock({
             </div>
 
             <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 gap-8">
-              <p className="text-slate-500 text-sm">{content.copyright_text || `© ${new Date().getFullYear()} Elena Vance.`}</p>
+              <p className="text-slate-500 text-sm">
+                {content.copyright_text ||
+                  `© ${new Date().getFullYear()} Elena Vance.`}
+              </p>
 
               <div className="flex space-x-8 text-xs font-bold uppercase tracking-widest text-slate-500">
-                <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
-                <a href="#" className="hover:text-primary transition-colors">Terms</a>
+                <a href="#" className="hover:text-primary transition-colors">
+                  Privacy Policy
+                </a>
+                <a href="#" className="hover:text-primary transition-colors">
+                  Terms
+                </a>
               </div>
 
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:text-white transition-colors group"
               >
-                Back to top <ArrowUp size={16} className="group-hover:-translate-y-1 transition-transform" />
+                Back to top{' '}
+                <ArrowUp
+                  size={16}
+                  className="group-hover:-translate-y-1 transition-transform"
+                />
               </button>
             </div>
           </div>

@@ -30,7 +30,10 @@ export type BlockType =
   | 'footer'
   | 'features'
   | 'infinite-hero'
-  | 'brand-hero';
+  | 'brand-hero'
+  | 'organic-hero'
+  | 'skills'
+  | 'stats';
 
 // Hero Block
 export const heroBlockContentSchema = z.object({
@@ -49,8 +52,12 @@ export const heroBlockSettingsSchema = z.object({
   overlay: z.boolean().default(false),
   height: z.enum(['small', 'medium', 'large', 'full']).default('medium'),
   text_color: z.string().optional(),
-  variant: z.enum(['centered', 'split', 'minimal', 'bold', 'script']).default('centered'),
-  headline_style: z.enum(['default', 'gradient', 'serif', 'script']).default('default'), // New
+  variant: z
+    .enum(['centered', 'split', 'minimal', 'bold', 'script'])
+    .default('centered'),
+  headline_style: z
+    .enum(['default', 'gradient', 'serif', 'script'])
+    .default('default'), // New
 });
 
 export type HeroBlockContent = z.infer<typeof heroBlockContentSchema>;
@@ -135,7 +142,9 @@ export const formBlockContentSchema = z.object({
       email: z.string().optional(),
       location: z.string().optional(),
       phone: z.string().optional(),
-      socials: z.array(z.object({ platform: z.string(), url: z.string() })).optional(), // New
+      socials: z
+        .array(z.object({ platform: z.string(), url: z.string() }))
+        .optional(), // New
     })
     .optional(),
 });
@@ -144,7 +153,9 @@ export const formBlockSettingsSchema = z.object({
   layout: z.enum(['single', 'two-column', 'split-with-info']).default('single'),
   button_style: z.enum(['primary', 'secondary', 'outline']).default('primary'),
   button_align: z.enum(['left', 'center', 'right']).default('left'),
-  rounded_corners: z.enum(['none', 'md', 'lg', 'full', 'artisanal']).default('md'), // New
+  rounded_corners: z
+    .enum(['none', 'md', 'lg', 'full', 'artisanal'])
+    .default('md'), // New
 });
 
 export type FormBlockContent = z.infer<typeof formBlockContentSchema>;
@@ -193,10 +204,14 @@ export type VideoBlockSettings = z.infer<typeof videoBlockSettingsSchema>;
 export const headerBlockContentSchema = z.object({
   logo_text: z.string().optional(),
   logo_image: z.string().url().optional(),
-  links: z.array(z.object({
-    label: z.string(),
-    url: z.string(),
-  })).optional(),
+  links: z
+    .array(
+      z.object({
+        label: z.string(),
+        url: z.string(),
+      })
+    )
+    .optional(),
 });
 
 export const headerBlockSettingsSchema = z.object({
@@ -232,9 +247,59 @@ export const featuresBlockSettingsSchema = z.object({
   background: z.enum(['default', 'glass']).default('default'),
 });
 
-
 export type FeaturesBlockContent = z.infer<typeof featuresBlockContentSchema>;
 export type FeaturesBlockSettings = z.infer<typeof featuresBlockSettingsSchema>;
+
+// Skills Block
+export const skillsBlockContentSchema = z.object({
+  title: z.string().optional(),
+  skills: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        level: z.number().int().min(0).max(100),
+        category: z.string().optional(),
+        icon: z.string().optional(),
+      })
+    )
+    .default([]),
+});
+
+export const skillsBlockSettingsSchema = z.object({
+  layout: z.enum(['bars', 'badges', 'grid', 'circular']).default('bars'),
+  show_level: z.boolean().default(true),
+  show_category: z.boolean().default(false),
+  columns: z.number().int().min(1).max(6).default(3),
+});
+
+export type SkillsBlockContent = z.infer<typeof skillsBlockContentSchema>;
+export type SkillsBlockSettings = z.infer<typeof skillsBlockSettingsSchema>;
+
+// Stats Block
+export const statsBlockContentSchema = z.object({
+  title: z.string().optional(),
+  stats: z
+    .array(
+      z.object({
+        id: z.string(),
+        label: z.string(),
+        value: z.union([z.string(), z.number()]),
+        suffix: z.string().optional(),
+        icon: z.string().optional(),
+      })
+    )
+    .default([]),
+});
+
+export const statsBlockSettingsSchema = z.object({
+  layout: z.enum(['grid', 'horizontal']).default('grid'),
+  columns: z.number().int().min(1).max(6).default(4),
+  animation: z.boolean().default(true),
+});
+
+export type StatsBlockContent = z.infer<typeof statsBlockContentSchema>;
+export type StatsBlockSettings = z.infer<typeof statsBlockSettingsSchema>;
 
 // Infinite Hero Block
 export const infiniteHeroBlockContentSchema = z.object({
@@ -251,16 +316,24 @@ export const infiniteHeroBlockSettingsSchema = z.object({
   overlay_variant: z.enum(['default', 'dark', 'vignette']).default('vignette'),
 });
 
-export type InfiniteHeroBlockContent = z.infer<typeof infiniteHeroBlockContentSchema>;
-export type InfiniteHeroBlockSettings = z.infer<typeof infiniteHeroBlockSettingsSchema>;
+export type InfiniteHeroBlockContent = z.infer<
+  typeof infiniteHeroBlockContentSchema
+>;
+export type InfiniteHeroBlockSettings = z.infer<
+  typeof infiniteHeroBlockSettingsSchema
+>;
 
 // Brand Hero Block
 export const brandHeroBlockContentSchema = z.object({
   logoText: z.string().optional(),
-  navLinks: z.array(z.object({
-    label: z.string(),
-    href: z.string(),
-  })).optional(),
+  navLinks: z
+    .array(
+      z.object({
+        label: z.string(),
+        href: z.string(),
+      })
+    )
+    .optional(),
   versionText: z.string().optional(),
   title: z.string().optional(),
   subtitle: z.string().optional(),
@@ -273,7 +346,29 @@ export const brandHeroBlockSettingsSchema = z.object({
 });
 
 export type BrandHeroBlockContent = z.infer<typeof brandHeroBlockContentSchema>;
-export type BrandHeroBlockSettings = z.infer<typeof brandHeroBlockSettingsSchema>;
+export type BrandHeroBlockSettings = z.infer<
+  typeof brandHeroBlockSettingsSchema
+>;
+
+// Organic Hero Block
+export const organicHeroBlockContentSchema = z.object({
+  slogan: z.string().optional(),
+  headline: z.string().optional(),
+  subheadline: z.string().optional(),
+  cta_text: z.string().optional(),
+  cta_link: z.string().optional(),
+});
+
+export const organicHeroBlockSettingsSchema = z.object({
+  height: z.enum(['small', 'medium', 'large', 'full']).default('full'),
+});
+
+export type OrganicHeroBlockContent = z.infer<
+  typeof organicHeroBlockContentSchema
+>;
+export type OrganicHeroBlockSettings = z.infer<
+  typeof organicHeroBlockSettingsSchema
+>;
 
 // Block content type union
 export type BlockContent =
@@ -287,7 +382,10 @@ export type BlockContent =
   | HeaderBlockContent
   | FeaturesBlockContent
   | InfiniteHeroBlockContent
-  | BrandHeroBlockContent;
+  | BrandHeroBlockContent
+  | OrganicHeroBlockContent
+  | SkillsBlockContent
+  | StatsBlockContent;
 
 // Block settings type union
 export type BlockSettings =
@@ -301,7 +399,10 @@ export type BlockSettings =
   | HeaderBlockSettings
   | FeaturesBlockSettings
   | InfiniteHeroBlockSettings
-  | BrandHeroBlockSettings;
+  | BrandHeroBlockSettings
+  | OrganicHeroBlockSettings
+  | SkillsBlockSettings
+  | StatsBlockSettings;
 
 // Block metadata
 export interface BlockMetadata {
@@ -496,7 +597,8 @@ export const blockRegistry: Record<BlockType, BlockMetadata> = {
     category: 'content',
     defaultContent: {
       headline: 'The road dissolves in light,\nthe horizon remains unseen.',
-      subheadline: 'Minimal structures fade into a vast horizon where presence and absence merge. A quiet tension invites the eye to wander without end.',
+      subheadline:
+        'Minimal structures fade into a vast horizon where presence and absence merge. A quiet tension invites the eye to wander without end.',
       cta_text: 'Learn more',
       cta_link: '#',
       cta_secondary_text: 'View portfolio',
@@ -510,7 +612,8 @@ export const blockRegistry: Record<BlockType, BlockMetadata> = {
   'brand-hero': {
     type: 'brand-hero',
     name: 'Brand Hero',
-    description: 'Minimal branded hero with integrated navigation and full background',
+    description:
+      'Minimal branded hero with integrated navigation and full background',
     icon: 'Package',
     category: 'content',
     defaultContent: {
@@ -526,6 +629,62 @@ export const blockRegistry: Record<BlockType, BlockMetadata> = {
     },
     defaultSettings: {
       height: 'full',
+    },
+  },
+  'organic-hero': {
+    type: 'organic-hero',
+    name: 'Organic Hero',
+    description: 'Artisanal organic hero with fluid background blobs',
+    icon: 'Waves',
+    category: 'layout',
+    defaultContent: {
+      slogan: 'NATURE IN HARMONY',
+      headline: 'Organic Flow',
+      subheadline:
+        'A balanced exploration of form and function, inspired by the natural world.',
+      cta_text: 'Discover the Flow',
+      cta_link: '#',
+    },
+    defaultSettings: {
+      height: 'full',
+    },
+  },
+  skills: {
+    type: 'skills',
+    name: 'Skills',
+    description: 'Display your skills with progress bars or badges',
+    icon: 'Terminal',
+    category: 'content',
+    defaultContent: {
+      title: 'Professional Skills',
+      skills: [
+        { id: '1', name: 'Design', level: 90, category: 'Creative' },
+        { id: '2', name: 'Development', level: 85, category: 'Technical' },
+      ],
+    },
+    defaultSettings: {
+      layout: 'bars',
+      show_level: true,
+      columns: 3,
+    },
+  },
+  stats: {
+    type: 'stats',
+    name: 'Stats',
+    description: 'Display key statistics or metrics',
+    icon: 'BarChart',
+    category: 'content',
+    defaultContent: {
+      title: 'By the Numbers',
+      stats: [
+        { id: '1', label: 'Projects', value: 50, suffix: '+' },
+        { id: '2', label: 'Experience', value: 10, suffix: 'y' },
+      ],
+    },
+    defaultSettings: {
+      layout: 'grid',
+      columns: 4,
+      animation: true,
     },
   },
 };
@@ -571,6 +730,15 @@ export function validateBlockContent(
         return true;
       case 'brand-hero':
         brandHeroBlockContentSchema.parse(content);
+        return true;
+      case 'organic-hero':
+        organicHeroBlockContentSchema.parse(content);
+        return true;
+      case 'skills':
+        skillsBlockContentSchema.parse(content);
+        return true;
+      case 'stats':
+        statsBlockContentSchema.parse(content);
         return true;
       default:
         return false;
@@ -620,6 +788,15 @@ export function validateBlockSettings(
         return true;
       case 'brand-hero':
         brandHeroBlockSettingsSchema.parse(settings);
+        return true;
+      case 'organic-hero':
+        organicHeroBlockSettingsSchema.parse(settings);
+        return true;
+      case 'skills':
+        skillsBlockSettingsSchema.parse(settings);
+        return true;
+      case 'stats':
+        statsBlockSettingsSchema.parse(settings);
         return true;
       default:
         return false;

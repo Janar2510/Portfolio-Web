@@ -22,7 +22,10 @@ export async function middleware(request: NextRequest) {
   // Check if this is a subdomain request (portfolio site)
   // Format: subdomain.domain.com or subdomain.localhost:3000
   const subdomainMatch = hostname.match(/^([^.]+)\./);
-  const isSubdomainRoute = subdomainMatch && subdomainMatch[1] !== 'www' && subdomainMatch[1] !== 'app';
+  const isSubdomainRoute =
+    subdomainMatch &&
+    subdomainMatch[1] !== 'www' &&
+    subdomainMatch[1] !== 'app';
 
   // If it's a subdomain route, handle it differently
   if (isSubdomainRoute) {
@@ -64,7 +67,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if this is a public auth route
-  const isPublicAuthRoute = publicAuthRoutes.some((route) =>
+  const isPublicAuthRoute = publicAuthRoutes.some(route =>
     pathWithoutLocale.startsWith(route)
   );
 

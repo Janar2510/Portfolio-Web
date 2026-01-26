@@ -352,7 +352,7 @@ INSERT INTO public.subscription_plans (slug, name, name_et, description, price_m
     {"key": "portfolio_sites", "value": 1, "label": "1 Portfolio site"},
     {"key": "pages", "value": 3, "label": "3 pages"},
     {"key": "projects", "value": 5, "label": "5 projects"},
-    {"key": "branding", "value": true, "label": "Copifolio branding"}
+    {"key": "branding", "value": true, "label": "Supale branding"}
   ]',
   '{"portfolio_sites": 1, "pages_per_site": 3, "projects": 5, "crm_contacts": 0, "storage_mb": 100}'
 ),

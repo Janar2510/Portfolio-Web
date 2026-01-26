@@ -13,26 +13,26 @@ export default function LeadsPage() {
   const supabase = createClient();
   const crmService = new CRMEnhancedService(supabase);
 
+  // Leads tables do not exist yet in this version
   const { data: leads = [], isLoading: leadsLoading } = useQuery({
     queryKey: ['crm-leads'],
-    queryFn: () => crmService.getLeads(),
+    queryFn: () => Promise.resolve([] as Lead[]), // Stubbed
   });
 
   const { data: labels = [], isLoading: labelsLoading } = useQuery({
     queryKey: ['crm-labels-leads'],
-    queryFn: () => crmService.getLabels('lead'),
+    queryFn: () => Promise.resolve([] as Label[]), // Stubbed
   });
 
   const createMutation = useMutation({
-    mutationFn: (lead: Partial<Lead>) => crmService.createLead(lead),
+    mutationFn: async (lead: Partial<Lead>) => { alert('Leads feature coming soon'); return {} as any; },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['crm-leads'] });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<Lead> }) =>
-      crmService.updateLead(id, updates),
+    mutationFn: async ({ id, updates }: { id: string; updates: Partial<Lead> }) => { return {} as any; },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['crm-leads'] });
     },
@@ -40,37 +40,14 @@ export default function LeadsPage() {
 
   const convertMutation = useMutation({
     mutationFn: async (leadId: string) => {
-      // Get default pipeline and first stage
-      const pipelines = await crmService.getPipelines();
-      const defaultPipeline = pipelines.find(p => p.is_default) || pipelines[0];
-      if (!defaultPipeline) throw new Error('No pipeline found');
-
-      const stages = await crmService.getPipelineStages(defaultPipeline.id);
-      const firstStage = stages[0];
-      if (!firstStage) throw new Error('No stages found');
-
-      const lead = await crmService.getLeadById(leadId);
-      if (!lead) throw new Error('Lead not found');
-
-      await crmService.convertLeadToDeal(leadId, {
-        pipeline_id: defaultPipeline.id,
-        stage_id: firstStage.id,
-        title: lead.title,
-        value: lead.expected_value,
-      });
-
-      // Redirect to deals page
-      router.push('/crm/pipeline');
+      alert('Leads feature coming soon');
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crm-leads'] });
-      queryClient.invalidateQueries({ queryKey: ['crm-deals'] });
     },
   });
 
   const createLabelMutation = useMutation({
-    mutationFn: ({ name, color }: { name: string; color: string }) =>
-      crmService.createLabel({ entity_type: 'lead', name, color }),
+    mutationFn: async ({ name, color }: { name: string; color: string }) => { return {} as any; },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['crm-labels-leads'] });
     },

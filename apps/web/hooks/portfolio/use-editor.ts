@@ -6,7 +6,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
 import { PortfolioService } from '@/lib/services/portfolio';
-import { useEditorStore, useBlocksStore, useHistoryStore } from '@/stores/portfolio';
+import {
+  useEditorStore,
+  useBlocksStore,
+  useHistoryStore,
+} from '@/stores/portfolio';
 import type { PortfolioBlock, PortfolioPage } from '@/lib/services/portfolio';
 import { createBlock } from '@/lib/portfolio/blocks/registry';
 
@@ -50,8 +54,12 @@ export function useSavePage() {
       setHasUnsavedChanges(false);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPage?.id] });
-      queryClient.invalidateQueries({ queryKey: ['portfolio-page', currentPage?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPage?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-page', currentPage?.id],
+      });
     },
   });
 }
@@ -85,7 +93,7 @@ export function useAddBlock() {
       // Determine sort order
       let sortOrder = blocks.length;
       if (afterBlockId) {
-        const afterIndex = blocks.findIndex((b) => b.id === afterBlockId);
+        const afterIndex = blocks.findIndex(b => b.id === afterBlockId);
         if (afterIndex !== -1) {
           sortOrder = afterIndex + 1;
         }
@@ -109,7 +117,7 @@ export function useAddBlock() {
         entity_id: newBlock.id,
         action: 'create',
         previous_state: null,
-        new_state: (newBlock as unknown) as Record<string, unknown>,
+        new_state: newBlock as unknown as Record<string, unknown>,
         description: `Added ${blockType} block`,
         changed_by: null,
         session_id: null,
@@ -119,7 +127,9 @@ export function useAddBlock() {
       return newBlock;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPage?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPage?.id],
+      });
     },
   });
 }
@@ -163,7 +173,7 @@ export function useUpdateBlock() {
         entity_id: blockId,
         action: 'update',
         previous_state: currentBlock || null,
-        new_state: (updated as unknown) as Record<string, unknown>,
+        new_state: updated as unknown as Record<string, unknown>,
         description: 'Block updated',
         changed_by: null,
         session_id: null,
@@ -173,7 +183,9 @@ export function useUpdateBlock() {
       return updated;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPage?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPage?.id],
+      });
     },
   });
 }
@@ -220,7 +232,9 @@ export function useDeleteBlock() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPage?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPage?.id],
+      });
     },
   });
 }
@@ -235,14 +249,14 @@ export function useDuplicateBlock() {
     mutationFn: async (blockId: string) => {
       if (!currentPage) throw new Error('No page selected');
 
-      const block = blocks.find((b) => b.id === blockId);
+      const block = blocks.find(b => b.id === blockId);
       if (!block) throw new Error('Block not found');
 
       const supabase = createClient();
       const portfolioService = new PortfolioService(supabase);
 
       // Create duplicate in database
-      const index = blocks.findIndex((b) => b.id === blockId);
+      const index = blocks.findIndex(b => b.id === blockId);
       const newBlock = await portfolioService.createBlock(currentPage.id, {
         block_type: block.block_type,
         content: block.content,
@@ -260,7 +274,7 @@ export function useDuplicateBlock() {
         entity_id: newBlock.id,
         action: 'duplicate',
         previous_state: null,
-        new_state: (newBlock as unknown) as Record<string, unknown>,
+        new_state: newBlock as unknown as Record<string, unknown>,
         description: `Duplicated ${block.block_type} block`,
         changed_by: null,
         session_id: null,
@@ -270,7 +284,101 @@ export function useDuplicateBlock() {
       return newBlock;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPage?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPage?.id],
+      });
+    },
+  });
+}
+
+export function useUpdatePage() {
+  const queryClient = useQueryClient();
+  const { currentPage, setCurrentPage } = useEditorStore();
+  const { addHistoryEntry } = useHistoryStore();
+
+  return useMutation({
+    mutationFn: async ({
+      pageId,
+      updates,
+    }: {
+      pageId: string;
+      updates: Partial<PortfolioPage>;
+    }) => {
+      const supabase = createClient();
+      const portfolioService = new PortfolioService(supabase);
+
+      const { data: prevState } = await supabase
+        .from('portfolio_pages')
+        .select('*')
+        .eq('id', pageId)
+        .single();
+      const updated = await portfolioService.updatePage(pageId, updates as any);
+
+      if (currentPage?.id === pageId) setCurrentPage(updated);
+
+      addHistoryEntry({
+        site_id: updated.site_id,
+        entity_type: 'page',
+        entity_id: pageId,
+        action: 'update',
+        previous_state: prevState || null,
+        new_state: updated as any,
+        description: 'Page updated',
+        changed_by: null,
+        session_id: null,
+        is_undoable: true,
+      });
+
+      return updated;
+    },
+    onSuccess: data => {
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-pages', data.site_id],
+      });
+      queryClient.invalidateQueries({ queryKey: ['portfolio-page', data.id] });
+    },
+  });
+}
+
+export function useUpdateSite() {
+  const queryClient = useQueryClient();
+  const { addHistoryEntry } = useHistoryStore();
+
+  return useMutation({
+    mutationFn: async ({
+      siteId,
+      updates,
+    }: {
+      siteId: string;
+      updates: any;
+    }) => {
+      const supabase = createClient();
+      const portfolioService = new PortfolioService(supabase);
+
+      const { data: prevState } = await supabase
+        .from('portfolio_sites')
+        .select('*')
+        .eq('id', siteId)
+        .single();
+      const updated = await portfolioService.updateSite(siteId, updates);
+
+      addHistoryEntry({
+        site_id: siteId,
+        entity_type: 'site',
+        entity_id: siteId,
+        action: 'update',
+        previous_state: prevState || null,
+        new_state: updated as any,
+        description: 'Site updated',
+        changed_by: null,
+        session_id: null,
+        is_undoable: true,
+      });
+
+      return updated;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['portfolio-site'] });
     },
   });
 }
@@ -318,11 +426,13 @@ export function useReplacePageContent() {
   const { addHistoryEntry } = useHistoryStore();
 
   return useMutation({
-    mutationFn: async (newBlocksData: Array<{
-      block_type: string;
-      content: Record<string, unknown>;
-      settings?: Record<string, unknown>;
-    }>) => {
+    mutationFn: async (
+      newBlocksData: Array<{
+        block_type: string;
+        content: Record<string, unknown>;
+        settings?: Record<string, unknown>;
+      }>
+    ) => {
       if (!currentPage) throw new Error('No page selected');
 
       const supabase = createClient();
@@ -363,7 +473,9 @@ export function useReplacePageContent() {
       return createdBlocks;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['portfolio-blocks', currentPage?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['portfolio-blocks', currentPage?.id],
+      });
     },
   });
 }

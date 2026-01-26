@@ -168,7 +168,7 @@ export function Sidebar({ locale, collapsed = false, onToggle }: SidebarProps) {
               'w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
               'hover:bg-neutral-100 dark:hover:bg-dark-bg-2',
               active &&
-              'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
+                'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
               !active && 'text-neutral-700 dark:text-dark-text-secondary',
               level > 0 && 'pl-8'
             )}
@@ -203,7 +203,7 @@ export function Sidebar({ locale, collapsed = false, onToggle }: SidebarProps) {
           'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
           'hover:bg-neutral-100 dark:hover:bg-dark-bg-2',
           active &&
-          'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
+            'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400',
           !active && 'text-neutral-700 dark:text-dark-text-secondary',
           level > 0 && 'pl-8',
           collapsed && 'justify-center'

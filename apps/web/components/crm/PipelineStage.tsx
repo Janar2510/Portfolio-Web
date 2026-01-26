@@ -13,11 +13,15 @@ import { cn } from '@/lib/utils';
 import type {
   PipelineStage as PipelineStageType,
   Deal,
+  Contact,
+  Company
 } from '@/lib/services/crm';
 
 interface PipelineStageProps {
   stage: PipelineStageType;
   deals: Deal[];
+  contacts: Contact[];
+  companies: Company[];
   onDealClick: (deal: Deal) => void;
   onAddDeal?: (stageId: string) => void;
   onStageSettings?: (stage: PipelineStageType) => void;
@@ -30,6 +34,8 @@ function getDealDragId(dealId: string): string {
 export function PipelineStage({
   stage,
   deals,
+  contacts,
+  companies,
   onDealClick,
   onAddDeal,
   onStageSettings,
@@ -122,6 +128,8 @@ export function PipelineStage({
             <DealCard
               key={deal.id}
               deal={deal}
+              contact={contacts.find(c => c.id === deal.contact_id)}
+              company={companies.find(c => c.id === deal.company_id)}
               onClick={() => onDealClick(deal)}
             />
           ))}

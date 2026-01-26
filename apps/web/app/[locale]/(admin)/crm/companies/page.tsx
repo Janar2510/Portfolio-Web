@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { CompanyList } from '@/components/crm/CompanyList';
 import { ContactList } from '@/components/crm/ContactList';
+import { OrganizationDetailView } from '@/components/crm/OrganizationDetailView';
 import { createClient } from '@/lib/supabase/client';
 import type { Company, Contact } from '@/lib/services/crm';
 
@@ -63,9 +64,13 @@ export default function CompaniesPage() {
   const createCompanyMutation = useMutation({
     mutationFn: async (data: Partial<Company>) => {
       const supabase = createClient();
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const { data: company, error } = await supabase
         .from('companies')
-        .insert(data)
+        .insert({ ...data, user_id: user.id })
         .select()
         .single();
       if (error) throw error;
@@ -107,9 +112,9 @@ export default function CompaniesPage() {
       const { error } = await supabase.from('companies').delete().eq('id', id);
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['crm-companies'] });
-      if (selectedCompanyId === id) {
+      if (selectedCompanyId === variables) {
         setSelectedCompanyId(null);
       }
     },
@@ -119,9 +124,13 @@ export default function CompaniesPage() {
   const createContactMutation = useMutation({
     mutationFn: async (data: Partial<Contact>) => {
       const supabase = createClient();
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const { data: contact, error } = await supabase
         .from('contacts')
-        .insert(data)
+        .insert({ ...data, user_id: user.id })
         .select()
         .single();
       if (error) throw error;
@@ -241,54 +250,39 @@ export default function CompaniesPage() {
       </div>
 
       {/* Company Details */}
-      <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
+      <div className="flex-1 flex flex-col bg-background animate-fade-in border-l border-border">
         {selectedCompanyId ? (
-          <div className="text-center animate-scale-in">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-              <svg
-                className="w-8 h-8 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
-            </div>
-            <p className="text-lg font-semibold text-foreground">
-              Company Details
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Company detail view coming soon
-            </p>
-          </div>
+          (() => {
+            const company = companies.find(c => c.id === selectedCompanyId);
+            return company ? (
+              <OrganizationDetailView company={company} />
+            ) : null;
+          })()
         ) : (
-          <div className="text-center animate-scale-in">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-              <svg
-                className="w-8 h-8 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
+          <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))]">
+            <div className="text-center animate-scale-in">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-foreground">
+                Select a company
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Choose a company from the sidebar to view details
+              </p>
             </div>
-            <p className="text-lg font-semibold text-foreground">
-              Select a company
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Choose a company from the sidebar to view details
-            </p>
           </div>
         )}
       </div>

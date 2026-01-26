@@ -14,6 +14,10 @@ interface EditorStore {
   currentPage: PortfolioPage | null;
   setCurrentPage: (page: PortfolioPage | null) => void;
 
+  // Site ID
+  siteId: string | null;
+  setSiteId: (id: string | null) => void;
+
   // Selected block
   selectedBlockId: string | null;
   setSelectedBlockId: (id: string | null) => void;
@@ -51,44 +55,48 @@ interface EditorStore {
   setLastSavedAt: (timestamp: string | null) => void;
 }
 
-export const useEditorStore = create<EditorStore>((set) => ({
+export const useEditorStore = create<EditorStore>(set => ({
   // Current page
   currentPage: null,
-  setCurrentPage: (page) => set({ currentPage: page }),
+  setCurrentPage: page => set({ currentPage: page }),
+
+  // Site ID
+  siteId: null,
+  setSiteId: id => set({ siteId: id }),
 
   // Selected block
   selectedBlockId: null,
-  setSelectedBlockId: (id) => set({ selectedBlockId: id }),
+  setSelectedBlockId: id => set({ selectedBlockId: id }),
 
   // Preview mode
   previewMode: 'desktop',
-  setPreviewMode: (mode) => set({ previewMode: mode }),
+  setPreviewMode: mode => set({ previewMode: mode }),
 
   // Editor view
   view: 'canvas',
-  setView: (view) => set({ view }),
+  setView: view => set({ view }),
 
   // Sidebar state
   sidebarOpen: true,
-  setSidebarOpen: (open) => set({ sidebarOpen: open }),
+  setSidebarOpen: open => set({ sidebarOpen: open }),
   sidebarTab: 'blocks',
-  setSidebarTab: (tab) => set({ sidebarTab: tab }),
+  setSidebarTab: tab => set({ sidebarTab: tab }),
 
   // Settings panel
   settingsPanelOpen: false,
-  setSettingsPanelOpen: (open) => set({ settingsPanelOpen: open }),
+  setSettingsPanelOpen: open => set({ settingsPanelOpen: open }),
 
   // Loading state
   isLoading: false,
-  setIsLoading: (loading) => set({ isLoading: loading }),
+  setIsLoading: loading => set({ isLoading: loading }),
 
   // Unsaved changes
   hasUnsavedChanges: false,
-  setHasUnsavedChanges: (hasChanges) => set({ hasUnsavedChanges: hasChanges }),
+  setHasUnsavedChanges: hasChanges => set({ hasUnsavedChanges: hasChanges }),
 
   // Auto-save
   autoSaveEnabled: true,
-  setAutoSaveEnabled: (enabled) => set({ autoSaveEnabled: enabled }),
+  setAutoSaveEnabled: enabled => set({ autoSaveEnabled: enabled }),
   lastSavedAt: null,
-  setLastSavedAt: (timestamp) => set({ lastSavedAt: timestamp }),
+  setLastSavedAt: timestamp => set({ lastSavedAt: timestamp }),
 }));

@@ -13,7 +13,9 @@ interface StylesStore {
 
   // Style updates
   updateColors: (colors: Partial<PortfolioSiteStyles['colors']>) => void;
-  updateTypography: (typography: Partial<PortfolioSiteStyles['typography']>) => void;
+  updateTypography: (
+    typography: Partial<PortfolioSiteStyles['typography']>
+  ) => void;
   updateSpacing: (spacing: Partial<PortfolioSiteStyles['spacing']>) => void;
   updateEffects: (effects: Partial<PortfolioSiteStyles['effects']>) => void;
   updateLayout: (layout: Partial<PortfolioSiteStyles['layout']>) => void;
@@ -42,23 +44,29 @@ interface StylesStore {
 export const useStylesStore = create<StylesStore>((set, get) => ({
   // Current styles
   styles: null,
-  setStyles: (styles) => set({ styles }),
+  setStyles: styles => set({ styles }),
 
   // Style updates
-  updateColors: (colors) =>
-    set((state) => {
+  updateColors: colors =>
+    set(state => {
       if (!state.styles) return state;
+      const newColors = { ...state.styles.colors };
+      Object.entries(colors).forEach(([key, value]) => {
+        if (value !== undefined) {
+          newColors[key] = value;
+        }
+      });
       return {
         styles: {
           ...state.styles,
-          colors: { ...state.styles.colors, ...colors },
+          colors: newColors,
         },
         hasUnsavedChanges: true,
       };
     }),
 
-  updateTypography: (typography) =>
-    set((state) => {
+  updateTypography: typography =>
+    set(state => {
       if (!state.styles) return state;
       return {
         styles: {
@@ -69,8 +77,8 @@ export const useStylesStore = create<StylesStore>((set, get) => ({
       };
     }),
 
-  updateSpacing: (spacing) =>
-    set((state) => {
+  updateSpacing: spacing =>
+    set(state => {
       if (!state.styles) return state;
       return {
         styles: {
@@ -81,8 +89,8 @@ export const useStylesStore = create<StylesStore>((set, get) => ({
       };
     }),
 
-  updateEffects: (effects) =>
-    set((state) => {
+  updateEffects: effects =>
+    set(state => {
       if (!state.styles) return state;
       return {
         styles: {
@@ -93,8 +101,8 @@ export const useStylesStore = create<StylesStore>((set, get) => ({
       };
     }),
 
-  updateLayout: (layout) =>
-    set((state) => {
+  updateLayout: layout =>
+    set(state => {
       if (!state.styles) return state;
       return {
         styles: {
@@ -105,8 +113,8 @@ export const useStylesStore = create<StylesStore>((set, get) => ({
       };
     }),
 
-  updateCustomCSS: (css) =>
-    set((state) => {
+  updateCustomCSS: css =>
+    set(state => {
       if (!state.styles) return state;
       return {
         styles: {
@@ -119,9 +127,9 @@ export const useStylesStore = create<StylesStore>((set, get) => ({
 
   // Presets
   presets: [],
-  setPresets: (presets) => set({ presets }),
-  savePreset: (preset) =>
-    set((state) => {
+  setPresets: presets => set({ presets }),
+  savePreset: preset =>
+    set(state => {
       const newPreset: StylePreset = {
         ...preset,
         id: crypto.randomUUID(),
@@ -131,20 +139,29 @@ export const useStylesStore = create<StylesStore>((set, get) => ({
         hasUnsavedChanges: true,
       };
     }),
-  deletePreset: (id) =>
-    set((state) => ({
-      presets: state.presets.filter((p) => p.id !== id),
+  deletePreset: id =>
+    set(state => ({
+      presets: state.presets.filter(p => p.id !== id),
       hasUnsavedChanges: true,
     })),
-  applyPreset: (id) => {
+  applyPreset: id => {
     const { presets, styles } = get();
-    const preset = presets.find((p) => p.id === id);
+    const preset = presets.find(p => p.id === id);
     if (!preset || !styles) return;
+
+    const mergedColors = { ...styles.colors };
+    if (preset.colors) {
+      Object.entries(preset.colors).forEach(([key, value]) => {
+        if (value !== undefined) {
+          mergedColors[key] = value;
+        }
+      });
+    }
 
     set({
       styles: {
         ...styles,
-        colors: preset.colors ? { ...styles.colors, ...preset.colors } : styles.colors,
+        colors: mergedColors,
         typography: preset.typography
           ? { ...styles.typography, ...preset.typography }
           : styles.typography,
@@ -161,13 +178,13 @@ export const useStylesStore = create<StylesStore>((set, get) => ({
 
   // Dark mode
   darkModeEnabled: false,
-  setDarkModeEnabled: (enabled) => set({ darkModeEnabled: enabled }),
+  setDarkModeEnabled: enabled => set({ darkModeEnabled: enabled }),
 
   // Loading state
   isLoading: false,
-  setIsLoading: (loading) => set({ isLoading: loading }),
+  setIsLoading: loading => set({ isLoading: loading }),
 
   // Unsaved changes
   hasUnsavedChanges: false,
-  setHasUnsavedChanges: (hasChanges) => set({ hasUnsavedChanges: hasChanges }),
+  setHasUnsavedChanges: hasChanges => set({ hasUnsavedChanges: hasChanges }),
 }));

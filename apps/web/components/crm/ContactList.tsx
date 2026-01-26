@@ -102,7 +102,8 @@ export function ContactList({
 
   const handleCreateContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const tags =
       formData.get('tags')?.toString().split(',').filter(Boolean) || [];
 
@@ -116,8 +117,10 @@ export function ContactList({
       lead_source: formData.get('lead_source')?.toString() || undefined,
       tags: tags.length > 0 ? tags : undefined,
     });
+
+    // Reset form before closing the dialog to ensure clean state next time
+    form.reset();
     setIsCreateDialogOpen(false);
-    e.currentTarget.reset();
   };
 
   const handleEditContact = async (e: React.FormEvent<HTMLFormElement>) => {

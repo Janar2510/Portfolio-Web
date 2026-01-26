@@ -4,7 +4,10 @@
  */
 
 import { create } from 'zustand';
-import type { PortfolioEditHistory, PortfolioVersion } from '@/lib/portfolio/types';
+import type {
+  PortfolioEditHistory,
+  PortfolioVersion,
+} from '@/lib/portfolio/types';
 
 interface HistoryState {
   // Edit history
@@ -17,7 +20,9 @@ interface HistoryState {
   currentVersionId: string | null;
 
   // Actions
-  addHistoryEntry: (entry: Omit<PortfolioEditHistory, 'id' | 'created_at'>) => void;
+  addHistoryEntry: (
+    entry: Omit<PortfolioEditHistory, 'id' | 'created_at'>
+  ) => void;
   undo: () => PortfolioEditHistory | null;
   redo: () => PortfolioEditHistory | null;
   canUndo: () => boolean;
@@ -45,8 +50,8 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
   currentVersionId: null,
 
   // Actions
-  addHistoryEntry: (entry) =>
-    set((state) => {
+  addHistoryEntry: entry =>
+    set(state => {
       const newEntry: PortfolioEditHistory = {
         ...entry,
         id: crypto.randomUUID(),
@@ -104,8 +109,8 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     }),
 
   // Versions
-  addVersion: (version) =>
-    set((state) => {
+  addVersion: version =>
+    set(state => {
       const newVersion: PortfolioVersion = {
         ...version,
         id: crypto.randomUUID(),
@@ -116,14 +121,14 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
       };
     }),
 
-  setCurrentVersion: (id) => set({ currentVersionId: id }),
+  setCurrentVersion: id => set({ currentVersionId: id }),
 
-  getVersion: (id) => {
+  getVersion: id => {
     const { versions } = get();
-    return versions.find((v) => v.id === id) || null;
+    return versions.find(v => v.id === id) || null;
   },
 
   // Loading state
   isLoading: false,
-  setIsLoading: (loading) => set({ isLoading: loading }),
+  setIsLoading: loading => set({ isLoading: loading }),
 }));

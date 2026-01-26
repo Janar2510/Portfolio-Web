@@ -1,18 +1,9 @@
-/**
- * Send Email via SMTP
- *
- * Server-side route to send emails using SMTP
- */
-
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import nodemailer from 'nodemailer';
 import {
   decryptCredentials,
   type IMAPCredentials,
 } from '@/lib/email/encryption';
-
-// Note: This requires an SMTP library like 'nodemailer'
-// For now, this is a placeholder
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,14 +16,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production, use nodemailer to send emails
-    // Example:
-    /*
-    const nodemailer = require('nodemailer');
+    // credentials should be the decrypted IMAPCredentials (which include SMTP info)
     const transporter = nodemailer.createTransport({
-      host: 'smtp.mail.me.com', // iCloud SMTP
-      port: 587,
-      secure: false,
+      host: credentials.host,
+      port: credentials.port,
+      secure: credentials.use_tls,
       auth: {
         user: credentials.username,
         pass: credentials.password,
@@ -40,7 +28,7 @@ export async function POST(request: NextRequest) {
     });
 
     const info = await transporter.sendMail({
-      from: credentials.username,
+      from: `"${credentials.displayName || credentials.username}" <${credentials.username}>`,
       to: email.to.join(', '),
       cc: email.cc?.join(', '),
       bcc: email.bcc?.join(', '),
@@ -50,14 +38,6 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ messageId: info.messageId });
-    */
-
-    // Placeholder: return success for now
-    // TODO: Implement actual SMTP email sending
-    return NextResponse.json({
-      messageId: 'sent',
-      message: 'SMTP send not yet implemented',
-    });
   } catch (error) {
     console.error('SMTP send error:', error);
     return NextResponse.json(

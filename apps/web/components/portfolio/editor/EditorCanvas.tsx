@@ -46,7 +46,7 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
     duplicateBlock,
   } = useBlocksStore();
   const { selectedBlockId, setSelectedBlockId } = useEditorStore();
-  const { styles } = useStylesStore();
+  const { styles, darkModeEnabled } = useStylesStore();
 
   const cssVariables = styles?.colors
     ? ({
@@ -111,7 +111,8 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
             'min-h-full bg-background transition-all duration-300',
             view === 'preview' && previewStyles[previewMode],
             view === 'split' && 'max-w-6xl mx-auto',
-            isOver && 'ring-2 ring-primary ring-inset'
+            isOver && 'ring-2 ring-primary ring-inset',
+            darkModeEnabled && 'dark'
           )}
           style={{
             ...cssVariables,

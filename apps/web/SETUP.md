@@ -2,23 +2,26 @@
 
 ## Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 9+ (or pnpm/yarn)
 - Supabase account (for database)
 
 ## Installation
 
 1. **Install dependencies:**
+
 ```bash
 npm install
 ```
 
 2. **Set up environment variables:**
+
 ```bash
 cp .env.example .env.local
 ```
 
 Edit `.env.local` with your Supabase credentials:
+
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -26,6 +29,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
 3. **Run database migrations:**
+
 ```bash
 # If using Supabase CLI locally
 supabase start
@@ -36,6 +40,7 @@ supabase db push
 ```
 
 4. **Start development server:**
+
 ```bash
 npm run dev
 ```
@@ -95,6 +100,7 @@ npx shadcn-ui@latest add [component-name]
 ```
 
 Example:
+
 ```bash
 npx shadcn-ui@latest add card
 npx shadcn-ui@latest add dialog
@@ -107,9 +113,10 @@ The project supports English (`en`) and Estonian (`et`) by default.
 
 - Add translations in `messages/[locale].json`
 - Use translations in components:
+
   ```tsx
   import { useTranslations } from 'next-intl';
-  
+
   const t = useTranslations('common');
   return <h1>{t('welcome')}</h1>;
   ```

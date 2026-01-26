@@ -21,20 +21,26 @@ import { SplitHeroBlock } from '../blocks/SplitHeroBlock';
 import { OrganicHeroBlock } from '../blocks/OrganicHeroBlock';
 import dynamic from 'next/dynamic';
 
-const BrandHeroBlock = dynamic(() => import('../blocks/BrandHeroBlock').then(mod => mod.BrandHeroBlock), {
-  ssr: false,
-  loading: () => <div className="h-screen w-full bg-black animate-pulse" />
-});
+const BrandHeroBlock = dynamic(
+  () => import('../blocks/BrandHeroBlock').then(mod => mod.BrandHeroBlock),
+  {
+    ssr: false,
+    loading: () => <div className="h-screen w-full bg-black animate-pulse" />,
+  }
+);
 
 const InfiniteHeroBlock = dynamic(() => import('../blocks/InfiniteHeroBlock'), {
   ssr: false,
-  loading: () => <div className="h-screen w-full bg-black animate-pulse" />
+  loading: () => <div className="h-screen w-full bg-black animate-pulse" />,
 });
 
-const CyberHeroBlock = dynamic(() => import('../blocks/CyberHeroBlock').then(mod => mod.CyberHeroBlock), {
-  ssr: false,
-  loading: () => <div className="h-screen w-full bg-black animate-pulse" />
-});
+const CyberHeroBlock = dynamic(
+  () => import('../blocks/CyberHeroBlock').then(mod => mod.CyberHeroBlock),
+  {
+    ssr: false,
+    loading: () => <div className="h-screen w-full bg-black animate-pulse" />,
+  }
+);
 
 interface BlockRendererProps {
   block: PortfolioBlock;

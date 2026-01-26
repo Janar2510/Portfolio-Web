@@ -72,7 +72,8 @@ blockRegistry.register({
   metadata: {
     type: 'split-hero',
     name: 'Split Hero',
-    description: 'A premium split-screen hero layout with slanted image geometry.',
+    description:
+      'A premium split-screen hero layout with slanted image geometry.',
     icon: LayoutTemplate,
     category: 'layout',
     schema: Schemas.splitHeroBlockContentSchema,

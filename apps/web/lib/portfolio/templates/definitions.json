@@ -8,13 +8,7 @@
       "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=1600"
     ],
     "targetPersona": "Digital Artists, Surrealists, Visual Storytellers",
-    "styleKeywords": [
-      "dark",
-      "glass",
-      "premium",
-      "serif",
-      "immersive"
-    ],
+    "styleKeywords": ["dark", "glass", "premium", "serif", "immersive"],
     "colorPalette": {
       "primary": "#6366f1",
       "secondary": "#a855f7",
@@ -130,11 +124,7 @@
         "title": "Let's Create \n Something Epic",
         "description": "Available for collaborations, commissions, and speaking engagements worldwide. Whether you have a specific project in mind or just want to say hello, my inbox is always open.",
         "ctaText": "Send Message",
-        "formFields": [
-          "name",
-          "email",
-          "message"
-        ],
+        "formFields": ["name", "email", "message"],
         "settings": {
           "layout": "split-with-info"
         },
@@ -159,9 +149,7 @@
     "title": "System Root",
     "description": "A premium, architectural portfolio designed for systems-level thinkers and creative engineers. Features a deep teal and navy palette with holographic interface elements.",
     "thumbnail_url": "/templates/system-root-hero-v2.png",
-    "preview_images": [
-      "/templates/system-root-hero-v2.png"
-    ],
+    "preview_images": ["/templates/system-root-hero-v2.png"],
     "targetPersona": "Systems Architects, Tech Leads, Creative Engineers",
     "styleKeywords": [
       "dark",
@@ -257,10 +245,7 @@
         "title": "Initiate \nProtocol",
         "description": "Ready to discuss secure infrastructure or distributed systems. Secure channel open for collaboration.",
         "ctaText": "Send Signal",
-        "formFields": [
-          "email",
-          "message"
-        ],
+        "formFields": ["email", "message"],
         "settings": {
           "layout": "split-with-info"
         }
@@ -279,17 +264,9 @@
     "title": "Editorial Minimal",
     "description": "A sophisticated, travel-journal inspired portfolio with warm sandstone tones, elegant serif typography, and high-impact ancient architecture visuals.",
     "thumbnail_url": "/templates/editorial-minimal-hero.png",
-    "preview_images": [
-      "/templates/editorial-minimal-hero.png"
-    ],
+    "preview_images": ["/templates/editorial-minimal-hero.png"],
     "targetPersona": "Travel Photographers, Architects, Cultural Historians",
-    "styleKeywords": [
-      "editorial",
-      "minimal",
-      "warm",
-      "travel",
-      "serif"
-    ],
+    "styleKeywords": ["editorial", "minimal", "warm", "travel", "serif"],
     "colorPalette": {
       "primary": "#AB6530",
       "secondary": "#87410F",
@@ -370,11 +347,7 @@
       "contact": {
         "title": "Start Your Journey",
         "ctaText": "Inquire Today",
-        "formFields": [
-          "name",
-          "email",
-          "message"
-        ],
+        "formFields": ["name", "email", "message"],
         "settings": {
           "layout": "split-with-info"
         }
@@ -393,17 +366,9 @@
     "title": "Playful Pop",
     "description": "A vibrant yet sophisticated portfolio featuring bold 3D visuals, organic shapes, and a premium ocean-meets-earth color palette.",
     "thumbnail_url": "/templates/playful-pop-hero.png",
-    "preview_images": [
-      "/templates/playful-pop-hero.png"
-    ],
+    "preview_images": ["/templates/playful-pop-hero.png"],
     "targetPersona": "Digital Artists, Creative Agencies, Product Designers",
-    "styleKeywords": [
-      "playful",
-      "premium",
-      "vibrant",
-      "3d",
-      "oceanic"
-    ],
+    "styleKeywords": ["playful", "premium", "vibrant", "3d", "oceanic"],
     "colorPalette": {
       "primary": "#964734",
       "secondary": "#0FA4AF",
@@ -484,11 +449,7 @@
       "contact": {
         "title": "Let's Collaborate",
         "ctaText": "Start a Project",
-        "formFields": [
-          "name",
-          "email",
-          "message"
-        ],
+        "formFields": ["name", "email", "message"],
         "settings": {
           "layout": "simple-centered"
         }
@@ -511,13 +472,7 @@
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1600"
     ],
     "targetPersona": "Adventure Photographers, Outdoor Enthusiasts, Mountain Guides",
-    "styleKeywords": [
-      "dark",
-      "bold",
-      "premium",
-      "split-layout",
-      "adventure"
-    ],
+    "styleKeywords": ["dark", "bold", "premium", "split-layout", "adventure"],
     "colorPalette": {
       "primary": "#AB6530",
       "secondary": "#87410F",
@@ -574,11 +529,7 @@
       "contact": {
         "title": "Begin Your Ascent",
         "ctaText": "Start Planning",
-        "formFields": [
-          "name",
-          "email",
-          "message"
-        ],
+        "formFields": ["name", "email", "message"],
         "settings": {
           "layout": "simple-centered"
         }
@@ -597,17 +548,9 @@
     "title": "Cyber Dream",
     "description": "An ultra-futuristic, WebGPU-powered portfolio with scanning effects, depth-map distortion, and glitchy animations for creative technologists.",
     "thumbnail_url": "https://i.postimg.cc/XYwvXN8D/img-4.png",
-    "preview_images": [
-      "https://i.postimg.cc/XYwvXN8D/img-4.png"
-    ],
+    "preview_images": ["https://i.postimg.cc/XYwvXN8D/img-4.png"],
     "targetPersona": "Creative Technologists, AI Researchers, Web3 Developers",
-    "styleKeywords": [
-      "futuristic",
-      "tech",
-      "webgpu",
-      "glitch",
-      "immersive"
-    ],
+    "styleKeywords": ["futuristic", "tech", "webgpu", "glitch", "immersive"],
     "colorPalette": {
       "primary": "#3b82f6",
       "secondary": "#ef4444",
@@ -653,10 +596,7 @@
       "contact": {
         "title": "Transmit Message",
         "ctaText": "Sync Connection",
-        "formFields": [
-          "email",
-          "message"
-        ],
+        "formFields": ["email", "message"],
         "settings": {
           "layout": "simple-centered"
         }
@@ -679,13 +619,7 @@
       "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1600"
     ],
     "targetPersona": "Fine Art Photographers, Sustainable Brands, Interior Designers",
-    "styleKeywords": [
-      "organic",
-      "nature",
-      "serene",
-      "warm",
-      "fluid"
-    ],
+    "styleKeywords": ["organic", "nature", "serene", "warm", "fluid"],
     "colorPalette": {
       "primary": "#CC8B65",
       "secondary": "#E3DCD2",
@@ -738,11 +672,7 @@
       "contact": {
         "title": "Grow With Us",
         "ctaText": "Start a Project",
-        "formFields": [
-          "name",
-          "email",
-          "message"
-        ],
+        "formFields": ["name", "email", "message"],
         "settings": {
           "layout": "split"
         }
@@ -765,13 +695,7 @@
       "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?auto=format&fit=crop&q=80&w=1600"
     ],
     "targetPersona": "Product Developers, Brand Designers, Creative Agencies",
-    "styleKeywords": [
-      "dark",
-      "premium",
-      "branded",
-      "blue",
-      "minimal"
-    ],
+    "styleKeywords": ["dark", "premium", "branded", "blue", "minimal"],
     "colorPalette": {
       "primary": "#3C3FA3",
       "secondary": "#4E68F0",
@@ -857,11 +781,7 @@
       "contact": {
         "title": "Initiate Connection",
         "ctaText": "Send Message",
-        "formFields": [
-          "name",
-          "email",
-          "message"
-        ],
+        "formFields": ["name", "email", "message"],
         "settings": {
           "layout": "split-with-info"
         }

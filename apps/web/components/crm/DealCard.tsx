@@ -4,10 +4,12 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Calendar, User, Building2, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Deal } from '@/lib/services/crm';
+import type { Deal, Contact, Company } from '@/lib/services/crm';
 
 interface DealCardProps {
   deal: Deal;
+  contact?: Contact;
+  company?: Company;
   onClick?: () => void;
   isDragging?: boolean;
 }
@@ -16,7 +18,7 @@ function getDealDragId(dealId: string): string {
   return `deal-${dealId}`;
 }
 
-export function DealCard({ deal, onClick, isDragging = false }: DealCardProps) {
+export function DealCard({ deal, contact, company, onClick, isDragging = false }: DealCardProps) {
   const {
     attributes,
     listeners,
@@ -72,7 +74,7 @@ export function DealCard({ deal, onClick, isDragging = false }: DealCardProps) {
           </div>
         )}
 
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+        <div className="flex flex-col gap-1 text-xs text-muted-foreground">
           {deal.expected_close_date && (
             <div
               className={cn(
@@ -92,16 +94,16 @@ export function DealCard({ deal, onClick, isDragging = false }: DealCardProps) {
               </span>
             </div>
           )}
-          {deal.contact_id && (
+          {contact && (
             <div className="flex items-center gap-1">
               <User className="h-3 w-3" />
-              <span>Contact</span>
+              <span>{contact.first_name} {contact.last_name}</span>
             </div>
           )}
-          {deal.company_id && (
+          {company && (
             <div className="flex items-center gap-1">
               <Building2 className="h-3 w-3" />
-              <span>Company</span>
+              <span>{company.name}</span>
             </div>
           )}
         </div>

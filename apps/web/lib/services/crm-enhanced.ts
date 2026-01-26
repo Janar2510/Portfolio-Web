@@ -19,7 +19,7 @@ import type {
 } from '@/lib/crm/types';
 
 export class CRMEnhancedService {
-  constructor(private supabase: SupabaseClient) {}
+  constructor(private supabase: SupabaseClient) { }
 
   // ===========================================
   // ORGANIZATIONS
@@ -724,14 +724,8 @@ export class CRMEnhancedService {
   async getLabels(
     entityType: 'person' | 'organization' | 'deal' | 'lead'
   ): Promise<LabelType[]> {
-    const { data, error } = await this.supabase
-      .from('crm_labels')
-      .select('*')
-      .eq('entity_type', entityType)
-      .order('sort_order', { ascending: true });
-
-    if (error) throw error;
-    return data || [];
+    console.warn('Labels table not implemented yet');
+    return [];
   }
 
   async createLabel(label: {
@@ -769,26 +763,8 @@ export class CRMEnhancedService {
     owner_id?: string;
     label_ids?: string[];
   }): Promise<Lead[]> {
-    let query = this.supabase.from('crm_leads').select('*');
-
-    if (filters?.status) {
-      query = query.eq('status', filters.status);
-    }
-
-    if (filters?.owner_id) {
-      query = query.eq('owner_id', filters.owner_id);
-    }
-
-    if (filters?.label_ids && filters.label_ids.length > 0) {
-      query = query.overlaps('label_ids', filters.label_ids);
-    }
-
-    const { data, error } = await query.order('created_at', {
-      ascending: false,
-    });
-
-    if (error) throw error;
-    return data || [];
+    console.warn('Leads table not implemented yet');
+    return [];
   }
 
   async convertLeadToDeal(

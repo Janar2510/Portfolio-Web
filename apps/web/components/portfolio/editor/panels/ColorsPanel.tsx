@@ -96,8 +96,15 @@ const COLOR_PRESETS = [
 ];
 
 export function ColorsPanel() {
-  const { styles, updateColors, savePreset, presets, applyPreset } =
-    useStylesStore();
+  const {
+    styles,
+    updateColors,
+    savePreset,
+    presets,
+    applyPreset,
+    darkModeEnabled,
+    setDarkModeEnabled,
+  } = useStylesStore();
   const [presetName, setPresetName] = useState('');
 
   if (!styles) {
@@ -442,14 +449,11 @@ export function ColorsPanel() {
             <Label className="text-xs">Dark Mode</Label>
           </div>
           <Button
-            variant="outline"
+            variant={darkModeEnabled ? 'default' : 'outline'}
             size="sm"
-            onClick={() => {
-              // TODO: Toggle dark mode
-              console.log('Toggle dark mode');
-            }}
+            onClick={() => setDarkModeEnabled(!darkModeEnabled)}
           >
-            Configure
+            {darkModeEnabled ? 'Disable' : 'Enable'}
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">

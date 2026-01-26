@@ -3,11 +3,15 @@ import { createClient } from '@/lib/supabase/server';
 export type CompanySize = 'small' | 'medium' | 'large' | 'enterprise';
 export type ActivityType = 'email' | 'call' | 'meeting' | 'note' | 'task';
 
+export type Visibility = 'owner' | 'team' | 'company';
+
 export interface Company {
   id: string;
   user_id: string;
+  owner_user_id: string;
   name: string;
   website: string | null;
+  domain: string | null;
   industry: string | null;
   size: CompanySize | null;
   address: {
@@ -18,6 +22,10 @@ export interface Company {
   } | null;
   notes: string | null;
   custom_fields: Record<string, unknown>;
+  visibility: Visibility;
+  last_activity_at: string | null;
+  next_activity_at: string | null;
+  deleted_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -25,11 +33,16 @@ export interface Company {
 export interface Contact {
   id: string;
   user_id: string;
+  owner_user_id: string;
   company_id: string | null;
   first_name: string;
   last_name: string | null;
   email: string | null;
+  primary_email: string | null;
+  additional_emails: string[];
   phone: string | null;
+  primary_phone: string | null;
+  additional_phones: string[];
   job_title: string | null;
   avatar_url: string | null;
   social_links: {
@@ -46,7 +59,11 @@ export interface Contact {
   lead_source: string | null;
   tags: string[];
   custom_fields: Record<string, unknown>;
+  visibility: Visibility;
   last_contacted_at: string | null;
+  last_activity_at: string | null;
+  next_activity_at: string | null;
+  deleted_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -66,6 +83,7 @@ export interface PipelineStage {
 export interface Deal {
   id: string;
   user_id: string;
+  owner_user_id: string;
   contact_id: string | null;
   company_id: string | null;
   stage_id: string;
@@ -78,6 +96,11 @@ export interface Deal {
   notes: string | null;
   lost_reason: string | null;
   sort_order: number;
+  visibility: Visibility;
+  stage_entered_at: string | null;
+  last_stage_id: string | null;
+  is_locked: boolean;
+  deleted_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -86,14 +109,19 @@ export interface CRMActivity {
   id: string;
   user_id: string;
   contact_id: string | null;
+  company_id: string | null;
   deal_id: string | null;
   activity_type: ActivityType;
   title: string | null;
   description: string | null;
+  location: string | null;
+  participants: Array<{ id: string; name: string }>;
+  calendar_event_id: string | null;
   metadata: Record<string, unknown>;
   is_completed: boolean;
   due_date: string | null;
   completed_at: string | null;
+  deleted_at: string | null;
   created_at: string;
 }
 
@@ -108,6 +136,27 @@ export interface FollowUp {
   completed_at: string | null;
   created_at: string;
 }
+
+export interface EmailLink {
+  id: string;
+  user_id: string;
+  email_id: string;
+  contact_id: string | null;
+  company_id: string | null;
+  deal_id: string | null;
+  created_at: string;
+}
+
+export interface AuditLog {
+  id: string;
+  user_id: string;
+  entity_type: 'contact' | 'company' | 'deal' | 'activity' | 'email_link';
+  entity_id: string;
+  action: 'created' | 'updated' | 'deleted' | 'restored' | 'linked' | 'unlinked' | 'merged';
+  changes: Record<string, any>;
+  created_at: string;
+}
+
 
 export class CRMService {
   private async getSupabase() {

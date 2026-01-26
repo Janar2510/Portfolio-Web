@@ -574,9 +574,9 @@ export class PortfolioService {
     // Filter static templates if category provided
     const filteredStatic = category
       ? staticTemplates.filter(t =>
-        // Simple category matching
-        category === 'portfolio' ? true : t.category === category
-      )
+          // Simple category matching
+          category === 'portfolio' ? true : t.category === category
+        )
       : staticTemplates;
 
     // FORCED OVERRIDE: Return ONLY static templates to ensure users see the updated designs
@@ -604,12 +604,34 @@ export class PortfolioService {
   }
 
   // Project methods
-  async getProjects(siteId: string): Promise<any[]> {
-    const { data, error } = await this.supabase
+  async getProjects(
+    siteId: string,
+    filters?: {
+      category?: string;
+      tags?: string[];
+      limit?: number;
+    }
+  ): Promise<any[]> {
+    let query = this.supabase
       .from('portfolio_projects')
       .select('*')
-      .eq('site_id', siteId)
-      .order('created_at', { ascending: false });
+      .eq('site_id', siteId);
+
+    if (filters?.category) {
+      query = query.eq('category', filters.category);
+    }
+
+    if (filters?.tags && filters.tags.length > 0) {
+      query = query.contains('tags', filters.tags);
+    }
+
+    if (filters?.limit) {
+      query = query.limit(filters.limit);
+    }
+
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     return data || [];
@@ -730,6 +752,7 @@ export class PortfolioService {
 
         // Create blocks for the page
         if (pageData.blocks) {
+          let blockIndex = 0;
           for (const blockData of pageData.blocks) {
             // Apply logo override if Header
             let content = blockData.content;
@@ -741,6 +764,7 @@ export class PortfolioService {
               block_type: blockData.block_type,
               content: content,
               settings: blockData.settings,
+              sort_order: blockIndex++,
             });
           }
         }
@@ -903,5 +927,32 @@ export class PortfolioService {
       .eq('id', mediaId);
 
     if (error) throw error;
+  }
+
+  // Form Submission methods
+  async getFormSubmissions(siteId: string): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('portfolio_form_submissions')
+      .select('*')
+      .eq('site_id', siteId)
+      .order('submitted_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  async updateFormSubmission(
+    id: string,
+    updates: { is_read?: boolean; status?: string }
+  ): Promise<any> {
+    const { data, error } = await this.supabase
+      .from('portfolio_form_submissions')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
   }
 }

@@ -15,6 +15,26 @@
       "toggle": "Vaheta teemat"
     }
   },
+  "brand": {
+    "name": "Supale",
+    "slogan": "Sinu professionaalne pale internetis.",
+    "tagline": "Supakiiret portfooliot.",
+    "description": "Lihtsaim viis luua veebis oma professionaalne pale."
+  },
+  "seo": {
+    "home": {
+      "title": "Supale | Loo professionaalne portfoolio minutitega",
+      "description": "Supale on lihtsaim viis luua veebis oma professionaalne pale. Ideaalne copywriteritele ja disaineritele, kes soovivad silma paista."
+    },
+    "signIn": {
+      "title": "Logi sisse | Supale",
+      "description": "Logi sisse oma Supale kontosse ja halda oma portfooliot."
+    },
+    "signUp": {
+      "title": "Registreeru | Supale",
+      "description": "Loo tasuta Supale konto ja alusta oma professionaalse portfoolio loomisega juba täna."
+    }
+  },
   "auth": {
     "login": "Logi sisse",
     "logout": "Logi välja",
@@ -46,6 +66,10 @@
     "locale": "Keel",
     "continue": "Jätka",
     "skip": "Jäta praegu vahele",
+    "orContinueWith": "Või jätka",
+    "agreeToTerms": "Registreerudes nõustud meie kasutustingimuste ja privaatsuspoliitikaga.",
+    "heroTitle": "Alusta oma loomingulist teekonda täna.",
+    "heroSubtitle": "Loo professionaalne portfoolio, mis paistab silma. Koodi pole vaja, ainult sinu visioon ja meie tööriistad.",
     "errors": {
       "invalidEmail": "Palun sisesta kehtiv e-posti aadress",
       "passwordTooWeak": "Parool on liiga nõrk",
@@ -65,11 +89,219 @@
       "emailVerified": "E-post kinnitatud edukalt!"
     }
   },
+  "landing": {
+    "nav": {
+      "features": "Funktsioonid",
+      "pricing": "Hinnad",
+      "examples": "Näited",
+      "faq": "KKK",
+      "logIn": "Logi sisse",
+      "startFreeTrial": "Alusta tasuta"
+    },
+    "hero": {
+      "badge": "Uus: Tehisintellektil põhinev portfoolio koostaja",
+      "title": "Ehita oma portfoolio.",
+      "titleHighlight": "Kasvata oma äri.",
+      "subtitle": "Kõik-ühes platvorm vabakutselistele, et esitleda töid, hallata kliente ja arendada oma loomingulist äri professionaalsete tööriistadega.",
+      "cta": "Alusta tasuta",
+      "ctaSecondary": "Vaata näiteid",
+      "stats": {
+        "freelancers": "Aktiivset vabakutselist",
+        "revenue": "Teenitud tulu",
+        "satisfaction": "Klientide rahulolu"
+      }
+    },
+    "features": {
+      "title": "Kõik vajalik",
+      "titleHighlight": "edu jaoks",
+      "subtitle": "Tõsta oma professionaalset esindatust tippklassi loojatele loodud tööriistade komplektiga.",
+      "portfolioBuilder": {
+        "title": "Portfoolio koostaja",
+        "description": "Loo silmapaistvaid portfooliosid meie intuitiivse pukseerimisredaktoriga. Vali 20+ professionaalse malli seast, mis on disainitud tippkunstnike poolt."
+      },
+      "clientCRM": {
+        "title": "Kliendihaldus",
+        "description": "Jälgi müügivihjeid, halda kontakte ja organiseeri kliendisuhteid ühes lihtsas töölaudas."
+      },
+      "smartAnalytics": {
+        "title": "Nutikas analüütika",
+        "description": "Sügavad ülevaated portfoolio jõudlusest ja klientide kaasatuse mõõdikutest."
+      },
+      "emailMarketing": {
+        "title": "E-posti turundus",
+        "description": "Integreeritud pakkumiste süsteem ja automaatsed meeldetuletused, et hoida kliente kaasatud ja projekte liikumas."
+      },
+      "customDomain": {
+        "title": "Oma domeen",
+        "description": "Ühenda oma identiteet kohandatud domeeni ja professionaalsete SSL-sertifikaatidega."
+      }
+    },
+    "howItWorks": {
+      "title": "Kuidas see",
+      "titleHighlight": "töötab",
+      "subtitle": "Maailmatasemel portfoolio loomine pole kunagi olnud lihtsam. Järgi meie lihtsat protsessi ja ole minutitega live.",
+      "cta": "Alusta oma loo loomist",
+      "getStarted": "Alusta kohe",
+      "steps": {
+        "step1": {
+          "number": "01",
+          "title": "Ühenda oma portfoolio",
+          "description": "Impordi olemasolevad projektid või alusta nullist meie intuitiivse koostajaga. Toetame kõiki peamisi meediaformaate."
+        },
+        "step2": {
+          "number": "02",
+          "title": "Võimas kohandamine",
+          "description": "Saavuta täielik kontroll oma esteetika üle täiustatud värvipalettide ja tippkreatiivsete disainitud kujundusplokkidega."
+        },
+        "step3": {
+          "number": "03",
+          "title": "Halda oma äri",
+          "description": "Kasuta meie integreeritud CRM-i müügivihjete jälgimiseks, projektide haldamiseks ja klientidega suhtlemiseks otse oma töölaualt."
+        },
+        "step4": {
+          "number": "04",
+          "title": "Skaleerumine ja automatiseerimine",
+          "description": "Automatiseeri igavad ülesanded ja skaleeri oma tegevust. Keskendu sellele, mida teed kõige paremini, samal ajal kui meie tegeleme tehnilise raskustööga."
+        }
+      }
+    },
+    "pricing": {
+      "title": "Lihtne, läbipaistev",
+      "titleHighlight": "hinnakujundus",
+      "subtitle": "Vali oma loomingulise äri jaoks ideaalne pakett. Varjatud tasusid pole, tühista igal ajal.",
+      "monthly": "Kuumakse",
+      "yearly": "Aastamakse",
+      "savePercent": "Säästa 20%",
+      "year": "aasta",
+      "month": "kuu",
+      "mostPopular": "Populaarseim",
+      "whatsIncluded": "Mis sisaldub",
+      "plans": {
+        "free": {
+          "name": "Tasuta",
+          "description": "Ideaalne platvormi testimiseks",
+          "cta": "Alusta tasuta"
+        },
+        "starter": {
+          "name": "Alustaja",
+          "description": "Alustavatele vabakutselistele",
+          "cta": "Alusta prooviperioodiga"
+        },
+        "professional": {
+          "name": "Professionaalne",
+          "description": "Aktiivsetele vabakutselistele ja loojatele",
+          "cta": "Alusta prooviperioodiga"
+        },
+        "business": {
+          "name": "Äriklient",
+          "description": "Agentuuridele ja kasvavatele ettevõtetele",
+          "cta": "Võta ühendust"
+        }
+      },
+      "features": {
+        "portfolioSites": "{count} portfoolio sait | {count} portfoolio saiti",
+        "pages": "{count} lehte",
+        "unlimitedPages": "Piiramatu arv lehti",
+        "projects": "{count} projekti",
+        "unlimitedProjects": "Piiramatu arv projekte",
+        "crmContacts": "{count} CRM kontakti",
+        "unlimitedContacts": "Piiramatu arv CRM kontakte",
+        "brandingIncluded": "Supale bränding",
+        "customDomain": "Kohandatud domeen",
+        "customDomains": "Kohandatud domeenid",
+        "basicAnalytics": "Põhianalüütika",
+        "advancedAnalytics": "Täiustatud analüütika",
+        "prioritySupport": "Prioriteetne tugi",
+        "teamMembers": "Meeskonnaliikmed ({count})",
+        "apiAccess": "API ligipääs"
+      }
+    },
+    "faq": {
+      "title": "Korduma kippuvad küsimused",
+      "subtitle": "Kõik, mida pead teadma Supale arvete, funktsioonide ja toe kohta.",
+      "stillHaveQuestions": "Kas sul on veel küsimusi?",
+      "helpText": "Oleme siin, et aidata. Vestle meie tugimeeskonnaga.",
+      "contactSupport": "Võta ühendust toega →",
+      "items": {
+        "q1": {
+          "question": "Kas ma saan enne ostmist proovida?",
+          "answer": "Jah! Kõik tasulised paketid sisaldavad 14-päevast tasuta prooviperioodi. Tasu võetakse alles pärast prooviperioodi lõppu ja saad igal ajal tühistada."
+        },
+        "q2": {
+          "question": "Kas ma saan hiljem paketti muuta?",
+          "answer": "Kindlasti. Saad oma paketti igal ajal arveldusseadetest uuendada või alandada. Muudatused jõustuvad koheselt."
+        },
+        "q3": {
+          "question": "Kas ma vajan programmeerimisoskusi?",
+          "answer": "Absoluutselt mitte. Meie pukseerimisredaktor võimaldab luua silmapaistvaid portfooliosid ilma ühtegi koodirida kirjutamata. Siiski on kohandatud CSS saadaval kõrgematel tasemetel edasijõudnud kasutajatele."
+        },
+        "q4": {
+          "question": "Kas ma saan kasutada oma domeeni?",
+          "answer": "Jah, saad ühendada oma kohandatud domeeni (nt sinunimi.ee) Alustaja paketist alates. Tegeleme SSL-sertifikaatidega automaatselt."
+        },
+        "q5": {
+          "question": "Mis juhtub, kui tühistan?",
+          "answer": "Kui tühistad, jääb sinu portfoolio aktiivseks kuni arveldusperioodi lõpuni. Pärast seda naaseb see Tasuta paketi piirangutele."
+        },
+        "q6": {
+          "question": "Kas pakute allahindlusi?",
+          "answer": "Jah, pakume ~17% allahindlust, kui valid mis tahes tasulisel paketil aastaarvelduse."
+        }
+      }
+    },
+    "cta": {
+      "title": "Kas oled valmis looma oma professionaalset portfooliot?",
+      "subtitle": "Liitu tuhandete vabakutselistega, kes kasutavad Supale't oma töö esitlemiseks ja äri kasvatamiseks. Alusta oma tasuta 14-päevast prooviperioodi täna.",
+      "button": "Alusta tasuta",
+      "note": "Krediitkaarti pole vaja. Tühista igal ajal."
+    },
+    "footer": {
+      "description": "Kõik-ühes platvorm vabakutselistele, et esitleda töid, hallata kliente ja kasvatada oma tulu professionaalsete tööriistadega.",
+      "product": "Toode",
+      "resources": "Ressursid",
+      "company": "Ettevõte",
+      "legal": "Juriidiline",
+      "links": {
+        "features": "Funktsioonid",
+        "pricing": "Hinnad",
+        "templates": "Mallid",
+        "showcase": "Näited",
+        "blog": "Blogi",
+        "helpCenter": "Abikeskus",
+        "apiDocs": "API dokumentatsioon",
+        "status": "Staatus",
+        "about": "Meist",
+        "careers": "Karjäär",
+        "contact": "Kontakt",
+        "press": "Press",
+        "privacy": "Privaatsus",
+        "terms": "Tingimused",
+        "cookies": "Küpsised",
+        "gdpr": "GDPR"
+      },
+      "copyright": "© {year} Supale. Tehtud armastusega Eestis.",
+      "systemsOperational": "Kõik süsteemid toimivad"
+    }
+  },
   "portfolio": {
     "title": "Portfoolio",
     "sites": "Saidid",
     "createSite": "Loo sait",
-    "templates": "Mallid"
+    "templates": "Mallid",
+    "noSite": "Sul pole veel portfoolio saiti. Loo üks, et alustada!",
+    "manageSite": "Halda oma saiti",
+    "siteName": "Saidi nimi",
+    "subdomain": "Alamdomeen",
+    "selectTemplate": "Vali mall",
+    "templateOptional": "Vali mall, et kiiresti alustada, või alusta nullist.",
+    "subdomainPlaceholder": "minuportfoolio",
+    "subdomainHint": "Lubatud on ainult väikesed tähed, numbrid ja sidekriipsud. Peab olema vähemalt 3 tähemärki.",
+    "subdomainTaken": "See alamdomeen on juba võetud",
+    "subdomainRequired": "Alamdomeen on kohustuslik",
+    "subdomainMinLength": "Alamdomeen peab olema vähemalt 3 tähemärki",
+    "subdomainInvalid": "Alamdomeen võib sisaldada ainult väikeseid tähti, numbreid ja sidekriipsusid",
+    "siteNameRequired": "Saidi nimi on kohustuslik",
+    "alreadyHasSite": "Sul on juba portfoolio sait"
   },
   "projects": {
     "title": "Projektid",
@@ -103,26 +335,6 @@
     "newProject": "Uus projekt",
     "status": "Seisund",
     "tasksToday": "ülesannet täna"
-  },
-  "portfolio": {
-    "title": "Portfoolio",
-    "sites": "Saidid",
-    "createSite": "Loo sait",
-    "templates": "Mallid",
-    "noSite": "Sul pole veel portfoolio saiti. Loo üks, et alustada!",
-    "manageSite": "Halda oma saiti",
-    "siteName": "Saidi nimi",
-    "subdomain": "Alamdomeen",
-    "selectTemplate": "Vali mall",
-    "templateOptional": "Vali mall, et kiiresti alustada, või alusta nullist.",
-    "subdomainPlaceholder": "minuportfoolio",
-    "subdomainHint": "Lubatud on ainult väikesed tähed, numbrid ja sidekriipsud. Peab olema vähemalt 3 tähemärki.",
-    "subdomainTaken": "See alamdomeen on juba võetud",
-    "subdomainRequired": "Alamdomeen on kohustuslik",
-    "subdomainMinLength": "Alamdomeen peab olema vähemalt 3 tähemärki",
-    "subdomainInvalid": "Alamdomeen võib sisaldada ainult väikeseid tähti, numbreid ja sidekriipsusid",
-    "siteNameRequired": "Saidi nimi on kohustuslik",
-    "alreadyHasSite": "Sul on juba portfoolio sait"
   },
   "onboarding": {
     "welcome": {
@@ -179,7 +391,7 @@
       "siteName": "Saidi nimi",
       "siteNamePlaceholder": "Minu Portfoolio",
       "subdomain": "Alamdomeen",
-      "subdomainSuffix": ".meieplatvorm.ee",
+      "subdomainSuffix": ".supale.ee",
       "subdomainAvailable": "Saadaval!",
       "subdomainTaken": "Kahjuks on see juba võetud",
       "colorPalette": "Värvipalett",

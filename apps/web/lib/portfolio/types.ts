@@ -1,6 +1,6 @@
 /**
  * Portfolio TypeScript Types
- * Comprehensive type definitions for the Copyfolio-style portfolio system
+ * Comprehensive type definitions for the Supale portfolio system
  */
 
 // ===========================================
@@ -403,7 +403,8 @@ export type HistoryAction =
   | 'update'
   | 'delete'
   | 'reorder'
-  | 'duplicate';
+  | 'duplicate'
+  | 'replace_content';
 
 // ===========================================
 // VERSION TYPES

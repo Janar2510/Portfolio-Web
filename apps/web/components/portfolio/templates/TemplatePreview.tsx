@@ -99,6 +99,7 @@ export function TemplatePreview({
           {/* Centered Action Button */}
           <div className="hidden md:flex justify-center">
             <Button
+              type="button"
               onClick={onSelect}
               size="sm"
               className="gap-2 px-6 h-9 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs shadow-lg transition-all hover:scale-105 active:scale-95"
@@ -116,6 +117,7 @@ export function TemplatePreview({
                 return (
                   <Button
                     key={device}
+                    type="button"
                     variant={deviceType === device ? 'secondary' : 'ghost'}
                     size="sm"
                     className="h-7 w-9 p-0 rounded-full"
@@ -127,7 +129,13 @@ export function TemplatePreview({
               })}
             </div>
 
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors" onClick={onClose}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors"
+              onClick={onClose}
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -136,6 +144,7 @@ export function TemplatePreview({
         {/* Action Button for mobile (since header middle is hidden on small screens) */}
         <div className="md:hidden flex-shrink-0 p-3 border-b bg-background flex justify-center">
           <Button
+            type="button"
             onClick={onSelect}
             size="sm"
             className="w-full gap-2 h-10 rounded-lg bg-primary font-bold text-sm"
@@ -186,21 +195,30 @@ export function TemplatePreview({
                 {/* Inject Styles */}
                 <style jsx global>{`
                   #preview-scroll-container {
-                    --background: ${styles?.color_palette?.background || '#ffffff'};
+                    --background: ${styles?.color_palette?.background ||
+                    '#ffffff'};
                     --foreground: ${styles?.color_palette?.text || '#000000'};
                     --primary: ${styles?.color_palette?.primary || '#000000'};
                     --primary-foreground: #ffffff;
-                    --secondary: ${styles?.color_palette?.secondary || '#666666'};
+                    --secondary: ${styles?.color_palette?.secondary ||
+                    '#666666'};
                     --secondary-foreground: #ffffff;
                     --muted: ${styles?.color_palette?.surface || '#f1f5f9'};
-                    --muted-foreground: ${styles?.color_palette?.textSecondary || '#64748b'};
-                    --border: ${styles?.color_palette?.border || 'rgba(0,0,0,0.1)'};
-                    
-                    --portfolio-primary: ${styles?.color_palette?.primary || '#000000'};
-                    --portfolio-secondary: ${styles?.color_palette?.secondary || '#666666'};
-                    --portfolio-background: ${styles?.color_palette?.background || '#ffffff'};
-                    --portfolio-heading-font: ${styles?.typography?.headingFont || 'inherit'};
-                    --portfolio-body-font: ${styles?.typography?.bodyFont || 'inherit'};
+                    --muted-foreground: ${styles?.color_palette
+                      ?.textSecondary || '#64748b'};
+                    --border: ${styles?.color_palette?.border ||
+                    'rgba(0,0,0,0.1)'};
+
+                    --portfolio-primary: ${styles?.color_palette?.primary ||
+                    '#000000'};
+                    --portfolio-secondary: ${styles?.color_palette?.secondary ||
+                    '#666666'};
+                    --portfolio-background: ${styles?.color_palette
+                      ?.background || '#ffffff'};
+                    --portfolio-heading-font: ${styles?.typography
+                      ?.headingFont || 'inherit'};
+                    --portfolio-body-font: ${styles?.typography?.bodyFont ||
+                    'inherit'};
                   }
                   #preview-scroll-container h1,
                   #preview-scroll-container h2,
@@ -219,8 +237,8 @@ export function TemplatePreview({
                         key={block.id}
                         block={block}
                         isEditing={false}
-                        onUpdate={() => { }}
-                        onDelete={() => { }}
+                        onUpdate={() => {}}
+                        onDelete={() => {}}
                         siteId="preview"
                       />
                     ))}
@@ -235,7 +253,6 @@ export function TemplatePreview({
               </div>
             </div>
           </div>
-
         </div>
       </DialogContent>
     </Dialog>

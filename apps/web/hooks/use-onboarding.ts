@@ -9,7 +9,11 @@ import type { OnboardingStepId } from '@/lib/onboarding/steps';
 export function useOnboarding() {
   const queryClient = useQueryClient();
   const supabase = createClient();
-  const { setProgress, progress, isLoading: storeLoading } = useOnboardingStore();
+  const {
+    setProgress,
+    progress,
+    isLoading: storeLoading,
+  } = useOnboardingStore();
 
   // Fetch onboarding progress
   const { data, isLoading, error } = useQuery({
@@ -53,10 +57,17 @@ export function useOnboarding() {
   useEffect(() => {
     if (data) {
       setProgress({
-        status: data.status as 'not_started' | 'in_progress' | 'completed' | 'skipped',
+        status: data.status as
+          | 'not_started'
+          | 'in_progress'
+          | 'completed'
+          | 'skipped',
         current_step: data.current_step,
         current_substep: data.current_substep,
-        steps_completed: data.steps_completed as Record<OnboardingStepId, boolean>,
+        steps_completed: data.steps_completed as Record<
+          OnboardingStepId,
+          boolean
+        >,
         user_type: data.user_type as any,
         primary_goal: data.primary_goal as any,
         selected_template_id: data.selected_template_id,
@@ -79,13 +90,20 @@ export function useOnboarding() {
       };
 
       if (updates.status) dbUpdates.status = updates.status;
-      if (updates.current_step !== undefined) dbUpdates.current_step = updates.current_step;
-      if (updates.current_substep !== undefined) dbUpdates.current_substep = updates.current_substep;
-      if (updates.steps_completed) dbUpdates.steps_completed = updates.steps_completed;
-      if (updates.user_type !== undefined) dbUpdates.user_type = updates.user_type;
-      if (updates.primary_goal !== undefined) dbUpdates.primary_goal = updates.primary_goal;
-      if (updates.selected_template_id !== undefined) dbUpdates.selected_template_id = updates.selected_template_id;
-      if (updates.steps_skipped) dbUpdates.steps_skipped = updates.steps_skipped;
+      if (updates.current_step !== undefined)
+        dbUpdates.current_step = updates.current_step;
+      if (updates.current_substep !== undefined)
+        dbUpdates.current_substep = updates.current_substep;
+      if (updates.steps_completed)
+        dbUpdates.steps_completed = updates.steps_completed;
+      if (updates.user_type !== undefined)
+        dbUpdates.user_type = updates.user_type;
+      if (updates.primary_goal !== undefined)
+        dbUpdates.primary_goal = updates.primary_goal;
+      if (updates.selected_template_id !== undefined)
+        dbUpdates.selected_template_id = updates.selected_template_id;
+      if (updates.steps_skipped)
+        dbUpdates.steps_skipped = updates.steps_skipped;
       if (updates.completed_at) dbUpdates.completed_at = updates.completed_at;
 
       const { data: updated, error } = await supabase
@@ -98,14 +116,17 @@ export function useOnboarding() {
       if (error) throw error;
       return updated;
     },
-    onSuccess: (updated) => {
+    onSuccess: updated => {
       queryClient.invalidateQueries({ queryKey: ['onboarding-progress'] });
       if (updated) {
         setProgress({
           status: updated.status as any,
           current_step: updated.current_step,
           current_substep: updated.current_substep,
-          steps_completed: updated.steps_completed as Record<OnboardingStepId, boolean>,
+          steps_completed: updated.steps_completed as Record<
+            OnboardingStepId,
+            boolean
+          >,
           user_type: updated.user_type as any,
           primary_goal: updated.primary_goal as any,
           selected_template_id: updated.selected_template_id,

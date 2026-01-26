@@ -15,6 +15,26 @@
       "toggle": "Toggle theme"
     }
   },
+  "brand": {
+    "name": "Supale",
+    "slogan": "Show your true face.",
+    "tagline": "Supa-fast portfolios.",
+    "description": "The easiest way to create your professional face online."
+  },
+  "seo": {
+    "home": {
+      "title": "Supale | Create a Professional Portfolio in Minutes",
+      "description": "Supale is the easiest way to create your professional face online. Ideal for copywriters, designers, and creatives who want to stand out."
+    },
+    "signIn": {
+      "title": "Sign In | Supale",
+      "description": "Sign in to your Supale account and manage your portfolio."
+    },
+    "signUp": {
+      "title": "Sign Up | Supale",
+      "description": "Create your free Supale account and start building your professional portfolio today."
+    }
+  },
   "auth": {
     "login": "Login",
     "logout": "Logout",
@@ -46,6 +66,10 @@
     "locale": "Language",
     "continue": "Continue",
     "skip": "Skip for now",
+    "orContinueWith": "Or continue with",
+    "agreeToTerms": "By signing up, you agree to our Terms of Service and Privacy Policy.",
+    "heroTitle": "Start your creative journey today.",
+    "heroSubtitle": "Create a professional portfolio that stands out. No coding required, just your vision and our tools.",
     "errors": {
       "invalidEmail": "Please enter a valid email address",
       "passwordTooWeak": "Password is too weak",
@@ -65,13 +89,219 @@
       "emailVerified": "Email verified successfully!"
     }
   },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "examples": "Examples",
+      "faq": "FAQ",
+      "logIn": "Log in",
+      "startFreeTrial": "Start Free Trial"
+    },
+    "hero": {
+      "badge": "New: AI-Powered Portfolio Builder",
+      "title": "Build Your Portfolio.",
+      "titleHighlight": "Grow Your Business.",
+      "subtitle": "The all-in-one platform for freelancers to showcase work, manage clients, and scale their creative business with professional tools.",
+      "cta": "Start Free Trial",
+      "ctaSecondary": "View Examples",
+      "stats": {
+        "freelancers": "Active Freelancers",
+        "revenue": "Revenue Generated",
+        "satisfaction": "Client Satisfaction"
+      }
+    },
+    "features": {
+      "title": "Everything You Need to",
+      "titleHighlight": "Succeed",
+      "subtitle": "Elevate your professional presence with a suite of tools built for high-performance creatives.",
+      "portfolioBuilder": {
+        "title": "Portfolio Builder",
+        "description": "Create stunning portfolios with our intuitive drag-and-drop editor. Choose from 20+ professional templates designed by top industrial artists."
+      },
+      "clientCRM": {
+        "title": "Client CRM",
+        "description": "Track leads, manage contacts, and organize client relationships in one simple dashboard."
+      },
+      "smartAnalytics": {
+        "title": "Smart Analytics",
+        "description": "Deep insights into portfolio performance and client engagement metrics."
+      },
+      "emailMarketing": {
+        "title": "Email Marketing",
+        "description": "Integrated proposal system and automated follow-ups to keep your clients engaged and projects moving."
+      },
+      "customDomain": {
+        "title": "Custom Domain",
+        "description": "Connect your identity with a custom domain and professional SSL certificates."
+      }
+    },
+    "howItWorks": {
+      "title": "How It",
+      "titleHighlight": "Works",
+      "subtitle": "Building a world-class portfolio has never been easier. Follow our simple process to go live in minutes.",
+      "cta": "Start Building Your Story",
+      "getStarted": "Get started now",
+      "steps": {
+        "step1": {
+          "number": "01",
+          "title": "Connect Your Portfolio",
+          "description": "Import your existing projects or start from scratch with our intuitive builder. We support all major media formats."
+        },
+        "step2": {
+          "number": "02",
+          "title": "Powerful Customization",
+          "description": "Gain full control over your aesthetic with advanced color palettes and layout blocks designed by top creatives."
+        },
+        "step3": {
+          "number": "03",
+          "title": "Manage Your Business",
+          "description": "Use our integrated CRM to track leads, manage projects, and communicate with clients directly through your dashboard."
+        },
+        "step4": {
+          "number": "04",
+          "title": "Scale and Automate",
+          "description": "Automate boring tasks and scale your outreach. Focus on what you do best while we handle the technical heavy lifting."
+        }
+      }
+    },
+    "pricing": {
+      "title": "Simple, Transparent",
+      "titleHighlight": "Pricing",
+      "subtitle": "Choose the perfect plan for your creative business. No hidden fees, cancel anytime.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "savePercent": "Save 20%",
+      "year": "year",
+      "month": "month",
+      "mostPopular": "Most Popular",
+      "whatsIncluded": "What's included",
+      "plans": {
+        "free": {
+          "name": "Free",
+          "description": "Perfect for trying out the platform",
+          "cta": "Start Free"
+        },
+        "starter": {
+          "name": "Starter",
+          "description": "For freelancers getting started",
+          "cta": "Start Trial"
+        },
+        "professional": {
+          "name": "Professional",
+          "description": "For active freelancers and creatives",
+          "cta": "Start Trial"
+        },
+        "business": {
+          "name": "Business",
+          "description": "For agencies and growing businesses",
+          "cta": "Contact Us"
+        }
+      },
+      "features": {
+        "portfolioSites": "{count} Portfolio site | {count} Portfolio sites",
+        "pages": "{count} pages",
+        "unlimitedPages": "Unlimited pages",
+        "projects": "{count} projects",
+        "unlimitedProjects": "Unlimited projects",
+        "crmContacts": "{count} CRM contacts",
+        "unlimitedContacts": "Unlimited CRM contacts",
+        "brandingIncluded": "Supale branding",
+        "customDomain": "Custom domain",
+        "customDomains": "Custom domains",
+        "basicAnalytics": "Basic analytics",
+        "advancedAnalytics": "Advanced analytics",
+        "prioritySupport": "Priority support",
+        "teamMembers": "Team members ({count})",
+        "apiAccess": "API Access"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about Supale billing, features, and support.",
+      "stillHaveQuestions": "Still have questions?",
+      "helpText": "We're here to help. Chat with our support team.",
+      "contactSupport": "Contact Support →",
+      "items": {
+        "q1": {
+          "question": "Can I try before I buy?",
+          "answer": "Yes! All paid plans come with a 14-day free trial. No charge until the trial ends, and you can cancel anytime."
+        },
+        "q2": {
+          "question": "Can I change plans later?",
+          "answer": "Absolutely. You can upgrade or downgrade your plan at any time from your billing settings. Changes take effect immediately."
+        },
+        "q3": {
+          "question": "Do I need coding skills?",
+          "answer": "Not at all. Our drag-and-drop editor allows you to build stunning portfolios without writing a single line of code. However, custom CSS is available on higher tiers for advanced users."
+        },
+        "q4": {
+          "question": "Can I use my own domain?",
+          "answer": "Yes, you can connect your own custom domain (e.g., yourname.com) on the Starter plan and above. We handle the SSL certificates automatically."
+        },
+        "q5": {
+          "question": "What happens if I cancel?",
+          "answer": "If you cancel, your portfolio will remain active until the end of your billing period. After that, it will revert to the Free plan limits."
+        },
+        "q6": {
+          "question": "Do you offer discounts?",
+          "answer": "Yes, we offer a ~17% discount when you choose annual billing on any paid plan."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Build Your Professional Portfolio?",
+      "subtitle": "Join thousands of freelancers who use Supale to showcase their work and grow their business. Start your free 14-day trial today.",
+      "button": "Get Started for Free",
+      "note": "No credit card required. Cancel anytime."
+    },
+    "footer": {
+      "description": "The all-in-one platform for freelancers to showcase work, manage clients, and grow their revenue with professional tools.",
+      "product": "Product",
+      "resources": "Resources",
+      "company": "Company",
+      "legal": "Legal",
+      "links": {
+        "features": "Features",
+        "pricing": "Pricing",
+        "templates": "Templates",
+        "showcase": "Showcase",
+        "blog": "Blog",
+        "helpCenter": "Help Center",
+        "apiDocs": "API Docs",
+        "status": "Status",
+        "about": "About",
+        "careers": "Careers",
+        "contact": "Contact",
+        "press": "Press",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "cookies": "Cookies",
+        "gdpr": "GDPR"
+      },
+      "copyright": "© {year} Supale. Made with ♥ in Estonia.",
+      "systemsOperational": "All systems operational"
+    }
+  },
   "portfolio": {
     "title": "Portfolio",
     "sites": "Sites",
     "createSite": "Create Site",
     "templates": "Templates",
     "noSite": "You don't have a portfolio site yet. Create one to get started!",
-    "manageSite": "Manage Site"
+    "manageSite": "Manage your site",
+    "siteName": "Site Name",
+    "subdomain": "Subdomain",
+    "selectTemplate": "Select Template",
+    "templateOptional": "Choose a template to get started quickly, or start from scratch.",
+    "subdomainPlaceholder": "myportfolio",
+    "subdomainHint": "Only lowercase letters, numbers, and hyphens are allowed. Must be at least 3 characters.",
+    "subdomainTaken": "This subdomain is already taken",
+    "subdomainRequired": "Subdomain is required",
+    "subdomainMinLength": "Subdomain must be at least 3 characters",
+    "subdomainInvalid": "Subdomain can only contain lowercase letters, numbers, and hyphens",
+    "siteNameRequired": "Site name is required",
+    "alreadyHasSite": "You already have a portfolio site"
   },
   "projects": {
     "title": "Projects",
@@ -105,26 +335,6 @@
     "newProject": "New Project",
     "status": "Status",
     "tasksToday": "tasks today"
-  },
-  "portfolio": {
-    "title": "Portfolio",
-    "sites": "Sites",
-    "createSite": "Create Site",
-    "templates": "Templates",
-    "noSite": "You don't have a portfolio site yet. Create one to get started!",
-    "manageSite": "Manage your site",
-    "siteName": "Site Name",
-    "subdomain": "Subdomain",
-    "selectTemplate": "Select Template",
-    "templateOptional": "Choose a template to get started quickly, or start from scratch.",
-    "subdomainPlaceholder": "myportfolio",
-    "subdomainHint": "Only lowercase letters, numbers, and hyphens are allowed. Must be at least 3 characters.",
-    "subdomainTaken": "This subdomain is already taken",
-    "subdomainRequired": "Subdomain is required",
-    "subdomainMinLength": "Subdomain must be at least 3 characters",
-    "subdomainInvalid": "Subdomain can only contain lowercase letters, numbers, and hyphens",
-    "siteNameRequired": "Site name is required",
-    "alreadyHasSite": "You already have a portfolio site"
   },
   "onboarding": {
     "welcome": {
@@ -181,7 +391,7 @@
       "siteName": "Site name",
       "siteNamePlaceholder": "My Portfolio",
       "subdomain": "Subdomain",
-      "subdomainSuffix": ".ourplatform.com",
+      "subdomainSuffix": ".supale.com",
       "subdomainAvailable": "Available!",
       "subdomainTaken": "Sorry, that's taken",
       "colorPalette": "Color palette",

@@ -1,11 +1,10 @@
-
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI } from '@google/genai';
 
 // Fixed to initialize GoogleGenAI with process.env.API_KEY directly as required
 export const getGeminiResponse = async (userMessage: string) => {
   // Creating a new instance right before the call to ensure correct API key usage
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
@@ -24,9 +23,12 @@ export const getGeminiResponse = async (userMessage: string) => {
     });
 
     // Accessing .text as a property, not a function call
-    return response.text || "I'm sorry, I couldn't process that. My creative circuits are a bit hazy.";
+    return (
+      response.text ||
+      "I'm sorry, I couldn't process that. My creative circuits are a bit hazy."
+    );
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "I am currently taking a moment to reflect. Please try again in a few moments.";
+    console.error('Gemini API Error:', error);
+    return 'I am currently taking a moment to reflect. Please try again in a few moments.';
   }
 };

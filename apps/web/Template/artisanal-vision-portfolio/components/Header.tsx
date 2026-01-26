@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Menu, X, Instagram, Twitter, Linkedin } from 'lucide-react';
 
@@ -17,21 +16,24 @@ const Header: React.FC<HeaderProps> = ({ isScrolled }) => {
   ];
 
   return (
-    <header 
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-black/80 backdrop-blur-md py-4 border-b border-white/10' 
+        isScrolled
+          ? 'bg-black/80 backdrop-blur-md py-4 border-b border-white/10'
           : 'bg-transparent py-6'
       }`}
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
-        <a href="#home" className="text-2xl font-serif font-bold tracking-tighter text-white">
+        <a
+          href="#home"
+          className="text-2xl font-serif font-bold tracking-tighter text-white"
+        >
           ELENA<span className="text-indigo-500">.</span>VANCE
         </a>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
+          {navLinks.map(link => (
             <a
               key={link.name}
               href={link.href}
@@ -44,13 +46,19 @@ const Header: React.FC<HeaderProps> = ({ isScrolled }) => {
 
         {/* Socials Desktop */}
         <div className="hidden md:flex items-center space-x-4">
-          <a href="#" className="hover:text-indigo-400 transition-colors"><Instagram size={20} /></a>
-          <a href="#" className="hover:text-indigo-400 transition-colors"><Twitter size={20} /></a>
-          <a href="#" className="hover:text-indigo-400 transition-colors"><Linkedin size={20} /></a>
+          <a href="#" className="hover:text-indigo-400 transition-colors">
+            <Instagram size={20} />
+          </a>
+          <a href="#" className="hover:text-indigo-400 transition-colors">
+            <Twitter size={20} />
+          </a>
+          <a href="#" className="hover:text-indigo-400 transition-colors">
+            <Linkedin size={20} />
+          </a>
         </div>
 
         {/* Mobile Toggle */}
-        <button 
+        <button
           className="md:hidden text-white"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
@@ -59,11 +67,13 @@ const Header: React.FC<HeaderProps> = ({ isScrolled }) => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden absolute top-full left-0 right-0 bg-black border-b border-white/10 transition-all duration-300 overflow-hidden ${
-        isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-      }`}>
+      <div
+        className={`md:hidden absolute top-full left-0 right-0 bg-black border-b border-white/10 transition-all duration-300 overflow-hidden ${
+          isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
         <nav className="flex flex-col p-6 space-y-4">
-          {navLinks.map((link) => (
+          {navLinks.map(link => (
             <a
               key={link.name}
               href={link.href}

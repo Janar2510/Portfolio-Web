@@ -41,18 +41,18 @@ interface BlocksStore {
 export const useBlocksStore = create<BlocksStore>((set, get) => ({
   // Blocks array
   blocks: [],
-  setBlocks: (blocks) => set({ blocks }),
+  setBlocks: blocks => set({ blocks }),
 
   // Block operations
-  addBlock: (block) =>
-    set((state) => ({
+  addBlock: block =>
+    set(state => ({
       blocks: [...state.blocks, block],
       hasUnsavedChanges: true,
     })),
 
   updateBlock: (id, updates) =>
-    set((state) => ({
-      blocks: state.blocks.map((block) =>
+    set(state => ({
+      blocks: state.blocks.map(block =>
         block.id === id ? { ...block, ...updates } : block
       ),
       selectedBlock:
@@ -62,17 +62,17 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
       hasUnsavedChanges: true,
     })),
 
-  deleteBlock: (id) =>
-    set((state) => ({
-      blocks: state.blocks.filter((block) => block.id !== id),
+  deleteBlock: id =>
+    set(state => ({
+      blocks: state.blocks.filter(block => block.id !== id),
       selectedBlock:
         state.selectedBlock?.id === id ? null : state.selectedBlock,
       hasUnsavedChanges: true,
     })),
 
-  duplicateBlock: (id) =>
-    set((state) => {
-      const block = state.blocks.find((b) => b.id === id);
+  duplicateBlock: id =>
+    set(state => {
+      const block = state.blocks.find(b => b.id === id);
       if (!block) return state;
 
       const duplicated: PortfolioBlock = {
@@ -83,7 +83,7 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
         updated_at: new Date().toISOString(),
       };
 
-      const index = state.blocks.findIndex((b) => b.id === id);
+      const index = state.blocks.findIndex(b => b.id === id);
       const newBlocks = [...state.blocks];
       newBlocks.splice(index + 1, 0, duplicated);
 
@@ -100,9 +100,9 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
     }),
 
   moveBlock: (id, newIndex) =>
-    set((state) => {
+    set(state => {
       const blocks = [...state.blocks];
-      const currentIndex = blocks.findIndex((b) => b.id === id);
+      const currentIndex = blocks.findIndex(b => b.id === id);
       if (currentIndex === -1) return state;
 
       const [block] = blocks.splice(currentIndex, 1);
@@ -120,11 +120,11 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
       };
     }),
 
-  reorderBlocks: (blockIds) =>
-    set((state) => {
-      const blockMap = new Map(state.blocks.map((b) => [b.id, b]));
+  reorderBlocks: blockIds =>
+    set(state => {
+      const blockMap = new Map(state.blocks.map(b => [b.id, b]));
       const reorderedBlocks = blockIds
-        .map((id) => blockMap.get(id))
+        .map(id => blockMap.get(id))
         .filter((b): b is PortfolioBlock => b !== undefined)
         .map((b, i) => ({ ...b, sort_order: i }));
 
@@ -136,16 +136,16 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
 
   // Block selection
   selectedBlock: null,
-  setSelectedBlock: (block) => set({ selectedBlock: block }),
+  setSelectedBlock: block => set({ selectedBlock: block }),
 
   // Hovered block
   hoveredBlockId: null,
-  setHoveredBlockId: (id) => set({ hoveredBlockId: id }),
+  setHoveredBlockId: id => set({ hoveredBlockId: id }),
 
   // Clipboard
   clipboard: null,
-  copyBlock: (block) => set({ clipboard: block }),
-  pasteBlock: (afterBlockId) => {
+  copyBlock: block => set({ clipboard: block }),
+  pasteBlock: afterBlockId => {
     const { clipboard, blocks } = get();
     if (!clipboard) return null;
 
@@ -157,10 +157,10 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
     };
 
     if (afterBlockId) {
-      const index = blocks.findIndex((b) => b.id === afterBlockId);
+      const index = blocks.findIndex(b => b.id === afterBlockId);
       if (index !== -1) {
         duplicated.sort_order = blocks[index].sort_order + 1;
-        set((state) => {
+        set(state => {
           const newBlocks = [...state.blocks];
           newBlocks.splice(index + 1, 0, duplicated);
           const reordered = newBlocks.map((b, i) => ({
@@ -175,7 +175,7 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
       }
     } else {
       duplicated.sort_order = blocks.length;
-      set((state) => ({
+      set(state => ({
         blocks: [...state.blocks, duplicated],
         hasUnsavedChanges: true,
       }));
@@ -187,5 +187,5 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
 
   // Loading state
   isLoading: false,
-  setIsLoading: (loading) => set({ isLoading: loading }),
+  setIsLoading: loading => set({ isLoading: loading }),
 }));

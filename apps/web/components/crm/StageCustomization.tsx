@@ -48,7 +48,8 @@ export function StageCustomization({
 
   const handleCreateStage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const sortOrder = stages.length;
 
     await onStageCreate({
@@ -61,8 +62,10 @@ export function StageCustomization({
       is_lost: formData.get('is_lost') === 'true',
       sort_order: sortOrder,
     });
+
+    // Reset form before closing dialog
+    form.reset();
     setIsCreateDialogOpen(false);
-    e.currentTarget.reset();
   };
 
   const handleEditStage = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -122,11 +125,11 @@ export function StageCustomization({
               Add Stage
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent aria-describedby="create-stage-description">
             <form onSubmit={handleCreateStage}>
               <DialogHeader>
                 <DialogTitle>Create New Stage</DialogTitle>
-                <DialogDescription>
+                <DialogDescription id="create-stage-description">
                   Add a new stage to your sales pipeline.
                 </DialogDescription>
               </DialogHeader>
@@ -276,12 +279,12 @@ export function StageCustomization({
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
+        <DialogContent aria-describedby="edit-stage-description">
           {editingStage && (
             <form onSubmit={handleEditStage}>
               <DialogHeader>
                 <DialogTitle>Edit Stage</DialogTitle>
-                <DialogDescription>Update stage information.</DialogDescription>
+                <DialogDescription id="edit-stage-description">Update stage information.</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">

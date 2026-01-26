@@ -97,11 +97,11 @@ export function LeadsList({
               Add Lead
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl" aria-describedby="create-lead-description">
             <form onSubmit={handleCreate}>
               <DialogHeader>
                 <DialogTitle>Create Lead</DialogTitle>
-                <DialogDescription>
+                <DialogDescription id="create-lead-description">
                   Add a new lead to your pipeline
                 </DialogDescription>
               </DialogHeader>

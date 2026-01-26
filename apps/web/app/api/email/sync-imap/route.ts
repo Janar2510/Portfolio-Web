@@ -5,14 +5,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 import {
   decryptCredentials,
   type IMAPCredentials,
 } from '@/lib/email/encryption';
-
-// Note: This requires an IMAP library like 'imap' or 'node-imap'
-// For now, this is a placeholder
+import imaps from 'imap-simple';
+import { simpleParser } from 'mailparser';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,26 +23,55 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production, use an IMAP library to fetch emails
-    // Example with 'imap' package:
-    /*
-    const Imap = require('imap');
-    const imap = new Imap({
-      user: credentials.username,
-      password: credentials.password,
-      host: credentials.host,
-      port: credentials.port,
-      tls: credentials.use_tls,
-    });
+    // Connect to IMAP
+    const config = {
+      imap: {
+        user: credentials.username,
+        password: credentials.password,
+        host: credentials.host,
+        port: credentials.port,
+        tls: credentials.use_tls,
+        authTimeout: 10000,
+        tlsOptions: { rejectUnauthorized: false }, // Use with caution
+      },
+    };
 
-    // Connect and fetch emails
-    // Map IMAP messages to Email format
-    // Return array of Email objects
-    */
+    const connection = await imaps.connect(config);
+    await connection.openBox('INBOX');
 
-    // Placeholder: return empty array for now
-    // TODO: Implement actual IMAP email sync
-    return NextResponse.json([]);
+    const searchCriteria = ['UNSEEN'];
+    const fetchOptions = {
+      bodies: ['HEADER', 'TEXT', ''],
+      markSeen: false,
+    };
+
+    const messages = await connection.search(searchCriteria, fetchOptions);
+    const emails = [];
+
+    for (const message of messages) {
+      const all = message.parts.find(part => part.which === '');
+      const id = message.attributes.uid;
+      const idHeader = 'Imap-Id: ' + id + '\r\n';
+
+      if (all && all.body) {
+        const parsed = await simpleParser(idHeader + all.body);
+        emails.push({
+          id: parsed.messageId,
+          subject: parsed.subject,
+          from: parsed.from?.text,
+          to: Array.isArray(parsed.to)
+            ? parsed.to.map(addr => addr.text)
+            : [parsed.to?.text],
+          date: parsed.date,
+          text: parsed.text,
+          html: parsed.html,
+        });
+      }
+    }
+
+    connection.end();
+
+    return NextResponse.json(emails);
   } catch (error) {
     console.error('IMAP sync error:', error);
     return NextResponse.json(

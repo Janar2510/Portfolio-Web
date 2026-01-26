@@ -61,7 +61,10 @@ export function TemplateChooser({
   }
 
   // Categories
-  const categories = ['all', ...Array.from(new Set(templates.map(t => t.category || 'other')))];
+  const categories = [
+    'all',
+    ...Array.from(new Set(templates.map(t => t.category || 'other'))),
+  ];
 
   return (
     <div className="space-y-6">
@@ -95,10 +98,11 @@ export function TemplateChooser({
                 {filteredTemplates.map(template => (
                   <Card
                     key={template.id}
-                    className={`group relative overflow-hidden transition-all duration-300 border-2 hover:shadow-xl hover:translate-y-[-4px] ${selectedTemplateId === template.id
+                    className={`group relative overflow-hidden transition-all duration-300 border-2 hover:shadow-xl hover:translate-y-[-4px] ${
+                      selectedTemplateId === template.id
                         ? 'border-primary ring-2 ring-primary ring-offset-2'
                         : 'border-transparent hover:border-primary/20'
-                      }`}
+                    }`}
                     onClick={() => onTemplateSelect(template.id)}
                   >
                     {/* Image Container */}
@@ -121,9 +125,10 @@ export function TemplateChooser({
                       {/* Overlay */}
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
                         <Button
+                          type="button"
                           variant="secondary"
                           className="gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
-                          onClick={(e) => {
+                          onClick={e => {
                             e.stopPropagation();
                             setPreviewTemplate(template);
                           }}
@@ -143,7 +148,9 @@ export function TemplateChooser({
 
                     <CardContent className="p-4 bg-card/50 backdrop-blur-sm">
                       <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-base font-bold">{template.name}</CardTitle>
+                        <CardTitle className="text-base font-bold">
+                          {template.name}
+                        </CardTitle>
                         {template.is_premium && (
                           <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                             Pro
