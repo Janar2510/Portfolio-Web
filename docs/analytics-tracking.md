@@ -336,7 +336,7 @@ Consider implementing rate limiting on the tracking endpoint:
 ## File Structure
 
 ```
-apps/web/
+src/
 ├── lib/analytics/
 │   └── tracker.ts                    # Client-side tracker
 ├── components/portfolio/public/

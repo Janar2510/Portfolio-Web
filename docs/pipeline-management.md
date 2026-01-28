@@ -254,7 +254,7 @@ The pipeline uses database triggers for automatic updates:
 ## File Structure
 
 ```
-apps/web/
+src/
 ├── components/crm/
 │   ├── PipelineBoard.tsx          # Main board component
 │   ├── PipelineStage.tsx         # Stage column component

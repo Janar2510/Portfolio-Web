@@ -49,7 +49,7 @@ Comprehensive SEO support:
 ### File Structure
 
 ```
-apps/web/
+src/
 ├── app/
 │   └── sites/
 │       └── [subdomain]/

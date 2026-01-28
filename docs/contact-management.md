@@ -246,7 +246,7 @@ On a contact detail page, click "Add Activity" to record an interaction.
 ## File Structure
 
 ```
-apps/web/
+src/
 ├── components/crm/
 │   ├── ContactList.tsx          # Contact list with filtering
 │   ├── CompanyList.tsx          # Company list

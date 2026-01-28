@@ -16,35 +16,85 @@ See [docs/architecture.md](./docs/architecture.md) for detailed architecture doc
 
 ### Installation
 
-1. Clone the repository
-2. Install dependencies:
-```bash
-npm install
-```
+### Installation & Setup
 
-3. Set up environment variables:
-```bash
-cp apps/web/.env.example apps/web/.env.local
-# Edit apps/web/.env.local with your Supabase credentials
-```
+1. **Clone & Setup**:
+   ```bash
+   git clone <repo-url>
+   cd portfolio-web
+   npm run setup
+   ```
 
-4. Run the development server:
+2. **Configure Environment**:
+   - Open `.env.local`
+   - Add your Supabase credentials (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
+
+3. **Run**:
+   ```bash
+   npm run dev
+   ```
+
+## Development Runbook
+
+### 1. Setup & Run
 ```bash
+# First time setup
+npm run setup
+
+# Run development server
 npm run dev
+
+# Run type checking
+npm run type-check
 ```
+
+### 2. Database (Supabase)
+Helper scripts are located in `scripts/`:
+
+```bash
+# Setup local Supabase (requires Docker)
+./scripts/setup-supabase.sh
+
+# Apply all migrations to current env
+./scripts/apply-all-migrations.sh
+
+# Verify connection
+./scripts/verify-supabase.sh
+```
+
+### 3. Environment
+- Copy `.env.example` to `.env.local`
+- Populate `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Restart dev server after changes
+
+### Deployment
+
+This project is optimized for deployment on Vercel.
+
+1. **Connect to Vercel**: Connect your repository to Vercel.
+2. **Environment Variables**: Configure the following in Vercel:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_PORTFOLIO_BASE_URL`: Set this to your production URL (e.g., `https://your-app.vercel.app`)
+3. **Build Settings**: Vercel should automatically detect Next.js. If not, use:
+   - Framework: `Next.js`
+   - Build Command: `npm run build`
+   - Install Command: `npm install`
 
 ## Project Structure
 
 ```
 /
-├── apps/
-│   └── web/              # Next.js application
-├── packages/
-│   ├── database/         # Database types and migrations
-│   ├── email-templates/  # React Email templates
-│   └── shared/           # Shared utilities and types
-├── supabase/            # Supabase configuration and functions
-└── docs/                # Documentation
+├── app/                  # Next.js App Router (Admin & Public)
+├── src/
+│   ├── components/       # UI Components
+│   ├── domain/           # Business Logic (CRM, Builder, Renderer)
+│   ├── hooks/            # Custom Hooks
+│   ├── lib/              # Shared Utilities (Supabase, Email, SEO)
+│   └── stores/           # State Management
+├── packages/             # External packages
+├── infra/                # Infrastructure (Database migrations)
+└── docs/                 # Documentation
 ```
 
 ## Development

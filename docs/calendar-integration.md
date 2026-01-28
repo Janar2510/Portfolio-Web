@@ -219,7 +219,7 @@ SELECT cron.schedule(
 ## File Structure
 
 ```
-apps/web/
+src/
 ├── components/projects/
 │   └── CalendarView.tsx              # Calendar component
 ├── app/

@@ -1,0 +1,575 @@
+{
+  "sites": {
+    "title": "Sites",
+    "subtitle": "Manage your portfolio sites.",
+    "createCta": "Create site",
+    "empty": {
+      "title": "No sites yet",
+      "description": "Create your first site from a template.",
+      "cta": "Create your first site"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived"
+    },
+    "new": {
+      "title": "Choose a template",
+      "subtitle": "Pick a starting point and name your site.",
+      "nameLabel": "Site name",
+      "namePlaceholder": "e.g. Janar Portfolio",
+      "submit": "Create"
+    },
+    "actions": {
+      "edit": "Edit",
+      "viewPublic": "View"
+    },
+    "errors": {
+      "alreadyHasSite": "You already have a site.",
+      "invalidName": "Please enter a valid site name.",
+      "notAuthenticated": "Please sign in.",
+      "unknown": "Something went wrong."
+    },
+    "edit": {
+      "title": "Edit site",
+      "back": "Back to sites",
+      "actions": {
+        "preview": "Preview",
+        "publish": "Publish",
+        "unpublish": "Unpublish",
+        "viewPublic": "View public"
+      },
+      "meta": {
+        "slug": "Slug",
+        "status": "Status"
+      },
+      "sections": {
+        "title": "Sections"
+      },
+      "editor": {
+        "title": "Content"
+      },
+      "hero": {
+        "title": "Hero",
+        "headline": {
+          "et": "Headline (ET)",
+          "en": "Headline (EN)"
+        },
+        "subheadline": {
+          "et": "Subheadline (ET)",
+          "en": "Subheadline (EN)"
+        }
+      },
+      "about": {
+        "title": "About",
+        "body": {
+          "et": "About text (ET)",
+          "en": "About text (EN)"
+        }
+      },
+      "save": "Save changes",
+      "saved": "Saved",
+      "errors": {
+        "invalid": "Please check required fields.",
+        "unknown": "Something went wrong."
+      },
+      "preview": {
+        "title": "Preview",
+        "backToEdit": "Back to editor",
+        "publish": "Publish",
+        "unpublish": "Unpublish",
+        "publicUrl": "Public URL",
+        "openPublic": "Open",
+        "errors": {
+          "notAuthenticated": "Please sign in.",
+          "invalid": "Please check required fields.",
+          "unknown": "Something went wrong."
+        }
+      }
+    }
+  },
+  "common": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "toggle": "Toggle theme"
+    }
+  },
+  "brand": {
+    "name": "Supale",
+    "slogan": "Show your true face.",
+    "tagline": "Supa-fast portfolios.",
+    "description": "The easiest way to create your professional face online."
+  },
+  "seo": {
+    "home": {
+      "title": "Supale | Create a Professional Portfolio in Minutes",
+      "description": "Supale is the easiest way to create your professional face online. Ideal for copywriters, designers, and creatives who want to stand out."
+    },
+    "signIn": {
+      "title": "Sign In | Supale",
+      "description": "Sign in to your Supale account and manage your portfolio."
+    },
+    "signUp": {
+      "title": "Sign Up | Supale",
+      "description": "Create your free Supale account and start building your professional portfolio today."
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "sendResetLink": "Send Reset Link",
+    "backToSignIn": "Back to Sign In",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "emailVerification": "Email Verification",
+    "verifyEmail": "Verify Email",
+    "resendVerification": "Resend Verification Email",
+    "verificationSent": "Verification email sent! Please check your inbox.",
+    "checkEmail": "Check your email",
+    "passwordResetSent": "Password reset link sent! Please check your email.",
+    "createAccount": "Create Account",
+    "signInToAccount": "Sign in to your account",
+    "createNewAccount": "Create a new account",
+    "onboarding": "Welcome! Let's set up your profile",
+    "completeProfile": "Complete Profile",
+    "displayName": "Display Name",
+    "timezone": "Timezone",
+    "locale": "Language",
+    "continue": "Continue",
+    "skip": "Skip for now",
+    "orContinueWith": "Or continue with",
+    "agreeToTerms": "By signing up, you agree to our Terms of Service and Privacy Policy.",
+    "heroTitle": "Start your creative journey today.",
+    "heroSubtitle": "Create a professional portfolio that stands out. No coding required, just your vision and our tools.",
+    "errors": {
+      "invalidEmail": "Please enter a valid email address",
+      "passwordTooWeak": "Password is too weak",
+      "passwordsDontMatch": "Passwords don't match",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required",
+      "displayNameRequired": "Display name is required",
+      "emailAlreadyRegistered": "This email is already registered",
+      "invalidCredentials": "Invalid email or password",
+      "emailNotVerified": "Please verify your email address",
+      "linkExpired": "This link has expired",
+      "unknownError": "An error occurred. Please try again."
+    },
+    "success": {
+      "accountCreated": "Account created successfully!",
+      "passwordReset": "Password reset successfully!",
+      "emailVerified": "Email verified successfully!"
+    }
+  },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "examples": "Examples",
+      "faq": "FAQ",
+      "logIn": "Log in",
+      "startFreeTrial": "Start Free Trial"
+    },
+    "hero": {
+      "badge": "New: Professional Templates",
+      "title": "Build Your Portfolio.",
+      "titleHighlight": "Grow Your Business.",
+      "subtitle": "The all-in-one platform for freelancers to showcase work, manage clients, and scale their creative business with professional tools.",
+      "cta": "Start Free Trial",
+      "ctaSecondary": "View Examples",
+      "stats": {
+        "freelancers": "Active Freelancers",
+        "revenue": "Revenue Generated",
+        "satisfaction": "Client Satisfaction"
+      }
+    },
+    "features": {
+      "title": "Everything You Need to",
+      "titleHighlight": "Succeed",
+      "subtitle": "Elevate your professional presence with a suite of tools built for high-performance creatives.",
+      "portfolioBuilder": {
+        "title": "Portfolio Builder",
+        "description": "Create stunning portfolios with our intuitive drag-and-drop editor. Choose from 20+ professional templates designed by top industrial artists."
+      },
+      "customDomain": {
+        "title": "Custom Domain",
+        "description": "Connect your identity with a custom domain and professional SSL certificates."
+      }
+    },
+    "howItWorks": {
+      "title": "How It",
+      "titleHighlight": "Works",
+      "subtitle": "Building a world-class portfolio has never been easier. Follow our simple process to go live in minutes.",
+      "cta": "Start Building Your Story",
+      "getStarted": "Get started now",
+      "steps": {
+        "step1": {
+          "number": "01",
+          "title": "Connect Your Content",
+          "description": "Import your existing projects or start from scratch with our intuitive builder. We support all major media formats."
+        },
+        "step2": {
+          "number": "02",
+          "title": "Powerful Customization",
+          "description": "Gain full control over your aesthetic with advanced color palettes and layout blocks designed by top creatives."
+        }
+      }
+    },
+    "pricing": {
+      "title": "Simple, Transparent",
+      "titleHighlight": "Pricing",
+      "subtitle": "Choose the perfect plan for your creative business. No hidden fees, cancel anytime.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "savePercent": "Save 20%",
+      "year": "year",
+      "month": "month",
+      "mostPopular": "Most Popular",
+      "whatsIncluded": "What's included",
+      "plans": {
+        "free": {
+          "name": "Free",
+          "description": "Perfect for trying out the platform",
+          "cta": "Start Free"
+        },
+        "starter": {
+          "name": "Starter",
+          "description": "For freelancers getting started",
+          "cta": "Start Trial"
+        },
+        "professional": {
+          "name": "Professional",
+          "description": "For active freelancers and creatives",
+          "cta": "Start Trial"
+        },
+        "business": {
+          "name": "Business",
+          "description": "For agencies and growing businesses",
+          "cta": "Contact Us"
+        }
+      },
+      "features": {
+        "portfolioSites": "{count, plural, one {{count} Portfolio site} other {{count} Portfolio sites}}",
+        "pages": "{count, plural, one {{count} page} other {{count} pages}}",
+        "unlimitedPages": "Unlimited pages",
+        "projects": "{count, plural, one {{count} project} other {{count} projects}}",
+        "unlimitedProjects": "Unlimited projects",
+        "crmContacts": "{count, plural, one {{count} CRM contact} other {{count} CRM contacts}}",
+        "unlimitedContacts": "Unlimited CRM contacts",
+        "brandingIncluded": "Supale branding",
+        "customDomain": "Custom domain",
+        "customDomains": "Custom domains",
+        "basicAnalytics": "Basic analytics",
+        "advancedAnalytics": "Advanced analytics",
+        "prioritySupport": "Priority support",
+        "teamMembers": "{count, plural, one {Team member ({count})} other {Team members ({count})}}",
+        "apiAccess": "API Access"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about Supale billing, features, and support.",
+      "stillHaveQuestions": "Still have questions?",
+      "helpText": "We're here to help. Chat with our support team.",
+      "contactSupport": "Contact Support →",
+      "items": {
+        "q1": {
+          "question": "Can I try before I buy?",
+          "answer": "Yes! All paid plans come with a 14-day free trial. No charge until the trial ends, and you can cancel anytime."
+        },
+        "q2": {
+          "question": "Can I change plans later?",
+          "answer": "Absolutely. You can upgrade or downgrade your plan at any time from your billing settings. Changes take effect immediately."
+        },
+        "q3": {
+          "question": "Do I need coding skills?",
+          "answer": "Not at all. Our drag-and-drop editor allows you to build stunning portfolios without writing a single line of code. However, custom CSS is available on higher tiers for advanced users."
+        },
+        "q4": {
+          "question": "Can I use my own domain?",
+          "answer": "Yes, you can connect your own custom domain (e.g., yourname.com) on the Starter plan and above. We handle the SSL certificates automatically."
+        },
+        "q5": {
+          "question": "What happens if I cancel?",
+          "answer": "If you cancel, your portfolio will remain active until the end of your billing period. After that, it will revert to the Free plan limits."
+        },
+        "q6": {
+          "question": "Do you offer discounts?",
+          "answer": "Yes, we offer a ~17% discount when you choose annual billing on any paid plan."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Build Your Professional Portfolio?",
+      "subtitle": "Join thousands of freelancers who use Supale to showcase their work and grow their business. Start your free 14-day trial today.",
+      "button": "Get Started for Free",
+      "note": "No credit card required. Cancel anytime."
+    },
+    "footer": {
+      "description": "The all-in-one platform for freelancers to showcase work, manage clients, and grow their revenue with professional tools.",
+      "product": "Product",
+      "resources": "Resources",
+      "company": "Company",
+      "legal": "Legal",
+      "links": {
+        "features": "Features",
+        "pricing": "Pricing",
+        "templates": "Templates",
+        "showcase": "Showcase",
+        "blog": "Blog",
+        "helpCenter": "Help Center",
+        "apiDocs": "API Docs",
+        "status": "Status",
+        "about": "About",
+        "careers": "Careers",
+        "contact": "Contact",
+        "press": "Press",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "cookies": "Cookies",
+        "gdpr": "GDPR"
+      },
+      "copyright": "© {year} Supale. Made with ♥ in Estonia.",
+      "systemsOperational": "All systems operational"
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "sites": "Sites",
+    "createSite": "Create Site",
+    "templates": "Templates",
+    "noSite": "You don't have a portfolio site yet. Create one to get started!",
+    "manageSite": "Manage your site",
+    "siteName": "Site Name",
+    "subdomain": "Subdomain",
+    "selectTemplate": "Select Template",
+    "templateOptional": "Choose a template to get started quickly, or start from scratch.",
+    "subdomainPlaceholder": "myportfolio",
+    "subdomainHint": "Only lowercase letters, numbers, and hyphens are allowed. Must be at least 3 characters.",
+    "subdomainTaken": "This subdomain is already taken",
+    "subdomainRequired": "Subdomain is required",
+    "subdomainMinLength": "Subdomain must be at least 3 characters",
+    "subdomainInvalid": "Subdomain can only contain lowercase letters, numbers, and hyphens",
+    "siteNameRequired": "Site name is required",
+    "alreadyHasSite": "You already have a portfolio site"
+  },
+  "projects": {
+    "title": "Projects",
+    "createProject": "Create Project",
+    "board": "Board"
+  },
+  "crm": {
+    "title": "CRM",
+    "contacts": "Contacts",
+    "deals": "Deals",
+    "pipeline": "Pipeline"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "portfolio": "Portfolio",
+    "projects": "Projects",
+    "projectsBoard": "Board",
+    "calendar": "Calendar",
+    "crm": "CRM",
+    "contacts": "Contacts",
+    "companies": "Companies",
+    "pipeline": "Pipeline",
+    "activities": "Activities",
+    "analytics": "Analytics",
+    "portfolioAnalytics": "Portfolio",
+    "crmAnalytics": "CRM",
+    "abTesting": "A/B Testing",
+    "email": "Email",
+    "quickActions": "Quick Actions",
+    "newContact": "New Contact",
+    "newProject": "New Project",
+    "status": "Status",
+    "tasksToday": "tasks today"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome!",
+      "subtitle": "Let's set up your account in a few minutes",
+      "userType": {
+        "label": "What best describes you?",
+        "freelancer": "Freelancer",
+        "freelancerDesc": "I work independently with clients",
+        "agency": "Agency",
+        "agencyDesc": "I manage a team or agency",
+        "business": "Small Business",
+        "businessDesc": "I run a business",
+        "creative": "Creative Professional",
+        "creativeDesc": "Designer, artist, photographer, etc."
+      },
+      "goal": {
+        "label": "What's your main goal?",
+        "portfolio": "Build a portfolio",
+        "portfolioDesc": "Showcase my work to the world",
+        "clients": "Manage clients",
+        "clientsDesc": "Track contacts and deals",
+        "both": "Both",
+        "bothDesc": "Portfolio + client management"
+      }
+    },
+    "profile": {
+      "title": "Set up your profile",
+      "subtitle": "Add your name and photo",
+      "displayName": "Display name",
+      "displayNamePlaceholder": "Your name",
+      "tagline": "Title / Role",
+      "taglinePlaceholder": "e.g. Graphic Designer",
+      "avatar": "Profile photo",
+      "avatarHint": "Drag an image here or click to upload"
+    },
+    "template": {
+      "title": "Choose a template",
+      "subtitle": "Start with a professional design",
+      "categories": {
+        "all": "All",
+        "minimal": "Minimal",
+        "creative": "Creative",
+        "professional": "Professional"
+      },
+      "preview": "Preview",
+      "select": "Select this template",
+      "scratch": "Start from scratch",
+      "scratchDesc": "Build your site from the ground up"
+    },
+    "customize": {
+      "title": "Customize your site",
+      "subtitle": "Pick colors and fonts",
+      "siteName": "Site name",
+      "siteNamePlaceholder": "My Portfolio",
+      "subdomain": "Subdomain",
+      "subdomainSuffix": ".supale.com",
+      "subdomainAvailable": "Available!",
+      "subdomainTaken": "Sorry, that's taken",
+      "colorPalette": "Color palette",
+      "typography": "Typography"
+    },
+    "content": {
+      "title": "Add your first content",
+      "subtitle": "Make it personal",
+      "heroTitle": "Your name",
+      "heroTitlePlaceholder": "Jane Smith",
+      "heroSubtitle": "Your role",
+      "heroSubtitlePlaceholder": "Graphic Designer",
+      "bio": "Short intro",
+      "bioPlaceholder": "Write a few sentences about yourself...",
+      "usePlaceholder": "Use placeholder content for now"
+    },
+    "tour": {
+      "title": "Discover the platform",
+      "subtitle": "A quick look at key features",
+      "skip": "Skip tour",
+      "next": "Next",
+      "previous": "Previous",
+      "finish": "Finish tour",
+      "tryIt": "Try it"
+    },
+    "publish": {
+      "title": "Your portfolio is ready!",
+      "subtitle": "Review and publish",
+      "preview": "Preview",
+      "devices": {
+        "desktop": "Desktop",
+        "tablet": "Tablet",
+        "mobile": "Mobile"
+      },
+      "checklist": {
+        "title": "What's included:",
+        "profile": "Your profile",
+        "template": "Template applied",
+        "styles": "Custom colors & fonts",
+        "content": "First content added"
+      },
+      "publishNow": "Publish now",
+      "publishLater": "I'll do this later",
+      "sharePreview": "Share preview link"
+    },
+    "complete": {
+      "title": "Congratulations! 🎉",
+      "subtitle": "Your portfolio is now live!",
+      "viewSite": "View your site",
+      "goToDashboard": "Go to dashboard",
+      "nextSteps": "Next steps",
+      "tips": {
+        "addPages": "Add more pages to your portfolio",
+        "createProject": "Create your first project",
+        "addContact": "Add your first client",
+        "connectEmail": "Connect your email"
+      }
+    },
+    "navigation": {
+      "back": "Back",
+      "continue": "Continue",
+      "skip": "Skip",
+      "skipAll": "Skip onboarding",
+      "finish": "Finish"
+    },
+    "progress": {
+      "step": "Step",
+      "of": "of",
+      "complete": "complete"
+    }
+  },
+  "checklist": {
+    "title": "Getting Started",
+    "portfolio": {
+      "title": "Portfolio",
+      "createSite": "Create your site",
+      "addPage": "Add first page",
+      "addBlock": "Add content block",
+      "customizeStyles": "Customize design",
+      "publish": "Publish portfolio"
+    },
+    "projects": {
+      "title": "Projects",
+      "createProject": "Create first project",
+      "addTask": "Add a task",
+      "completeTask": "Complete a task"
+    },
+    "crm": {
+      "title": "Client Management",
+      "addContact": "Add first contact",
+      "createDeal": "Create a deal",
+      "moveDeal": "Move a deal"
+    },
+    "email": {
+      "title": "Email",
+      "connect": "Connect email account",
+      "send": "Send first email"
+    },
+    "viewAll": "View all tasks"
+  },
+  "builder": {
+    "title": "My Sites",
+    "subtitle": "Manage your portfolios and landing pages.",
+    "create": "Create New Site",
+    "noSites": "No sites yet",
+    "noSitesDesc": "Create your first professional portfolio in minutes using our beautiful templates.",
+    "createFirst": "Create Your First Site",
+    "edit": "Edit",
+    "preview": "Preview",
+    "visit": "Visit Live Site",
+    "open": "Open Editor",
+    "updated": "Updated"
+  }
+}

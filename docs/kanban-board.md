@@ -225,7 +225,7 @@ The Kanban board is accessible at `/projects` route (within the admin layout).
 ## File Structure
 
 ```
-apps/web/
+src/
 ├── components/projects/
 │   ├── ProjectList.tsx          # Project sidebar
 │   ├── KanbanBoard.tsx          # Main board component

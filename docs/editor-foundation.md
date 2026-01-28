@@ -8,7 +8,7 @@ The editor foundation provides a complete block-based page builder system with d
 
 ### Block Schema System
 
-Located in `apps/web/lib/blocks/schema.ts`, the schema system provides:
+Located in `src/domain/builder/blocks/schemas.ts`, the schema system provides:
 
 - **Type Definitions**: Zod schemas for all block types
 - **Type Safety**: TypeScript types derived from schemas
@@ -42,7 +42,7 @@ Built with `@dnd-kit`, the drag-and-drop system provides:
 
 ### Block Components
 
-All blocks are located in `apps/web/components/portfolio/blocks/`:
+All blocks are located in `src/components/portfolio/blocks/`:
 
 #### BaseBlock
 
@@ -243,7 +243,7 @@ case 'custom':
 ## File Structure
 
 ```
-apps/web/
+src/
 ├── lib/
 │   └── blocks/
 │       ├── schema.ts          # Block schemas and validation

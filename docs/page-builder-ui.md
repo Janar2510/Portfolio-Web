@@ -219,7 +219,7 @@ export default function PortfolioEditorPage({ params }: { params: { siteId: stri
 ## File Structure
 
 ```
-apps/web/components/portfolio/builder/
+app/[locale]/(admin)/builder/
 ├── PageBuilder.tsx              # Main component
 ├── PagesList.tsx                # Pages sidebar
 ├── BlockToolbar.tsx             # Block insertion toolbar
@@ -227,7 +227,7 @@ apps/web/components/portfolio/builder/
 ├── StyleCustomizationPanel.tsx  # Style customization panel
 └── index.ts                     # Exports
 
-apps/web/components/ui/
+src/components/ui/
 ├── dialog.tsx                   # Dialog component
 ├── tabs.tsx                     # Tabs component
 ├── popover.tsx                  # Popover component

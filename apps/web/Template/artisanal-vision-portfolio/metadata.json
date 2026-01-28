@@ -1,5 +1,0 @@
-{
-  "name": "Artisanal Vision Portfolio",
-  "description": "A premium, modern portfolio for a digital and traditional artist featuring smooth animations, a curated gallery, and an AI-powered artistic consultant.",
-  "requestFramePermissions": ["camera", "microphone"]
-}

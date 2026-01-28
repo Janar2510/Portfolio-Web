@@ -220,7 +220,7 @@ Threads are displayed chronologically with the latest email first.
 ## File Structure
 
 ```
-apps/web/
+src/
 ├── components/email/
 │   ├── EmailCompose.tsx        # Compose dialog
 │   ├── EmailThreadView.tsx     # Thread view component

@@ -244,7 +244,7 @@ ActivitiesPage
 ## File Structure
 
 ```
-apps/web/
+src/
 ├── components/crm/
 │   ├── ActivityTimeline.tsx        # Activity timeline component
 │   ├── FollowUpReminders.tsx       # Follow-up reminders component
