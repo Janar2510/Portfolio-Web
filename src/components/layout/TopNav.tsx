@@ -7,6 +7,9 @@ import { createClient } from '@/lib/supabase/client';
 import { useState, useEffect } from 'react';
 import { Bell, Settings, LogOut, User, ChevronDown, Globe } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { UserNav } from '@/components/layout/UserNav';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { NotificationsPopover } from '@/components/notifications/NotificationsPopover';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -93,16 +96,12 @@ export function TopNav({ locale }: TopNavProps) {
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Notifications Popover */}
+        <NotificationsPopover />
+
         {/* Theme Toggle */}
         <ThemeToggle />
 
-        {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          {notifications > 0 && (
-            <span className="absolute top-1 right-1 w-2 h-2 bg-error-main rounded-full" />
-          )}
-        </Button>
 
         {/* Locale Switcher */}
         <DropdownMenu>

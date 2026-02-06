@@ -7,12 +7,13 @@
 
 import { Button } from '@/components/ui/button';
 import {
-  ArrowUp,
-  ArrowDown,
   Copy,
   Trash2,
   Settings,
   MoreVertical,
+  Layers,
+  ChevronUp,
+  ChevronDown,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -25,47 +26,47 @@ import type { PortfolioBlock } from '@/domain/builder/portfolio';
 
 interface BlockToolbarProps {
   block: PortfolioBlock;
-  onMoveUp?: () => void;
-  onMoveDown?: () => void;
   onDuplicate?: () => void;
   onDelete?: () => void;
   onSettings?: () => void;
+  onUpdateLayout?: (layout: Partial<PortfolioBlock['layout']>) => void;
   className?: string;
 }
 
 export function BlockToolbar({
   block,
-  onMoveUp,
-  onMoveDown,
   onDuplicate,
   onDelete,
   onSettings,
+  onUpdateLayout,
   className,
 }: BlockToolbarProps) {
+  const zIndex = block.layout?.zIndex ?? 10;
+
   return (
     <div
       className={cn(
-        'absolute -top-10 left-0 z-20 flex items-center gap-1 bg-background border rounded-md shadow-lg p-1',
+        'absolute -top-12 left-0 z-20 flex items-center gap-1 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-full shadow-2xl p-1.5 animate-in fade-in slide-in-from-bottom-2 duration-200',
         className
       )}
     >
       <Button
         variant="ghost"
         size="sm"
-        onClick={onMoveUp}
-        disabled={!onMoveUp}
+        onClick={() => onUpdateLayout?.({ zIndex: zIndex + 10 })}
+        title="Bring to Front"
         className="h-7 w-7 p-0"
       >
-        <ArrowUp className="h-3 w-3" />
+        <ChevronUp className="h-3 w-3" />
       </Button>
       <Button
         variant="ghost"
         size="sm"
-        onClick={onMoveDown}
-        disabled={!onMoveDown}
+        onClick={() => onUpdateLayout?.({ zIndex: Math.max(0, zIndex - 10) })}
+        title="Send to Back"
         className="h-7 w-7 p-0"
       >
-        <ArrowDown className="h-3 w-3" />
+        <ChevronDown className="h-3 w-3" />
       </Button>
       <div className="h-4 w-px bg-border mx-1" />
       <Button

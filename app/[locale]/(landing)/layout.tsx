@@ -29,21 +29,21 @@ export async function generateMetadata({
     keywords:
       locale === 'et'
         ? [
-            'portfoolio',
-            'veebileht',
-            'veebiportfoolio',
-            'disain',
-            'vabakutseline',
-            'Supale',
-          ]
+          'portfoolio',
+          'veebileht',
+          'veebiportfoolio',
+          'disain',
+          'vabakutseline',
+          'Supale',
+        ]
         : [
-            'portfolio',
-            'website',
-            'web portfolio',
-            'design',
-            'freelancer',
-            'Supale',
-          ],
+          'portfolio',
+          'website',
+          'web portfolio',
+          'design',
+          'freelancer',
+          'Supale',
+        ],
   };
 }
 
@@ -55,7 +55,7 @@ export default function LandingLayout({
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground overflow-x-hidden">
       <Navbar />
-      <main className="flex-1 selection:bg-teal-100 selection:text-teal-900 pt-20 md:pt-24">
+      <main className="flex-1 selection:bg-teal-100 selection:text-teal-900">
         {children}
       </main>
       <Footer />

@@ -19,6 +19,8 @@ import { ShapeBlock } from '../blocks/ShapeBlock';
 import { FeaturesBlock } from '../blocks/FeaturesBlock';
 import { SplitHeroBlock } from '../blocks/SplitHeroBlock';
 import { OrganicHeroBlock } from '../blocks/OrganicHeroBlock';
+import { MarqueeBlock } from '../blocks/MarqueeBlock';
+import { BentoGridBlock } from '../blocks/BentoGridBlock';
 import dynamic from 'next/dynamic';
 
 const BrandHeroBlock = dynamic(
@@ -50,6 +52,7 @@ interface BlockRendererProps {
   onAddAfter?: (blockType: string) => void;
   onEdit?: (block: PortfolioBlock) => void;
   siteId?: string; // Optional site_id for public pages
+  isSelected?: boolean;
 }
 
 export function BlockRenderer({
@@ -60,10 +63,12 @@ export function BlockRenderer({
   onAddAfter,
   onEdit,
   siteId,
+  isSelected = false,
 }: BlockRendererProps) {
   const blockProps = {
     block,
     isEditing,
+    isSelected,
     onUpdate: (
       content: Record<string, unknown>,
       settings?: Record<string, unknown>
@@ -136,10 +141,18 @@ export function BlockRenderer({
       return <ShapeBlock {...blockProps} />;
     case 'features':
       return <FeaturesBlock {...blockProps} />;
+    case 'marquee':
+      return <MarqueeBlock {...blockProps} />;
+    case 'bento':
+    case 'bento-grid':
+      return <BentoGridBlock {...blockProps} />;
+    case 'features':
+    case 'services':
+      return <FeaturesBlock {...blockProps} />;
     default:
       return (
-        <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">
-          Unknown block type: {block.block_type}
+        <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground bg-white/5">
+          Unknown block type: <span className="font-mono text-primary">{block.block_type || 'undefined'}</span>
         </div>
       );
   }

@@ -14,9 +14,11 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Loader2, Check, Eye, Sparkles } from 'lucide-react';
+import { Loader2, Check, Eye, Sparkles, Layout } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 import { TemplatePreview } from './templates/TemplatePreview';
 
@@ -67,21 +69,29 @@ export function TemplateChooser({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col space-y-2">
-        <h3 className="text-lg font-semibold flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-indigo-500" />
-          Choose a Starting Point
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          Select a professionally designed template to jumpstart your portfolio.
+      <div className="flex flex-col space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-[#68A9A5]/10 border border-[#68A9A5]/20">
+            <Sparkles className="h-6 w-6 text-[#68A9A5]" />
+          </div>
+          <h3 className="text-2xl font-bold font-display text-white">
+            Choose Your Starting Point
+          </h3>
+        </div>
+        <p className="text-white/40 text-lg max-w-2xl">
+          Select a professionally crafted template. You can fully customize every detail later.
         </p>
       </div>
 
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="mb-6 flex-wrap h-auto p-1 bg-muted/40">
+        <TabsList className="mb-10 flex-wrap h-auto p-1.5 bg-white/5 border border-white/5 rounded-2xl backdrop-blur-md">
           {categories.map(cat => (
-            <TabsTrigger key={cat} value={cat} className="capitalize px-4 py-2">
-              {cat}
+            <TabsTrigger
+              key={cat}
+              value={cat}
+              className="capitalize px-6 py-2.5 rounded-xl transition-all data-[state=active]:bg-[#68A9A5] data-[state=active]:text-white data-[state=active]:shadow-lg"
+            >
+              {cat === 'all' ? 'All Templates' : cat}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -92,78 +102,96 @@ export function TemplateChooser({
           );
 
           return (
-            <TabsContent key={category} value={category} className="mt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredTemplates.map(template => (
-                  <Card
-                    key={template.id}
-                    className={`group relative overflow-hidden transition-all duration-300 border-2 hover:shadow-xl hover:translate-y-[-4px] ${selectedTemplateId === template.id
-                      ? 'border-primary ring-2 ring-primary ring-offset-2'
-                      : 'border-transparent hover:border-primary/20'
-                      }`}
-                    onClick={() => onTemplateSelect(template.id)}
-                  >
-                    {/* Image Container */}
-                    <div className="aspect-[4/3] relative overflow-hidden rounded-t-lg bg-muted">
-                      {template.thumbnail_url ? (
-                        <Image
-                          src={template.thumbnail_url}
-                          alt={template.name}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
-                          <span className="text-4xl font-bold opacity-20">
-                            {template.name.charAt(0)}
-                          </span>
+            <TabsContent key={category} value={category} className="mt-0 outline-none">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <AnimatePresence mode="popLayout">
+                  {filteredTemplates.map((template, index) => (
+                    <motion.div
+                      key={template.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <Card
+                        className={cn(
+                          "group relative overflow-hidden transition-all duration-500 bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 rounded-[2.5rem]",
+                          selectedTemplateId === template.id &&
+                          "bg-white/10 border-[#68A9A5] ring-2 ring-[#68A9A5]/20 shadow-xl shadow-[#68A9A5]/10"
+                        )}
+                        onClick={() => setPreviewTemplate(template)}
+                      >
+                        {/* Image Container */}
+                        <div className="aspect-[4/3] relative overflow-hidden rounded-t-[2.5rem] bg-zinc-900/50">
+                          {template.thumbnail_url ? (
+                            <Image
+                              src={template.thumbnail_url}
+                              alt={template.name}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-white/5 to-transparent">
+                              <Layout className="h-12 w-12 text-white/10 mb-2" />
+                              <span className="text-sm font-bold text-white/20 uppercase tracking-widest">
+                                Preview Unavailable
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Overlay */}
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[4px]">
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              className="gap-2 bg-white text-black hover:bg-white/90 rounded-full px-8 py-6 text-base font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500"
+                              onClick={e => {
+                                e.stopPropagation();
+                                setPreviewTemplate(template);
+                              }}
+                            >
+                              <Eye className="h-5 w-5" />
+                              Preview
+                            </Button>
+                          </div>
+
+                          {/* Selection Status */}
+                          {selectedTemplateId === template.id && (
+                            <motion.div
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              className="absolute top-6 right-6 bg-[#68A9A5] text-white rounded-full p-2.5 shadow-xl"
+                            >
+                              <Check className="h-5 w-5" />
+                            </motion.div>
+                          )}
                         </div>
-                      )}
 
-                      {/* Overlay */}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          className="gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
-                          onClick={e => {
-                            e.stopPropagation();
-                            setPreviewTemplate(template);
-                          }}
-                        >
-                          <Eye className="h-4 w-4" />
-                          Preview Template
-                        </Button>
-                      </div>
+                        <CardContent className="p-6 relative">
+                          <div className="flex justify-between items-start mb-3">
+                            <h4 className="text-xl font-bold font-display text-white">
+                              {template.name}
+                            </h4>
+                            <div className="px-3 py-1 bg-white/5 rounded-full border border-white/5">
+                              <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">
+                                {template.category || 'Modern'}
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-sm text-white/50 line-clamp-2 leading-relaxed h-10">
+                            {template.description || 'A professional, high-converting portfolio layout designed for creatives.'}
+                          </p>
+                        </CardContent>
 
-                      {/* Selection Badge */}
-                      {selectedTemplateId === template.id && (
-                        <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full p-2 shadow-lg animate-in zoom-in-50">
-                          <Check className="h-4 w-4" />
-                        </div>
-                      )}
-                    </div>
-
-                    <CardContent className="p-4 bg-card/50 backdrop-blur-sm">
-                      <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-base font-bold">
-                          {template.name}
-                        </CardTitle>
-                        {/* Remove is_premium for now or add to schema */}
-                      </div>
-                      <CardDescription className="text-xs line-clamp-2 mb-3">
-                        {template.description}
-                      </CardDescription>
-
-                      {/* Tags */}
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] bg-muted px-2 py-1 rounded text-muted-foreground capitalize">
-                          {template.category || 'Portfolio'}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                        {/* Decorative accent */}
+                        <div className={cn(
+                          "absolute bottom-0 left-0 right-0 h-1 bg-[#68A9A5] transition-transform duration-500 origin-left scale-x-0 group-hover:scale-x-100",
+                          selectedTemplateId === template.id && "scale-x-100"
+                        )} />
+                      </Card>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </TabsContent>
           );

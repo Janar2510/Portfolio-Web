@@ -8,6 +8,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslations } from 'next-intl';
+import { useAuth } from '@/hooks/useAuth';
 
 export function HeroContent() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,6 +17,7 @@ export function HeroContent() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('landing.hero');
+  const { user, loading } = useAuth();
 
   useGSAP(
     () => {
@@ -62,77 +64,81 @@ export function HeroContent() {
   return (
     <div
       ref={containerRef}
-      className="container mx-auto px-4 md:px-6 pt-24 pb-32 relative z-10"
+      className="container mx-auto px-4 md:px-6 pt-32 pb-32 relative z-10"
     >
       <div className="max-w-4xl">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-primary text-xs font-semibold mb-8 animate-fade-in glass-card">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-xs font-semibold mb-8 animate-fade-in">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
           </span>
-          <span className="tracking-[0.2em] uppercase">{t('badge')}</span>
+          <span className="tracking-wide uppercase">{t('badge')}</span>
         </div>
 
         <h1
           ref={headlineRef}
-          className="text-7xl md:text-[120px] font-bold font-display tracking-tighter text-white mb-8 leading-[0.9] drop-shadow-2xl"
+          className="text-6xl md:text-[100px] font-bold font-display tracking-tight text-white mb-8 leading-[1.0] drop-shadow-sm"
         >
           {t('title')} <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/80 to-secondary animate-gradient-flow">
+          <span
+            className="text-primary drop-shadow-[0_0_15px_rgba(104,169,165,0.4)]"
+          >
             {t('titleHighlight')}
           </span>
         </h1>
 
         <p
           ref={subheadRef}
-          className="text-xl md:text-2xl text-muted-foreground/80 mb-12 max-w-2xl leading-relaxed font-light"
+          className="text-xl md:text-2xl text-white/70 mb-12 max-w-2xl leading-relaxed font-light"
         >
           {t('subtitle')}
         </p>
 
         <div ref={ctaRef} className="flex flex-col sm:flex-row gap-6 mb-20">
           <GradientButton
-            size="lg"
-            className="shadow-[0_0_30px_rgba(0,229,188,0.3)] group px-12 py-8 text-lg rounded-2xl hover:scale-105 transition-all"
+            asChild
+            className="shadow-2xl shadow-primary/20 hover:shadow-primary/40 text-lg py-7 px-10 rounded-2xl"
           >
-            <Link href="/sign-in">{t('cta')}</Link>
-            <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
+            <Link href={!loading && user ? "/dashboard" : "/sign-up"}>
+              {!loading && user ? t('goToDashboard') : t('cta')}
+              <ArrowRight className="ml-2 size-6 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </GradientButton>
-          <GradientButton
-            variant="variant"
+          <Button
+            variant="outline"
             size="lg"
-            className="px-12 py-8 text-lg rounded-2xl hover:bg-white/5 transition-all"
+            className="px-12 py-8 text-lg rounded-full border-white/20 text-white hover:bg-white/10 hover:text-white transition-all bg-transparent"
             asChild
           >
             <Link href="#examples">{t('ctaSecondary')}</Link>
-          </GradientButton>
+          </Button>
         </div>
 
         <div
           ref={statsRef}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-white/5"
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-white/10"
         >
           <div className="group">
-            <div className="text-3xl font-bold text-white mb-1 group-hover:text-primary transition-colors">
+            <div className="text-4xl font-bold text-white mb-1 group-hover:text-primary transition-colors font-display">
               10k+
             </div>
-            <div className="text-sm text-muted-foreground uppercase tracking-widest font-medium">
+            <div className="text-sm text-white/50 uppercase tracking-widest font-medium">
               {t('stats.freelancers')}
             </div>
           </div>
           <div className="group">
-            <div className="text-3xl font-bold text-white mb-1 group-hover:text-secondary transition-colors">
+            <div className="text-4xl font-bold text-white mb-1 group-hover:text-primary transition-colors font-display">
               €2.5M
             </div>
-            <div className="text-sm text-muted-foreground uppercase tracking-widest font-medium">
+            <div className="text-sm text-white/50 uppercase tracking-widest font-medium">
               {t('stats.revenue')}
             </div>
           </div>
           <div className="group">
-            <div className="text-3xl font-bold text-white mb-1 group-hover:text-primary transition-colors">
+            <div className="text-4xl font-bold text-white mb-1 group-hover:text-primary transition-colors font-display">
               98%
             </div>
-            <div className="text-sm text-muted-foreground uppercase tracking-widest font-medium">
+            <div className="text-sm text-white/50 uppercase tracking-widest font-medium">
               {t('stats.satisfaction')}
             </div>
           </div>

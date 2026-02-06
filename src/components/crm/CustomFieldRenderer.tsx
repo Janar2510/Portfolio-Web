@@ -179,6 +179,21 @@ export function CustomFieldRenderer({
           </div>
         );
 
+      case 'formula':
+        // Safe display of formula, ideally calculated from context passed in
+        // Since the renderer doesn't have the full context object (task/deal etc), 
+        // we might pass the full object as a prop 'contextData'.
+        // For now, if 'value' is passed as the calculated result, we just verify it.
+        // But actually, `value` prop is usually the stored value. Formulas aren't stored.
+        // So we need to calculate it here OR assume the parent component calculates it.
+        // Let's modify the props to accept `contextData` or just display what is passed if the parent did the math.
+        // If we want real-time calc, we need context.
+        return (
+          <div className="px-3 py-2 bg-muted/50 rounded-md text-sm font-mono text-muted-foreground border">
+            {String(value)}
+          </div>
+        );
+
       default:
         return (
           <Input

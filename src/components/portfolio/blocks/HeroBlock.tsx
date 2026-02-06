@@ -67,12 +67,13 @@ export function HeroBlock({
           settings.background === 'image' && 'bg-cover bg-center bg-no-repeat'
         )}
         style={{
-          backgroundColor: content.headline?.includes('Petra')
-            ? '#BC4E3F'
-            : undefined,
+          backgroundColor:
+            settings.background === 'image' && (content as any).image_url
+              ? undefined
+              : undefined,
           backgroundImage:
-            settings.background === 'image' && content.image_url
-              ? `url(${content.image_url})`
+            settings.background === 'image' && (content as any).image_url
+              ? `url(${(content as any).image_url})`
               : undefined,
         }}
       >
@@ -99,13 +100,17 @@ export function HeroBlock({
           {content.headline && (
             <h1
               className={cn(
-                'tracking-tighter leading-[0.5] animate-slide-up py-4 md:py-16 text-white',
+                'tracking-tighter leading-[0.5] animate-slide-up py-4 md:py-16',
                 settings.headline_style === 'script' ||
                   content.headline?.includes('Petra')
                   ? 'font-script text-[180px] md:text-[250px] lg:text-[350px]'
                   : 'text-7xl md:text-[8vw] lg:text-[12vw] font-extrabold',
                 settings.headline_style === 'serif' ? 'font-serif' : ''
               )}
+              style={{
+                color: 'var(--portfolio-text)',
+                fontFamily: settings.headline_style === 'script' ? undefined : 'var(--portfolio-font-heading)'
+              }}
             >
               {content.headline}
             </h1>
@@ -125,10 +130,7 @@ export function HeroBlock({
             <p
               className={cn(
                 'text-lg md:text-[1.2vw] lg:text-[1.4vw] font-light leading-relaxed opacity-90 text-balance animate-slide-up animate-delay-200 mt-4 max-w-2xl',
-                settings.headline_style === 'script' ||
-                  content.headline === 'Petra'
-                  ? 'text-white'
-                  : 'text-slate-300',
+                'text-[var(--portfolio-text)]',
                 currentAlignment === 'center' ? 'mx-auto' : ''
               )}
             >
@@ -151,8 +153,12 @@ export function HeroBlock({
                   settings.headline_style === 'script' ||
                     content.headline === 'Petra'
                     ? 'bg-[#5D99FA] text-white hover:bg-[#5D99FA]/90 rounded-none shadow-2xl'
-                    : 'rounded-full shadow-xl hover:shadow-primary/20 bg-primary text-primary-foreground hover:bg-primary/90'
+                    : 'shadow-xl hover:shadow-primary/20 transition-all duration-300'
                 )}
+                style={{
+                  backgroundColor: !(settings.headline_style === 'script' || content.headline === 'Petra') ? 'var(--portfolio-primary)' : undefined,
+                  color: !(settings.headline_style === 'script' || content.headline === 'Petra') ? 'var(--portfolio-background)' : undefined,
+                }}
               >
                 <a href={content.cta_link} className="flex items-center gap-2">
                   {content.cta_text}
@@ -164,7 +170,7 @@ export function HeroBlock({
 
         {/* Scroll indicator for full height heros */}
         {currentHeight === 'full' && content.show_scroll_indicator && (
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 flex flex-col items-center gap-2 animate-bounce">
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[var(--portfolio-text)] opacity-40 flex flex-col items-center gap-2 animate-bounce">
             <span className="text-[10px] uppercase tracking-widest font-bold">
               Scroll
             </span>

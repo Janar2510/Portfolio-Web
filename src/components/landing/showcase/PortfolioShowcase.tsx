@@ -9,6 +9,7 @@ import { GradientButton } from '@/components/ui/gradient-button';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,6 +42,7 @@ const examples = [
 export function PortfolioShowcase() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations('landing.showcase');
 
   useGSAP(
     () => {
@@ -67,20 +69,19 @@ export function PortfolioShowcase() {
     <section
       id="examples"
       ref={containerRef}
-      className="h-screen bg-background text-white overflow-hidden flex flex-col"
+      className="h-screen bg-[#0B0F19] text-white overflow-hidden flex flex-col"
     >
       <div className="container mx-auto px-4 md:px-6 pt-24 md:pt-32 shrink-0">
         <div className="flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-xl">
             <h2 className="text-5xl md:text-7xl font-bold font-display text-white mb-6 leading-tight">
-              Built with{' '}
-              <span className="text-primary drop-shadow-[0_0_10px_rgba(0,229,188,0.3)]">
-                Supale
+              {t('title')}{' '}
+              <span className="text-primary drop-shadow-[0_0_15px_rgba(104,169,165,0.4)]">
+                {t('titleHighlight')}
               </span>
             </h2>
             <p className="text-xl text-muted-foreground font-light">
-              Join thousands of creatives who trust us with their professional
-              presence.
+              {t('subtitle')}
             </p>
           </div>
           <GradientButton
@@ -89,7 +90,7 @@ export function PortfolioShowcase() {
             className="shadow-2xl shadow-primary/10"
           >
             <Link href="/examples">
-              View All Examples <ArrowRight className="ml-2 size-5" />
+              {t('viewAll')} <ArrowRight className="ml-2 size-5" />
             </Link>
           </GradientButton>
         </div>
@@ -144,15 +145,14 @@ export function PortfolioShowcase() {
             <div className="relative mb-10">
               <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 group-hover:bg-primary/30 transition-colors" />
               <h3 className="text-4xl md:text-5xl font-bold text-white relative z-10">
-                You're Next
+                {t('next.title')}
               </h3>
             </div>
             <p className="text-xl text-muted-foreground mb-10 max-w-xs font-light">
-              Start building your professional portfolio today. No credit card
-              required.
+              {t('next.description')}
             </p>
             <GradientButton asChild size="lg" className="font-bold px-10">
-              <Link href="/register">Start Building</Link>
+              <Link href="/sign-up">{t('next.button')}</Link>
             </GradientButton>
           </div>
         </div>

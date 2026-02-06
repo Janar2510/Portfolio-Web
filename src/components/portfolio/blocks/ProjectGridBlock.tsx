@@ -114,6 +114,19 @@ export function ProjectGridBlock({
     4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
   };
 
+  // Fallback to static content from template if no DB projects
+  const staticItems = ((content as any).items || []).map((item: any) => ({
+    id: item.id || Math.random().toString(),
+    title: item.title || 'Untitled Project',
+    excerpt: item.description || '',
+    thumbnail_url: item.image?.src || item.image_url || '',
+    category: 'Showcase',
+    tags: [],
+    slug: '#'
+  }));
+
+  const displayProjects = filteredProjects.length > 0 ? filteredProjects : staticItems;
+
   const columns = settings.columns || 3;
   const layout = settings.layout || 'grid';
 
@@ -170,7 +183,7 @@ export function ProjectGridBlock({
           <div className="text-center py-12 text-muted-foreground animate-pulse">
             Loading masterpieces...
           </div>
-        ) : filteredProjects.length === 0 ? (
+        ) : displayProjects.length === 0 ? (
           <div className="text-center py-32 bg-white/5 rounded-3xl border border-white/5 border-dashed">
             <p className="text-slate-500 italic">
               {isEditing
@@ -187,7 +200,7 @@ export function ProjectGridBlock({
               layout === 'list' && 'flex flex-col gap-4'
             )}
           >
-            {filteredProjects.map((project: any, i: number) => (
+            {displayProjects.map((project: any, i: number) => (
               <div
                 key={project.id}
                 className={cn(

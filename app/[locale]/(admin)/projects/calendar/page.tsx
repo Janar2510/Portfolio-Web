@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { CalendarView } from '@/components/projects/CalendarView';
+import { CalendarView, type CalendarEvent } from '@/components/projects/CalendarView';
 import { TaskDetailModal } from '@/components/projects/TaskDetailModal';
 import { Button } from '@/components/ui/button';
 import { Download, Calendar as CalendarIcon } from 'lucide-react';
@@ -51,6 +51,29 @@ export default function CalendarPage() {
       if (error) throw error;
       return (tasksData || []) as Task[];
     },
+  });
+
+  const calendarEvents: CalendarEvent[] = tasks.map(task => {
+    const startDate = new Date(task.due_date!);
+    if (task.due_time) {
+      const [hours, minutes] = task.due_time.split(':').map(Number);
+      startDate.setHours(hours, minutes);
+    } else {
+      startDate.setHours(9, 0); // Default to 9 AM
+    }
+
+    return {
+      id: task.id,
+      title: task.title,
+      description: task.priority || undefined, // prioritized as description
+      start: startDate,
+      type: 'task',
+      metadata: task,
+      color: task.priority === 'urgent' ? 'bg-red-100 text-red-800 border-red-200' :
+        task.priority === 'high' ? 'bg-orange-100 text-orange-800 border-orange-200' :
+          task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+            'bg-blue-100 text-blue-800 border-blue-200'
+    };
   });
 
   // Fetch subtasks for selected task
@@ -129,7 +152,10 @@ export default function CalendarPage() {
 
       {/* Calendar View */}
       <div className="flex-1 overflow-hidden">
-        <CalendarView tasks={tasks} onTaskClick={handleTaskClick} />
+        <CalendarView
+          events={calendarEvents}
+          onEventClick={(event) => handleTaskClick(event.metadata as Task)}
+        />
       </div>
 
       {/* Task Detail Modal */}

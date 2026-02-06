@@ -65,13 +65,13 @@ export function SkillsBlock({
     >
       <section className="w-full px-4 py-8">
         {content.title && (
-          <h2 className="text-3xl font-bold mb-8 text-center">
+          <h2 className="text-3xl font-bold mb-8 text-center text-[var(--portfolio-text)]">
             {content.title}
           </h2>
         )}
 
         {skills.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-[var(--portfolio-text)] opacity-60">
             {isEditing
               ? 'Add skills in the block settings.'
               : 'No skills to display.'}
@@ -81,7 +81,7 @@ export function SkillsBlock({
             className={cn(
               'space-y-6',
               layout === 'grid' &&
-                `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-6`
+              `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-6`
             )}
           >
             {layout === 'bars' &&
@@ -95,20 +95,20 @@ export function SkillsBlock({
                       {skill.icon && (
                         <span className="text-xl">{skill.icon}</span>
                       )}
-                      <span className="font-medium">{skill.name}</span>
+                      <span className="font-medium text-[var(--portfolio-text)]">{skill.name}</span>
                       {settings.show_category && skill.category && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs text-[var(--portfolio-text)] border-[var(--portfolio-text)]/20">
                           {skill.category}
                         </Badge>
                       )}
                     </div>
                     {settings.show_level && (
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm text-[var(--portfolio-text)] opacity-60">
                         {skill.level}%
                       </span>
                     )}
                   </div>
-                  <Progress value={skill.level} className="h-2" />
+                  <Progress value={skill.level} className="h-2 bg-[var(--portfolio-text)]/10" />
                 </div>
               ))}
 
@@ -136,19 +136,19 @@ export function SkillsBlock({
               skills.map((skill, index) => (
                 <div
                   key={`${skill.id || 'skill'}-${index}`}
-                  className="p-6 border rounded-lg text-center space-y-2"
+                  className="p-6 border border-[var(--portfolio-text)]/10 rounded-lg text-center space-y-2 bg-[var(--portfolio-text)]/5"
                 >
                   {skill.icon && (
                     <div className="text-4xl mb-2">{skill.icon}</div>
                   )}
-                  <div className="font-semibold">{skill.name}</div>
+                  <div className="font-semibold text-[var(--portfolio-text)]">{skill.name}</div>
                   {settings.show_level && (
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[var(--portfolio-text)] opacity-60">
                       {skill.level}%
                     </div>
                   )}
                   {settings.show_category && skill.category && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs text-[var(--portfolio-text)] border-[var(--portfolio-text)]/20">
                       {skill.category}
                     </Badge>
                   )}
@@ -171,7 +171,7 @@ export function SkillsBlock({
                           stroke="currentColor"
                           strokeWidth="8"
                           fill="none"
-                          className="text-muted"
+                          className="text-[var(--portfolio-text)] opacity-10"
                         />
                         <circle
                           cx="48"
@@ -185,15 +185,15 @@ export function SkillsBlock({
                         />
                       </svg>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-lg font-bold">
+                        <span className="text-lg font-bold text-[var(--portfolio-text)]">
                           {skill.level}%
                         </span>
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="font-medium">{skill.name}</div>
+                      <div className="font-medium text-[var(--portfolio-text)]">{skill.name}</div>
                       {settings.show_category && skill.category && (
-                        <Badge variant="outline" className="text-xs mt-1">
+                        <Badge variant="outline" className="text-xs mt-1 text-[var(--portfolio-text)] border-[var(--portfolio-text)]/20">
                           {skill.category}
                         </Badge>
                       )}

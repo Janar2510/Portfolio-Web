@@ -6,7 +6,8 @@ export type EntityType =
   | 'deal'
   | 'activity'
   | 'product'
-  | 'lead';
+  | 'lead'
+  | 'task';
 export type FieldType =
   | 'text'
   | 'textarea'
@@ -23,7 +24,8 @@ export type FieldType =
   | 'organization'
   | 'user'
   | 'address'
-  | 'boolean';
+  | 'boolean'
+  | 'formula';
 
 export type ActivityType =
   | 'call'
@@ -81,6 +83,7 @@ export interface CustomFieldDefinition {
   sort_order: number;
   field_group: string;
   is_system: boolean;
+  formula_expression?: string; // e.g. "{value} * 0.2"
   created_at: string;
   updated_at: string;
 }
@@ -90,7 +93,7 @@ export interface Organization {
   id: string;
   user_id: string;
   name: string;
-  address: {
+  address?: {
     street?: string;
     city?: string;
     country?: string;
@@ -103,7 +106,7 @@ export interface Organization {
   created_at: string;
   updated_at: string;
   is_deleted: boolean;
-  deleted_at?: string;
+  deleted_at?: string | null;
 }
 
 // Person
@@ -113,22 +116,22 @@ export interface Person {
   name: string;
   first_name?: string;
   last_name?: string;
-  organization_id?: string;
+  organization_id?: string | null;
   job_title?: string;
   emails: Array<{ value: string; label: string; primary: boolean }>;
   phones: Array<{ value: string; label: string; primary: boolean }>;
-  marketing_status: string;
+  marketing_status?: string;
   label_ids: string[];
   owner_id?: string;
   custom_fields: Record<string, unknown>;
   visible_to: VisibleTo;
-  avatar_url?: string;
-  last_activity_at?: string;
-  next_activity_date?: string;
+  avatar_url?: string | null;
+  last_activity_at?: string | null;
+  next_activity_date?: string | null;
   created_at: string;
   updated_at: string;
   is_deleted: boolean;
-  deleted_at?: string;
+  deleted_at?: string | null;
 }
 
 // Pipeline
@@ -178,18 +181,18 @@ export interface Deal {
   lost_reason?: string;
   expected_close_date?: string;
   probability?: number;
-  owner_id?: string;
+  owner_id?: string | null;
   stage_entered_at: string;
   label_ids: string[];
   custom_fields: Record<string, unknown>;
   visible_to: VisibleTo;
   stage_order: number;
-  last_activity_at?: string;
-  next_activity_date?: string;
+  last_activity_at?: string | null;
+  next_activity_date?: string | null;
   created_at: string;
   updated_at: string;
   is_deleted: boolean;
-  deleted_at?: string;
+  deleted_at?: string | null;
 }
 
 // Product
@@ -244,7 +247,7 @@ export interface Activity {
   participant_ids: string[];
   is_done: boolean;
   done_at?: string;
-  owner_id?: string;
+  owner_id?: string | null;
   assigned_to_id?: string;
   busy_flag: boolean;
   reminder_minutes_before?: number;
@@ -266,16 +269,16 @@ export interface Lead {
   phone?: string;
   expected_value?: number;
   currency: string;
-  owner_id?: string;
+  owner_id?: string | null;
   label_ids: string[];
   status: LeadStatus;
-  converted_deal_id?: string;
-  converted_at?: string;
-  converted_person_id?: string;
-  converted_organization_id?: string;
+  converted_deal_id?: string | null;
+  converted_at?: string | null;
+  converted_person_id?: string | null;
+  converted_organization_id?: string | null;
   custom_fields: Record<string, unknown>;
-  last_activity_at?: string;
-  next_activity_date?: string;
+  last_activity_at?: string | null;
+  next_activity_date?: string | null;
   created_at: string;
   updated_at: string;
 }

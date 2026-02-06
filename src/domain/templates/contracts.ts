@@ -27,8 +27,27 @@ export interface TemplateDefinition {
     description: string;
     templateVersion: number;
     previewImage?: string;
-    defaultLocale: Locale; // Set to 'et' in registry
+    defaultLocale: Locale;
     defaultSections: SiteSection[];
+    theme?: {
+        palette: {
+            primary: string;
+            secondary: string;
+            background: string;
+            text: string;
+            accent: string;
+            surface?: string;
+        };
+        fonts?: {
+            headingFont: string;
+            bodyFont: string;
+        };
+        buttons?: {
+            radius: string;
+            style: 'solid' | 'outline' | 'ghost' | 'link';
+            uppercase: boolean;
+        };
+    };
 }
 
 export type TemplateRegistry = Record<TemplateId, TemplateDefinition>;

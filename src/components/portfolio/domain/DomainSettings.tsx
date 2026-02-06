@@ -132,10 +132,10 @@ export function DomainSettings() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold">Custom Domain</h2>
-        <p className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground">
           Connect your own domain to your portfolio site.
           <Badge variant="outline" className="ml-2 border-yellow-500 text-yellow-600">Coming Soon</Badge>
-        </p>
+        </div>
       </div>
 
       {/* Current Domain Status */}

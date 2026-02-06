@@ -41,7 +41,13 @@ export function GalleryBlock({
   const settings = block.settings as GalleryBlockSettings;
   const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false);
 
-  const images = content.images || [];
+  const items = (content as any).items || [];
+  const images = content.images || items.map((item: any) => ({
+    id: item.id,
+    url: item.image?.src || item.url || '',
+    alt: item.image?.alt || item.alt || '',
+    caption: item.caption || '',
+  }));
 
   if (images.length === 0 && !isEditing) {
     return null;
@@ -90,32 +96,35 @@ export function GalleryBlock({
     >
       <section className="w-full px-4 py-8">
         {content.title && (
-          <h2 className="mb-6 text-center text-3xl font-semibold">
+          <h2 className="mb-6 text-center text-3xl font-semibold text-[var(--portfolio-text)]">
             {content.title}
           </h2>
         )}
 
         <div
           className={cn(
-            'grid gap-4',
+            'flex gap-4',
+            settings.layout === 'grid' && 'grid',
             settings.layout === 'grid' && gridCols[(settings.columns || 3) as keyof typeof gridCols],
             settings.layout === 'masonry' &&
             'columns-1 md:columns-2 lg:columns-3',
-            settings.layout === 'carousel' && 'flex overflow-x-auto'
+            settings.layout === 'carousel' && 'flex overflow-x-auto',
+            settings.layout === 'accordion' && 'h-[400px] items-stretch'
           )}
           style={{ gap: settings.gap || '1rem' }}
         >
-          {images.map(image => (
+          {images.map((image, idx) => (
             <div
-              key={image.id}
+              key={image.id || idx}
               className={cn(
-                'relative group overflow-hidden rounded-lg',
+                'relative group overflow-hidden rounded-lg transition-all duration-500',
                 settings.layout === 'masonry' && 'break-inside-avoid mb-4',
-                settings.layout === 'carousel' && 'flex-shrink-0 w-64'
+                settings.layout === 'carousel' && 'flex-shrink-0 w-64',
+                settings.layout === 'accordion' && 'flex-grow w-24 hover:w-full'
               )}
               style={{
-                aspectRatio: settings.aspect_ratio || undefined,
-                minHeight: '200px',
+                aspectRatio: settings.layout !== 'accordion' ? (settings.aspect_ratio || undefined) : undefined,
+                minHeight: settings.layout !== 'accordion' ? '200px' : undefined,
               }}
             >
               <Image
@@ -124,8 +133,8 @@ export function GalleryBlock({
                 fill
                 className="object-cover"
               />
-              {image.caption && (
-                <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 text-sm text-white opacity-100 group-hover:opacity-0 transition-opacity">
+              {image.caption && settings.layout !== 'accordion' && (
+                <div className="absolute bottom-0 left-0 right-0 bg-[var(--portfolio-background)]/80 backdrop-blur-sm p-2 text-sm text-[var(--portfolio-text)] opacity-100 group-hover:opacity-0 transition-opacity">
                   {image.caption}
                 </div>
               )}

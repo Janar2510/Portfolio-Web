@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Toaster } from 'sonner';
+import { QueryProvider } from '@/components/providers/QueryProvider';
 
 export function generateStaticParams() {
   return routing.locales.map(locale => ({ locale }));
@@ -25,11 +26,13 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <ThemeProvider defaultTheme="system">
-      <NextIntlClientProvider messages={messages}>
-        {children}
-        <Toaster />
-      </NextIntlClientProvider>
+    <ThemeProvider defaultTheme="dark" storageKey="portfolio-theme-v2">
+      <QueryProvider>
+        <NextIntlClientProvider messages={messages}>
+          {children}
+          <Toaster />
+        </NextIntlClientProvider>
+      </QueryProvider>
     </ThemeProvider>
   );
 }

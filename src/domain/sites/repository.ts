@@ -6,6 +6,7 @@ export interface SitesRepository {
     getById(id: string): Promise<SiteDocument | null>;
     listByOwner(ownerId: string): Promise<SiteDocument[]>;
     getPublishedBySlug(slug: string): Promise<SiteDocument | null>;
+    delete(id: string): Promise<void>;
 }
 
 /**
@@ -27,5 +28,8 @@ export class NotImplementedSitesRepository implements SitesRepository {
     }
     async getPublishedBySlug(slug: string): Promise<SiteDocument | null> {
         throw new Error('SitesRepository.getPublishedBySlug not implemented');
+    }
+    async delete(id: string): Promise<void> {
+        throw new Error('SitesRepository.delete not implemented');
     }
 }

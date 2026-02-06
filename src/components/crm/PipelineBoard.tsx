@@ -191,7 +191,7 @@ export function PipelineBoard({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <div className="flex h-full w-full gap-4 overflow-x-auto p-4 bg-muted/10">
+      <div className="flex h-full w-full gap-6 overflow-x-auto p-6 scrollbar-hide">
         <SortableContext
           items={stageIds}
           strategy={horizontalListSortingStrategy}

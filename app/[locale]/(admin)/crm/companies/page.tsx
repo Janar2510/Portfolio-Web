@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { CompanyList } from '@/components/crm/CompanyList';
 import { ContactList } from '@/components/crm/ContactList';
 import { OrganizationDetailView } from '@/components/crm/OrganizationDetailView';
 import { createClient } from '@/lib/supabase/client';
+import { Sparkles, PlusCircle, Building2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import type { Company, Contact } from '@/domain/crm/crm';
 
 export default function CompaniesPage() {
@@ -177,114 +179,123 @@ export default function CompaniesPage() {
     },
   });
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
-      {/* Companies List */}
-      <div className="w-80 shrink-0 bg-card border-r border-border animate-slide-down">
-        <CompanyList
-          companies={companies}
-          currentCompanyId={selectedCompanyId || undefined}
-          onCompanySelect={setSelectedCompanyId}
-          onCompanyCreate={async data => {
-            await createCompanyMutation.mutateAsync(data);
-          }}
-          onCompanyUpdate={async (id, data) => {
-            await updateCompanyMutation.mutateAsync({ id, data });
-          }}
-          onCompanyDelete={async id => {
-            await deleteCompanyMutation.mutateAsync(id);
-          }}
-          contactCounts={contactCounts}
-        />
+    <div className="animate-fade-up max-w-[1600px] mx-auto py-12 px-6 h-full flex flex-col">
+      {/* Pulse-style Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 shrink-0">
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">
+            <Sparkles className="w-3 h-3" />
+            B2B Intelligence
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white m-0 font-display">
+            Companies
+          </h1>
+          <p className="text-lg text-white/40 max-w-xl">
+            Everything is running smoothly. Manage your corporate relationships.
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Button
+            size="lg"
+            className="gap-2 rounded-2xl bg-primary text-white hover:bg-primary/90 shadow-glow-seafoam px-8 h-12"
+            onClick={() => {
+              // Usually handled in CompanyList
+            }}
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Add Company</span>
+          </Button>
+        </div>
       </div>
 
-      {/* Contacts List for Selected Company */}
-      <div className="w-96 shrink-0 border-r border-border bg-card">
-        {selectedCompanyId ? (
-          <ContactList
-            contacts={filteredContacts}
+      <div className="flex-1 min-h-0 flex gap-6 overflow-hidden">
+        {/* Companies List */}
+        <div className="w-80 shrink-0 surface-elevated border-white/5 bg-white/[0.02] backdrop-blur-sm rounded-[2.5rem] overflow-hidden flex flex-col">
+          <CompanyList
             companies={companies}
-            onContactSelect={contactId => {
-              router.push(`/crm/contacts/${contactId}`);
+            currentCompanyId={selectedCompanyId || undefined}
+            onCompanySelect={setSelectedCompanyId}
+            onCompanyCreate={async data => {
+              await createCompanyMutation.mutateAsync(data);
             }}
-            onContactCreate={async data => {
-              await createContactMutation.mutateAsync({
-                ...data,
-                company_id: selectedCompanyId,
-              });
+            onCompanyUpdate={async (id, data) => {
+              await updateCompanyMutation.mutateAsync({ id, data });
             }}
-            onContactUpdate={async (id, data) => {
-              await updateContactMutation.mutateAsync({ id, data });
+            onCompanyDelete={async id => {
+              await deleteCompanyMutation.mutateAsync(id);
             }}
-            onContactDelete={async id => {
-              await deleteContactMutation.mutateAsync(id);
-            }}
+            contactCounts={contactCounts}
           />
-        ) : (
-          <div className="flex h-full items-center justify-center animate-fade-in">
-            <div className="text-center animate-scale-in">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </div>
-              <p className="text-lg font-semibold text-foreground">
-                Select a company
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Choose a company from the sidebar to view its contacts
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
 
-      {/* Company Details */}
-      <div className="flex-1 flex flex-col bg-background animate-fade-in border-l border-border">
-        {selectedCompanyId ? (
-          (() => {
-            const company = companies.find(c => c.id === selectedCompanyId);
-            return company ? (
-              <OrganizationDetailView company={company} />
-            ) : null;
-          })()
-        ) : (
-          <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))]">
-            <div className="text-center animate-scale-in">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                  />
-                </svg>
+        {/* Contacts List for Selected Company */}
+        <div className="w-96 shrink-0 surface-elevated border-white/5 bg-white/[0.02] backdrop-blur-sm rounded-[2.5rem] overflow-hidden flex flex-col">
+          {selectedCompanyId ? (
+            <ContactList
+              contacts={filteredContacts}
+              companies={companies}
+              onContactSelect={contactId => {
+                router.push(`/crm/contacts/${contactId}`);
+              }}
+              onContactCreate={async data => {
+                await createContactMutation.mutateAsync({
+                  ...data,
+                  company_id: selectedCompanyId,
+                });
+              }}
+              onContactUpdate={async (id, data) => {
+                await updateContactMutation.mutateAsync({ id, data });
+              }}
+              onContactDelete={async id => {
+                await deleteContactMutation.mutateAsync(id);
+              }}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center animate-fade-in p-8 text-center">
+              <div className="animate-scale-in">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-3xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                  <Building2 className="w-8 h-8" />
+                </div>
+                <p className="text-lg font-bold text-white mb-2">Select a business</p>
+                <p className="text-sm text-white/40 leading-relaxed">
+                  Choose a company from the sidebar to manage its key members and contacts.
+                </p>
               </div>
-              <p className="text-lg font-semibold text-foreground">
-                Select a company
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Choose a company from the sidebar to view details
-              </p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* Company Details */}
+        <div className="flex-1 surface-elevated border-white/5 bg-white/[0.02] backdrop-blur-sm rounded-[2.5rem] overflow-hidden flex flex-col min-w-0">
+          {selectedCompanyId ? (
+            (() => {
+              const company = companies.find(c => c.id === selectedCompanyId);
+              return company ? (
+                <div className="flex-1 overflow-y-auto">
+                  <OrganizationDetailView company={company} />
+                </div>
+              ) : null;
+            })()
+          ) : (
+            <div className="flex-1 flex items-center justify-center p-12 text-center">
+              <div className="animate-scale-in max-w-sm">
+                <div className="w-20 h-20 mx-auto mb-8 rounded-[2rem] bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center text-primary shadow-glow-soft">
+                  <PlusCircle className="w-10 h-10" />
+                </div>
+                <h3 className="text-2xl font-bold font-display text-white mb-3">Enterprise View</h3>
+                <p className="text-white/40 leading-relaxed">
+                  Deep dive into organizational structures, active deals, and interaction history.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { ThemeConfig, AssetConfig } from '@/domain/templates/contracts';
+export * from '@/domain/builder/types';
 
 export interface PortfolioSiteStyles {
     colors: ThemeConfig['palette'];
@@ -26,21 +27,7 @@ export interface PortfolioSiteStyles {
     bio?: string;
 }
 
-export interface StylePreset {
-    id: string;
-    name: string;
-    colors?: Partial<PortfolioSiteStyles['colors']>;
-    typography?: Partial<PortfolioSiteStyles['typography']>;
-    spacing?: Partial<PortfolioSiteStyles['spacing']>;
-    effects?: Partial<PortfolioSiteStyles['effects']>;
-}
+// Keep existing interface if it's not in domain types, or alias it if needed
+// Checking domain types, StylePreset exists there too.
+// We can rely on the export * from domain/builder/types for most things now.
 
-export type TemplateCategory =
-    | 'minimal'
-    | 'creative'
-    | 'professional'
-    | 'developer'
-    | 'photographer'
-    | 'designer'
-    | 'agency'
-    | 'freelancer';

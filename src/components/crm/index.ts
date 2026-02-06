@@ -16,3 +16,5 @@ export { CustomFieldRenderer } from './CustomFieldRenderer';
 export { ProductsList } from './ProductsList';
 export { LeadsList } from './LeadsList';
 export { NotesList } from './NotesList';
+export { AddOrganizationDialog } from './AddOrganizationDialog';
+export { AddContactDialog } from './AddContactDialog';

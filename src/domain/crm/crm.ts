@@ -95,6 +95,7 @@ export interface Deal {
   probability: number | null;
   notes: string | null;
   lost_reason: string | null;
+  status: 'open' | 'won' | 'lost' | 'deleted';
   sort_order: number;
   visibility: Visibility;
   stage_entered_at: string | null;

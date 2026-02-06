@@ -42,10 +42,10 @@ export const PersonSchema = z.object({
     id: z.string().uuid(),
     user_id: z.string().uuid(),
     name: z.string().min(1, 'Name is required'),
-    first_name: z.string().optional(),
-    last_name: z.string().optional(),
+    first_name: z.string().nullable().optional(),
+    last_name: z.string().nullable().optional(),
     organization_id: z.string().uuid().nullable().optional(), // Reference to Org ID
-    job_title: z.string().optional(),
+    job_title: z.string().nullable().optional(),
     emails: z.array(z.object({
         value: z.string().email(),
         label: z.string().default('work'),
@@ -57,14 +57,14 @@ export const PersonSchema = z.object({
         primary: z.boolean().default(false),
     })).default([]),
     label_ids: z.array(z.string().uuid()).default([]),
-    owner_id: z.string().uuid().optional(),
+    owner_id: z.string().uuid().nullable().optional(),
     custom_fields: z.record(z.any()).default({}),
     visible_to: VisibleToSchema.default('everyone'),
-    last_activity_at: z.string().datetime().nullable().optional(),
-    created_at: z.string().datetime(),
-    updated_at: z.string().datetime(),
+    last_activity_at: z.string().nullable().optional(),
+    created_at: z.string(), // Relaxed validation
+    updated_at: z.string(), // Relaxed validation
     is_deleted: z.boolean().default(false),
-    deleted_at: z.string().datetime().nullable().optional(),
+    deleted_at: z.string().nullable().optional(),
 });
 
 export type Person = z.infer<typeof PersonSchema>;
@@ -133,9 +133,19 @@ export const LeadSchema = z.object({
     email: z.string().email().optional(),
     phone: z.string().optional(),
     status: LeadStatusSchema.default('new'),
-    owner_id: z.string().uuid().optional(),
-    created_at: z.string().datetime(),
-    updated_at: z.string().datetime(),
+    currency: z.string().length(3).default('EUR'),
+    expected_value: z.number().optional(),
+    owner_id: z.string().uuid().optional().nullable(),
+    label_ids: z.array(z.string()).default([]),
+    custom_fields: z.record(z.unknown()).default({}),
+    created_at: z.string(),
+    updated_at: z.string(),
+    converted_deal_id: z.string().uuid().optional().nullable(),
+    converted_at: z.string().optional().nullable(),
+    converted_person_id: z.string().uuid().optional().nullable(),
+    converted_organization_id: z.string().uuid().optional().nullable(),
+    last_activity_at: z.string().optional().nullable(),
+    next_activity_date: z.string().optional().nullable(),
 });
 
 export type Lead = z.infer<typeof LeadSchema>;

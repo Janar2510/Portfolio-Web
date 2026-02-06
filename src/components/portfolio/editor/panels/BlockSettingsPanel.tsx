@@ -1060,55 +1060,105 @@ export function BlockSettingsPanel({ block }: BlockSettingsPanelProps) {
           </TabsContent>
 
           <TabsContent value="layout" className="mt-0 space-y-4">
+            {/* Freeform Position Controls */}
             <div className="space-y-2">
-              <Label htmlFor="layout-width">Width</Label>
-              <Select
-                value={(watch('layout.width') as string) || 'container'}
-                onValueChange={value => setValue('layout.width', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="container">Container</SelectItem>
-                  <SelectItem value="full">Full Width</SelectItem>
-                  <SelectItem value="narrow">Narrow</SelectItem>
-                  <SelectItem value="wide">Wide</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label className="text-xs font-semibold uppercase text-muted-foreground">
+                Position
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <Label htmlFor="layout-x" className="text-xs">X</Label>
+                  <Input
+                    id="layout-x"
+                    type="number"
+                    {...register('layout.x', { valueAsNumber: true })}
+                    placeholder="20"
+                    className="h-8"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="layout-y" className="text-xs">Y</Label>
+                  <Input
+                    id="layout-y"
+                    type="number"
+                    {...register('layout.y', { valueAsNumber: true })}
+                    placeholder="20"
+                    className="h-8"
+                  />
+                </div>
+              </div>
             </div>
+
+            {/* Size Controls */}
             <div className="space-y-2">
-              <Label htmlFor="layout-padding">Padding</Label>
-              <Select
-                value={(watch('layout.padding') as string) || 'default'}
-                onValueChange={value => setValue('layout.padding', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  <SelectItem value="small">Small</SelectItem>
-                  <SelectItem value="default">Default</SelectItem>
-                  <SelectItem value="large">Large</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label className="text-xs font-semibold uppercase text-muted-foreground">
+                Size
+              </Label>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <Label htmlFor="layout-width" className="text-xs">Width</Label>
+                  <Input
+                    id="layout-width"
+                    type="number"
+                    {...register('layout.width', { valueAsNumber: true })}
+                    placeholder="600"
+                    className="h-8"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="layout-height" className="text-xs">Height</Label>
+                  <Input
+                    id="layout-height"
+                    type="number"
+                    {...register('layout.height', { valueAsNumber: true })}
+                    placeholder="200"
+                    className="h-8"
+                  />
+                </div>
+              </div>
             </div>
+
+            {/* Layer Controls */}
             <div className="space-y-2">
-              <Label htmlFor="layout-alignment">Alignment</Label>
-              <Select
-                value={(watch('layout.alignment') as string) || 'left'}
-                onValueChange={value => setValue('layout.alignment', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="left">Left</SelectItem>
-                  <SelectItem value="center">Center</SelectItem>
-                  <SelectItem value="right">Right</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label className="text-xs font-semibold uppercase text-muted-foreground">
+                Layer Order
+              </Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 h-8 text-xs"
+                  onClick={() => {
+                    const currentZ = (watch('layout.zIndex') as number) || 10;
+                    setValue('layout.zIndex', currentZ + 10);
+                  }}
+                >
+                  ↑ Bring Forward
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 h-8 text-xs"
+                  onClick={() => {
+                    const currentZ = (watch('layout.zIndex') as number) || 10;
+                    setValue('layout.zIndex', Math.max(1, currentZ - 10));
+                  }}
+                >
+                  ↓ Send Back
+                </Button>
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                <Label htmlFor="layout-zindex" className="text-xs">Z-Index:</Label>
+                <Input
+                  id="layout-zindex"
+                  type="number"
+                  {...register('layout.zIndex', { valueAsNumber: true })}
+                  placeholder="10"
+                  className="h-7 w-20 text-xs"
+                />
+              </div>
             </div>
           </TabsContent>
 

@@ -71,7 +71,10 @@ export function AddBlockModal({ onClose, onSelect }: AddBlockModalProps) {
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col" aria-describedby="add-block-desc">
+        <DialogDescription id="add-block-desc" className="sr-only">
+          Select a block to add to your site
+        </DialogDescription>
         <DialogHeader>
           <DialogTitle>Add Block</DialogTitle>
           <DialogDescription>

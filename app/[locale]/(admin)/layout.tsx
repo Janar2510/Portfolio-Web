@@ -1,9 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { TopNav } from '@/components/layout/TopNav';
-import { Sidebar } from '@/components/layout/Sidebar';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import { AppShell } from '@/components/shell/AppShell';
 
 export default async function AdminLayout({
   children,
@@ -75,33 +74,15 @@ export default async function AdminLayout({
       redirect(`/${locale}/sign-in`);
     }
 
-    // Check onboarding status - redirect if not completed
-    const { data: onboardingProgress } = await supabase
-      .from('onboarding_progress')
-      .select('status')
-      .eq('user_id', user.id)
-      .single();
-
-    // If onboarding exists and is not completed/skipped, redirect to onboarding
-    if (
-      onboardingProgress &&
-      onboardingProgress.status !== 'completed' &&
-      onboardingProgress.status !== 'skipped'
-    ) {
-      redirect(`/${locale}/onboarding`);
-    }
+    // Check onboarding status - handled in middleware!
+    // We removed the redundant check here to prevent redirect loops between Middleware (Edge) and Layout (Node).
+    // Middleware is the single source of truth for onboarding access control.
 
     return (
       <QueryProvider>
-        <div className="min-h-screen bg-background">
-          <TopNav locale={locale} />
-          <div className="flex">
-            <Sidebar locale={locale} />
-            <main className="flex-1 ml-64 pt-14 transition-all duration-200">
-              <div className="p-4 md:p-6">{children}</div>
-            </main>
-          </div>
-        </div>
+        <AppShell locale={locale}>
+          {children}
+        </AppShell>
       </QueryProvider>
     );
   } catch (error) {

@@ -143,6 +143,36 @@ export function DealDetailModal({
     }
   });
 
+  // Send Email Mutation
+  const sendEmailMutation = useMutation({
+    mutationFn: async (emailData: { to: string; subject: string; body: string }) => {
+      if (!deal?.id) throw new Error('Deal ID not found');
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not found');
+
+      const { error } = await supabase
+        .from('emails')
+        .insert({
+          deal_id: deal.id,
+          user_id: user.id,
+          to_address: emailData.to,
+          subject: emailData.subject,
+          body: emailData.body,
+          sent_at: new Date().toISOString(),
+          status: 'sent',
+          from_address: user.email // optional, might be useful
+        });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['crm-emails', deal?.id] });
+      // We also invalidate activities because ActivityComposer adds a log entry
+      queryClient.invalidateQueries({ queryKey: ['crm-activities', deal?.id] });
+    }
+  });
+
   if (!deal) return null;
 
   const currentStage = stages.find(s => s.id === deal.stage_id);
@@ -162,46 +192,46 @@ export function DealDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl h-[90vh] p-0 gap-0 overflow-hidden flex flex-col bg-background/95 backdrop-blur-sm" aria-describedby="deal-detail-description">
+      <DialogContent className="max-w-6xl h-[90vh] p-0 gap-0 overflow-hidden flex flex-col bg-black/40 backdrop-blur-3xl border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.5)] text-foreground rounded-[3rem]" aria-describedby="deal-detail-description">
         <DialogDescription id="deal-detail-description" className="sr-only">
           Details and activity timeline for the deal {deal.title}
         </DialogDescription>
 
         {/* Header */}
-        <DialogHeader className="p-4 border-b flex-shrink-0 flex flex-row items-center justify-between bg-background">
-          <div className="flex items-center gap-3">
+        <DialogHeader className="p-8 border-b border-white/5 flex-shrink-0 flex flex-row items-center justify-between bg-white/[0.01]">
+          <div className="flex items-center gap-5">
             <div
-              className="h-8 w-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
-              style={{ backgroundColor: currentStage?.color || '#3b82f6' }}
+              className="h-14 w-14 rounded-[1.5rem] flex items-center justify-center text-white text-lg font-black font-display shadow-glow-soft"
+              style={{ backgroundColor: currentStage?.color || 'hsl(var(--primary))' }}
             >
               {deal.value ? (
                 new Intl.NumberFormat('en-US', { style: 'currency', currency: deal.currency || 'USD', notation: 'compact' }).format(deal.value)
-              ) : '$'}
+              ) : <DollarSign className="w-6 h-6" />}
             </div>
-            <div>
-              <DialogTitle className="text-xl font-bold">{deal.title}</DialogTitle>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <span style={{ color: currentStage?.color || undefined }}>●</span>
-                  {currentStage?.name}
+            <div className="space-y-1">
+              <DialogTitle className="text-3xl font-bold tracking-tight text-white font-display uppercase">{deal.title}</DialogTitle>
+              <div className="flex items-center gap-3 text-sm font-medium">
+                <span className="flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/[0.03] border border-white/5">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: currentStage?.color || undefined }}></span>
+                  <span className="text-white/60">{currentStage?.name}</span>
                 </span>
-                <span>•</span>
-                <span>{contact?.first_name} {contact?.last_name}</span>
+                <span className="text-white/20">•</span>
+                <span className="text-white/60 flex items-center gap-2"><User className="h-3.5 w-3.5" /> {contact?.first_name} {contact?.last_name}</span>
                 {company && (
                   <>
-                    <span>•</span>
-                    <span className="flex items-center gap-1"><Building2 className="h-3 w-3" /> {company.name}</span>
+                    <span className="text-white/20">•</span>
+                    <span className="text-white/60 flex items-center gap-2"><Building2 className="h-3.5 w-3.5" /> {company.name}</span>
                   </>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setIsEditing(!isEditing)}>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => setIsEditing(!isEditing)} className="rounded-xl border border-white/5 hover:bg-white/5 text-white/40 hover:text-white transition-all">
               <Edit2 className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-destructive" onClick={async () => {
+            <Button variant="ghost" size="icon" className="rounded-xl border border-white/5 hover:bg-white/5 text-white/40 hover:text-destructive transition-all" onClick={async () => {
               if (confirm('Delete deal?')) {
                 try {
                   await onDelete(deal.id);
@@ -214,7 +244,7 @@ export function DealDetailModal({
             }}>
               <Trash2 className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-xl border border-white/5 hover:bg-white/5 text-white/40 hover:text-white transition-all">
               <X className="h-5 w-5" />
             </Button>
           </div>
@@ -224,7 +254,7 @@ export function DealDetailModal({
         <div className="flex-1 flex overflow-hidden">
 
           {/* Main Content (Timeline & Composer) - Left Side */}
-          <div className="flex-1 flex flex-col overflow-hidden border-r bg-muted/10">
+          <div className="flex-1 flex flex-col overflow-hidden border-r premium-border bg-[hsl(var(--bg-elevated))]/20">
             <ScrollArea className="flex-1">
               <div className="p-6 max-w-3xl mx-auto space-y-8">
                 {/* Composer */}
@@ -242,6 +272,9 @@ export function DealDetailModal({
                   onActivityCreate={async (activity) => {
                     await createActivityMutation.mutateAsync(activity);
                   }}
+                  onEmailSend={async (email) => {
+                    await sendEmailMutation.mutateAsync(email);
+                  }}
                 />
 
                 {/* Timeline */}
@@ -257,7 +290,7 @@ export function DealDetailModal({
           </div>
 
           {/* Sidebar (Details) - Right Side */}
-          <div className="w-80 flex-shrink-0 bg-background border-l flex flex-col overflow-y-auto">
+          <div className="w-96 flex-shrink-0 bg-white/[0.01] border-l border-white/5 flex flex-col overflow-y-auto">
             {isEditing ? (
               <form onSubmit={handleSave} className="p-4 space-y-4">
                 <div className="space-y-2">
@@ -287,80 +320,81 @@ export function DealDetailModal({
                   </Select>
                 </div>
                 {/* Other fields like date etc */}
-                <div className="flex justify-end gap-2 pt-4">
-                  <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
-                  <Button type="submit">Save</Button>
+                <div className="flex justify-end gap-3 pt-6 border-t border-white/5 mt-4">
+                  <Button type="button" variant="ghost" onClick={() => setIsEditing(false)} className="rounded-xl text-white/40 hover:text-white hover:bg-white/5">Cancel</Button>
+                  <Button type="submit" className="rounded-xl bg-primary text-white hover:bg-primary/90 shadow-glow-seafoam-sm px-6">Save Changes</Button>
                 </div>
               </form>
             ) : (
-              <div className="p-4 space-y-6">
+              <div className="p-8 space-y-8">
                 {/* Summary Card */}
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center text-sm font-medium text-muted-foreground">
-                    <span>Deal Details</span>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => setIsEditing(true)}>
-                      <Edit2 className="h-3 w-3" />
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <h4 className="text-xs font-black uppercase tracking-widest text-white/30">Deal Details</h4>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-lg hover:bg-white/5 text-white/20 hover:text-white" onClick={() => setIsEditing(true)}>
+                      <Edit2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
 
-                  <div className="space-y-3 text-sm">
-                    <div className="grid grid-cols-2 gap-2">
-                      <span className="text-muted-foreground">Value</span>
-                      <span className="font-medium text-right">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                      <span className="text-sm font-medium text-white/40">Value</span>
+                      <span className="text-xl font-bold text-white font-display">
                         {new Intl.NumberFormat('en-US', { style: 'currency', currency: deal.currency || 'USD' }).format(deal.value || 0)}
                       </span>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <span className="text-muted-foreground">Probability</span>
-                      <span className="font-medium text-right">{deal.probability || 0}%</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <span className="text-muted-foreground">Exp. Close</span>
-                      <span className="font-medium text-right">
-                        {deal.expected_close_date ? new Date(deal.expected_close_date).toLocaleDateString() : '-'}
-                      </span>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-white/30">Probability</span>
+                        <div className="text-lg font-bold text-primary shadow-glow-seafoam-sm inline-block">{deal.probability || 0}%</div>
+                      </div>
+                      <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-white/30">Exp. Close</span>
+                        <div className="text-sm font-bold text-white/80">
+                          {deal.expected_close_date ? new Date(deal.expected_close_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '-'}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <Separator />
+                <div className="h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
 
                 {/* Person Card */}
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Person</h4>
+                <div className="space-y-4">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-white/30">Primary Contact</h4>
                   {contact ? (
-                    <div className="flex items-start gap-3">
-                      <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-700 dark:text-blue-300">
-                        <User className="h-4 w-4" />
+                    <div className="flex items-center gap-4 p-4 rounded-[1.5rem] bg-indigo-500/5 border border-indigo-500/10 hover:border-indigo-500/30 transition-all group/contact">
+                      <div className="h-12 w-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20 group-hover/contact:shadow-glow-soft transition-all">
+                        <User className="h-6 w-6" />
                       </div>
-                      <div className="flex-1">
-                        <div className="font-medium text-sm">{contact.first_name} {contact.last_name}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">{contact.email}</div>
-                        <div className="text-xs text-muted-foreground">{contact.phone}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-white group-hover/contact:text-indigo-300 transition-colors uppercase tracking-tight">{contact.first_name} {contact.last_name}</div>
+                        <div className="text-xs text-white/40 truncate mt-0.5">{contact.email}</div>
                       </div>
                     </div>
                   ) : (
-                    <div className="text-sm text-muted-foreground italic">No person linked</div>
+                    <div className="text-sm text-white/20 italic p-4 rounded-2xl border border-dashed border-white/5">No person linked</div>
                   )}
                 </div>
 
-                <Separator />
+                <div className="h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
 
                 {/* Organization Card */}
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-3">Organization</h4>
+                <div className="space-y-4">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-white/30">Organization</h4>
                   {company ? (
-                    <div className="flex items-start gap-3">
-                      <div className="h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300">
-                        <Building2 className="h-4 w-4" />
+                    <div className="flex items-center gap-4 p-4 rounded-[1.5rem] bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all group/org">
+                      <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20 group-hover/org:shadow-glow-soft transition-all">
+                        <Building2 className="h-6 w-6" />
                       </div>
-                      <div className="flex-1">
-                        <div className="font-medium text-sm">{company.name}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">{company.address?.city || 'No location'}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-white group-hover/org:text-emerald-300 transition-colors uppercase tracking-tight">{company.name}</div>
+                        <div className="text-xs text-white/40 truncate mt-0.5">{company.address?.city || 'No location'}</div>
                       </div>
                     </div>
                   ) : (
-                    <div className="text-sm text-muted-foreground italic">No organization linked</div>
+                    <div className="text-sm text-white/20 italic p-4 rounded-2xl border border-dashed border-white/5">No organization linked</div>
                   )}
                 </div>
 

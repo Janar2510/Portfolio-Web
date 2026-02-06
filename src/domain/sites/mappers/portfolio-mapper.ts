@@ -24,6 +24,7 @@ export function portfolioSiteToSiteDocument(row: PortfolioSite): SiteDocument {
         publishedAt: row.updated_at, // Best effort from existing schema
         publishedSnapshot: publishedConfig ? {
             schemaVersion: (publishedConfig.schemaVersion as number) || 1,
+            locale: publishedConfig.locale || draftConfig?.locale || 'et',
             sections: publishedConfig.sections || [],
             publishedAt: row.updated_at
         } : undefined,
@@ -61,8 +62,11 @@ export function siteDocumentToPortfolioUpdate(site: SiteDocument): Partial<Portf
     if (site.publishedSnapshot) {
         update.published_config = {
             schemaVersion: site.publishedSnapshot.schemaVersion,
+            locale: site.publishedSnapshot.locale || site.locale,
             sections: site.publishedSnapshot.sections
         } as any;
+    } else {
+        update.published_config = null;
     }
 
     return update;

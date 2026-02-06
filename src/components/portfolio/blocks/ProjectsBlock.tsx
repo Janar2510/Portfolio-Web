@@ -64,6 +64,20 @@ export function ProjectsBlock({
     4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
   };
 
+  // Mix in static items from template if no DB projects found
+  // This ensures templates look good immediately after creation
+  const staticItems = ((content as any).items || []).map((item: any) => ({
+    id: item.id || Math.random().toString(),
+    title: item.title || 'Untitled Project',
+    excerpt: item.description || '',
+    thumbnail_url: item.image?.src || item.image_url || '',
+    category: 'Showcase',
+    tags: [],
+    slug: '#'
+  }));
+
+  const displayProjects = projects.length > 0 ? projects : staticItems;
+
   return (
     <BaseBlock
       block={block}
@@ -76,7 +90,7 @@ export function ProjectsBlock({
     >
       <section className="w-full px-4 py-8">
         {content.title && (
-          <h2 className="mb-6 text-center text-3xl font-semibold">
+          <h2 className="mb-6 text-center text-3xl font-bold" style={{ color: 'var(--portfolio-text)', fontFamily: 'var(--portfolio-font-heading)' }}>
             {content.title}
           </h2>
         )}
@@ -85,7 +99,7 @@ export function ProjectsBlock({
           <div className="flex min-h-[200px] items-center justify-center">
             <p className="text-sm text-muted-foreground">Loading projects...</p>
           </div>
-        ) : projects.length === 0 ? (
+        ) : displayProjects.length === 0 ? (
           <div className="flex min-h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-muted">
             <p className="text-sm text-muted-foreground">
               {isEditing
@@ -103,7 +117,7 @@ export function ProjectsBlock({
               'columns-1 md:columns-2 lg:columns-3'
             )}
           >
-            {projects.map(project => (
+            {displayProjects.map((project: any) => (
               <div
                 key={project.id}
                 className="group rounded-lg border bg-card p-4 transition-shadow hover:shadow-lg"
@@ -117,10 +131,10 @@ export function ProjectsBlock({
                     />
                   </div>
                 )}
-                <h3 className="mb-2 text-xl font-semibold">{project.title}</h3>
+                <h3 className="mb-2 text-xl font-bold" style={{ color: 'var(--portfolio-text)', fontFamily: 'var(--portfolio-font-heading)' }}>{project.title}</h3>
                 {settings.show_description &&
                   (project.excerpt || project.description) && (
-                    <p className="mb-3 text-sm text-muted-foreground">
+                    <p className="mb-3 text-sm text-[var(--portfolio-text)] opacity-60">
                       {project.excerpt || project.description}
                     </p>
                   )}
@@ -132,7 +146,7 @@ export function ProjectsBlock({
                       {project.tags.map((tag: string) => (
                         <span
                           key={tag}
-                          className="rounded-full bg-muted px-2 py-1 text-xs"
+                          className="bg-muted px-2 py-1 text-xs"
                         >
                           {tag}
                         </span>

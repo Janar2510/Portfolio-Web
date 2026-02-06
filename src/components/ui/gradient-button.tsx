@@ -1,60 +1,58 @@
-'use client';
+"use client"
 
-import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
 
 const gradientButtonVariants = cva(
   [
-    'gradient-button',
-    'inline-flex items-center justify-center',
-    'rounded-[11px] min-w-[50px] px-6', // min-w-50px as requested, height in variants
-    'text-base leading-[19px] font-[500] text-white',
-    'font-sans font-bold',
-    'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-    'disabled:pointer-events-none disabled:opacity-50',
-    'transition-all duration-300', // Added transition for smoothness
+    "gradient-button",
+    "inline-flex items-center justify-center",
+    "rounded-[11px]",
+    "text-base leading-[19px] font-[500] text-white",
+    "font-sans font-bold",
+    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+    "disabled:pointer-events-none disabled:opacity-50",
   ],
   {
     variants: {
       variant: {
-        default: '',
-        variant: 'gradient-button-variant',
+        default: "",
+        variant: "gradient-button-variant",
       },
       size: {
-        default: 'min-w-[70px] px-8 py-3 text-base',
-        sm: 'px-6 py-2 text-sm',
-        lg: 'min-w-[70px] px-10 py-4 text-lg',
-        icon: 'h-10 w-10 p-0',
+        default: "h-11 px-9 py-4",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-14 rounded-xl px-10 text-lg",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {
-      variant: 'default',
-      size: 'default',
+      variant: "default",
+      size: "default",
     },
   }
-);
+)
 
 export interface GradientButtonProps
-  extends
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof gradientButtonVariants> {
-  asChild?: boolean;
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  VariantProps<typeof gradientButtonVariants> {
+  asChild?: boolean
 }
 
 const GradientButton = React.forwardRef<HTMLButtonElement, GradientButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
+  ({ className, variant, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
     return (
       <Comp
-        className={cn(gradientButtonVariants({ variant, size, className }))}
+        className={cn(gradientButtonVariants({ variant, className }))}
         ref={ref}
         {...props}
       />
-    );
+    )
   }
-);
-GradientButton.displayName = 'GradientButton';
+)
+GradientButton.displayName = "GradientButton"
 
-export { GradientButton, gradientButtonVariants };
+export { GradientButton, gradientButtonVariants }

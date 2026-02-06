@@ -11,12 +11,14 @@ import {
   Building2,
   Briefcase,
   Send,
+  CheckSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { Email } from '@/domain/email/email';
 import type { Contact, Deal } from '@/domain/crm/crm';
+import { CreateTaskDialog } from '../projects/CreateTaskDialog';
 
 interface EmailThreadViewProps {
   emails: Email[];
@@ -42,6 +44,7 @@ export function EmailThreadView({
   const [expandedEmails, setExpandedEmails] = useState<Set<string>>(
     new Set([emails[0]?.id])
   );
+  const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
 
   const toggleEmail = (emailId: string) => {
     const newExpanded = new Set(expandedEmails);
@@ -57,6 +60,8 @@ export function EmailThreadView({
   const sortedEmails = [...emails].sort(
     (a, b) => new Date(a.sent_at).getTime() - new Date(b.sent_at).getTime()
   );
+
+  const latestEmail = sortedEmails[sortedEmails.length - 1];
 
   return (
     <div className="flex h-full flex-col">
@@ -89,6 +94,14 @@ export function EmailThreadView({
             </div>
           </div>
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsTaskDialogOpen(true)}
+            >
+              <CheckSquare className="mr-2 h-4 w-4" />
+              Create Task
+            </Button>
             {onCompose && (
               <Button size="sm" onClick={onCompose}>
                 <Send className="mr-2 h-4 w-4" />
@@ -98,6 +111,20 @@ export function EmailThreadView({
           </div>
         </div>
       </div>
+
+      <CreateTaskDialog
+        isOpen={isTaskDialogOpen}
+        onClose={() => setIsTaskDialogOpen(false)}
+        initialData={{
+          title: latestEmail?.subject || 'New Task from Email',
+          description: latestEmail?.body_preview || '',
+          email: {
+            id: latestEmail?.id,
+            subject: latestEmail?.subject || '',
+            from: latestEmail?.from_address || '',
+          }
+        }}
+      />
 
       {/* Email Thread */}
       <div className="flex-1 overflow-y-auto">

@@ -69,7 +69,8 @@ export function FeaturesBlock({
   const content = (block.content || {}) as FeaturesBlockContent;
   const settings = (block.settings || {}) as FeaturesBlockSettings;
 
-  const features = content.features || [];
+  const items = (content as any).items || [];
+  const features = content.features || items;
   const columns = settings.columns || 3;
   const showIcon = settings.show_icon !== false;
   const isGlass = settings.background === 'glass';
@@ -110,9 +111,10 @@ export function FeaturesBlock({
                   </h2>
                   <h3
                     className={cn(
-                      'text-4xl md:text-5xl font-serif font-bold',
-                      isGlass ? 'text-white' : 'text-foreground'
+                      'text-4xl md:text-5xl font-bold',
+                      'text-[var(--portfolio-text)]'
                     )}
+                    style={{ fontFamily: 'var(--portfolio-font-heading)' }}
                   >
                     {content.title}
                   </h3>
@@ -143,9 +145,7 @@ export function FeaturesBlock({
                   key={idx}
                   className={cn(
                     'group p-10 rounded-3xl transition-all duration-500 hover:-translate-y-2',
-                    isGlass
-                      ? 'bg-white/5 border border-white/10 hover:bg-white/10 text-white'
-                      : 'bg-surface border border-border hover:shadow-lg hover:border-primary/50 text-card-foreground'
+                    'bg-[var(--portfolio-text)]/5 border border-[var(--portfolio-text)]/10 hover:bg-[var(--portfolio-text)]/10 text-[var(--portfolio-text)]'
                   )}
                 >
                   {showIcon && (
@@ -168,16 +168,16 @@ export function FeaturesBlock({
                   )}
                   <h4
                     className={cn(
-                      'text-xl font-bold mb-4',
-                      isGlass ? 'text-white' : 'text-foreground'
+                      'text-xl font-bold mb-4'
                     )}
+                    style={{ color: 'var(--portfolio-text)', fontFamily: 'var(--portfolio-font-heading)' }}
                   >
                     {feature.title}
                   </h4>
                   <p
                     className={cn(
                       'text-sm leading-relaxed',
-                      isGlass ? 'text-slate-400' : 'text-muted-foreground'
+                      'text-[var(--portfolio-text)] opacity-60'
                     )}
                   >
                     {feature.description}

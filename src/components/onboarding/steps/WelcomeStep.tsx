@@ -5,8 +5,10 @@ import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { UserType, PrimaryGoal } from '@/lib/onboarding/steps';
-import { Briefcase, Building2, Palette, User } from 'lucide-react';
+import { Briefcase, Building2, Palette, User, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { GradientButton } from '@/components/ui/gradient-button';
+import { motion } from 'framer-motion';
 
 interface WelcomeStepProps {
   userType: UserType | null;
@@ -78,63 +80,111 @@ export function WelcomeStep({
   const canContinue = userType !== null && primaryGoal !== null;
 
   return (
-    <div className="space-y-8">
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">{t('subtitle')}</p>
+    <div className="space-y-12 py-4">
+      <div className="text-center space-y-4 max-w-2xl mx-auto">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl md:text-6xl font-bold font-display tracking-tight text-white"
+        >
+          {t('title')}
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-xl text-white/60 leading-relaxed"
+        >
+          {t('subtitle')}
+        </motion.p>
       </div>
 
       {/* User Type Selection */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold">{t('userType.label')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {userTypes.map(type => (
-            <Card
+      <div className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px bg-white/10 flex-1" />
+          <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-white/40">{t('userType.label')}</h2>
+          <div className="h-px bg-white/10 flex-1" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {userTypes.map((type, index) => (
+            <motion.div
               key={type.id}
-              className={cn(
-                'cursor-pointer transition-all hover:shadow-md',
-                userType === type.id &&
-                'ring-2 ring-primary-500 border-primary-500'
-              )}
-              onClick={() => {
-                onUserTypeSelect(type.id);
-                onGoalSelect('portfolio'); // Automatically set goal to portfolio
-              }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1 * index + 0.2 }}
             >
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div
-                    className={cn(
-                      'p-3 rounded-lg',
-                      userType === type.id
-                        ? 'bg-primary-100 text-primary-600'
-                        : 'bg-muted text-muted-foreground'
-                    )}
-                  >
-                    {type.icon}
+              <Card
+                className={cn(
+                  'relative group cursor-pointer transition-all duration-500 overflow-hidden bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 rounded-[2rem]',
+                  userType === type.id &&
+                  'bg-white/10 border-primary/50 ring-2 ring-primary/20 shadow-xl shadow-primary/10'
+                )}
+                onClick={() => {
+                  onUserTypeSelect(type.id);
+                  onGoalSelect('portfolio');
+                }}
+              >
+                {/* Selection Pulse */}
+                {userType === type.id && (
+                  <div className="absolute top-4 right-4 h-3 w-3 rounded-full bg-primary animate-pulse shadow-[0_0_15px_rgba(104,169,165,0.5)]" />
+                )}
+
+                <CardContent className="p-8">
+                  <div className="flex items-start gap-6">
+                    <div
+                      className={cn(
+                        'p-4 rounded-2xl transition-all duration-500 shadow-inner',
+                        userType === type.id
+                          ? 'bg-primary text-white scale-110'
+                          : 'bg-white/5 text-white/40 group-hover:bg-white/10 group-hover:text-white/80'
+                      )}
+                    >
+                      {type.icon}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <h3 className={cn(
+                        "text-2xl font-bold font-display transition-colors",
+                        userType === type.id ? "text-white" : "text-white/80 group-hover:text-white"
+                      )}>
+                        {type.label}
+                      </h3>
+                      <p className="text-white/50 group-hover:text-white/70 leading-relaxed text-base">
+                        {type.desc}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold mb-1">{type.label}</h3>
-                    <p className="text-sm text-muted-foreground">{type.desc}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+
+                {/* Decorative Gradient */}
+                <div className={cn(
+                  "absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity",
+                  userType === type.id && "opacity-100"
+                )} />
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>
 
       {/* Continue Button */}
-      <div className="flex justify-center pt-4">
-        <Button
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+        className="flex justify-center pt-8"
+      >
+        <GradientButton
           size="lg"
           onClick={onContinue}
           disabled={!canContinue}
-          className="min-w-[200px]"
+          className="min-w-[240px] h-16 rounded-2xl text-lg shadow-2xl shadow-primary/40 group"
         >
-          Continue
-        </Button>
-      </div>
+          {t('continue') || 'Continue'}
+          <ArrowRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+        </GradientButton>
+      </motion.div>
     </div>
   );
 }

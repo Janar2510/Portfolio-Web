@@ -1,0 +1,274 @@
+/* 
+   ============================================
+   SUPALE BRAND TOKENS - Premium Violet AI SaaS
+   ============================================ 
+   This file acts as the single source of truth for the design system.
+   Dark-first, violet/indigo energy, spacious editorial layout.
+*/
+
+:root {
+   /* 
+     ============================================
+     CORE CANVAS (Dark Indigo Foundation)
+     ============================================ 
+  */
+   --bg-root: 230 35% 6%;
+   /* near-black indigo base */
+   --bg-surface: 232 32% 9%;
+   /* cards, sections */
+   --bg-elevated: 234 30% 12%;
+   /* modals, panels, popovers */
+
+   /* 
+      ============================================
+      BRAND ENERGY (Seafoam / Indigo / Purple)
+      ============================================ 
+   */
+   --brand-seafoam: 176 29% 53%;
+   /* #68A9A5 - Seafoam */
+   --brand-violet: 265 90% 68%;
+   --brand-indigo: 245 80% 62%;
+   --brand-purple: 280 85% 70%;
+
+   /* Primary Branding (Seafoam) */
+   --brand-primary: var(--brand-seafoam);
+
+   /* Accent variants */
+   --accent-glow: 176 29% 53%;
+   /* Seafoam glow */
+   --accent-soft: 176 20% 40%;
+
+   /* 
+     ============================================
+     TEXT HIERARCHY (Improved contrast)
+     ============================================ 
+  */
+   --text-primary: 210 20% 98%;
+   /* near-white for headings */
+   --text-secondary: 215 15% 75%;
+   /* lighter gray for body - improved readability */
+   --text-muted: 220 10% 55%;
+   /* muted for labels */
+
+   /* 
+     ============================================
+     BORDERS & DIVIDERS
+     ============================================ 
+  */
+   --border-subtle: 230 20% 18%;
+
+   /* 
+      ============================================
+      GRADIENTS (Use sparingly, boldly)
+      ============================================ 
+   */
+   --gradient-hero: radial-gradient(circle at 50% 30%, hsla(176, 29%, 53%, 0.35), transparent 60%);
+   --gradient-accent: linear-gradient(135deg, hsl(176, 29%, 53%), hsl(176, 40%, 30%));
+   --gradient-brand: linear-gradient(135deg, hsl(176, 29%, 53%), hsl(176, 40%, 30%));
+
+   /* 
+     ============================================
+     SHADOWS & GLOWS
+     ============================================ 
+  */
+   --shadow-surface: 0 20px 50px -12px hsla(230, 35%, 6%, 0.5);
+   --shadow-elevated: 0 30px 60px -15px hsla(230, 35%, 6%, 0.7);
+   --shadow-glow-seafoam: 0 0 40px hsla(176, 29%, 53%, 0.3);
+   --shadow-glow-indigo: 0 0 30px hsla(245, 80%, 62%, 0.25);
+   --shadow-glow-soft: 0 0 20px hsla(176, 29%, 53%, 0.15);
+
+   /* 
+     ============================================
+     RADIUS (Large, Intentional)
+     ============================================ 
+  */
+   --radius: 1rem;
+   --radius-none: 0;
+   --radius-sm: 0.5rem;
+   /* 8px - small elements */
+   --radius-md: 0.875rem;
+   /* 14px - buttons, badges */
+   --radius-lg: 1rem;
+   /* 16px - inputs */
+   --radius-xl: 1.25rem;
+   /* 20px - small cards */
+   --radius-2xl: 1.5rem;
+   /* 24px - panels */
+   --radius-3xl: 1.75rem;
+   /* 28px - large surfaces */
+   --radius-surface: 1.75rem;
+   /* alias for cards */
+   --radius-panel: 1.5rem;
+   /* alias for panels */
+   --radius-input: 1rem;
+   /* alias for inputs */
+   --radius-full: 9999px;
+
+   /* 
+     ============================================
+     SPACING SYSTEM (4px base unit)
+     ============================================ 
+  */
+   --space-0: 0;
+   --space-px: 1px;
+   --space-0_5: 0.125rem;
+   /* 2px */
+   --space-1: 0.25rem;
+   /* 4px */
+   --space-1_5: 0.375rem;
+   /* 6px */
+   --space-2: 0.5rem;
+   /* 8px */
+   --space-2_5: 0.625rem;
+   /* 10px */
+   --space-3: 0.75rem;
+   /* 12px */
+   --space-4: 1rem;
+   /* 16px */
+   --space-5: 1.25rem;
+   /* 20px */
+   --space-6: 1.5rem;
+   /* 24px */
+   --space-8: 2rem;
+   /* 32px */
+   --space-10: 2.5rem;
+   /* 40px */
+   --space-12: 3rem;
+   /* 48px */
+   --space-16: 4rem;
+   /* 64px */
+   --space-20: 5rem;
+   /* 80px */
+   --space-24: 6rem;
+   /* 96px */
+
+   /* Legacy spacing aliases */
+   --space-xs: var(--space-1);
+   --space-sm: var(--space-2);
+   --space-md: var(--space-4);
+   --space-lg: var(--space-6);
+   --space-xl: var(--space-8);
+   --space-2xl: var(--space-12);
+   --space-3xl: var(--space-16);
+
+   /* 
+     ============================================
+     TYPOGRAPHY SCALE (Editorial)
+     ============================================ 
+  */
+   --text-xs: 0.75rem;
+   /* 12px */
+   --text-sm: 0.875rem;
+   /* 14px - small text */
+   --text-base: 1rem;
+   /* 16px - body */
+   --text-lg: 1.125rem;
+   /* 18px - body large */
+   --text-xl: 1.25rem;
+   /* 20px */
+   --text-2xl: 1.5rem;
+   /* 24px */
+   --text-3xl: 1.875rem;
+   /* 30px */
+   --text-4xl: 2.25rem;
+   /* 36px */
+   --text-5xl: 3rem;
+   /* 48px */
+
+   /* Premium scale for headings */
+   --text-h1: 3.5rem;
+   /* 56px - hero headlines */
+   --text-h2: 2.75rem;
+   /* 44px - section headers */
+   --text-h3: 2rem;
+   /* 32px - subsection headers */
+   --text-body: 1.125rem;
+   /* 18px - body text */
+   --text-small: 0.875rem;
+   /* 14px - small text */
+
+   /* Line heights */
+   --leading-none: 1;
+   --leading-tight: 1.25;
+   --leading-snug: 1.375;
+   --leading-normal: 1.5;
+   --leading-relaxed: 1.625;
+
+   /* Font weights */
+   --font-normal: 400;
+   --font-medium: 500;
+   --font-semibold: 600;
+   --font-bold: 700;
+
+   /* 
+     ============================================
+     FONT FAMILIES
+     ============================================ 
+  */
+   --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+   --font-family-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+   --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+   /* 
+     ============================================
+     BREAKPOINTS
+     ============================================ 
+  */
+   --breakpoint-sm: 640px;
+   --breakpoint-md: 768px;
+   --breakpoint-lg: 1024px;
+   --breakpoint-xl: 1280px;
+   --breakpoint-2xl: 1536px;
+
+   /* 
+     ============================================
+     CONTENT MAX WIDTHS
+     ============================================ 
+  */
+   --content-max-width: 1360px;
+   /* app content */
+   --form-max-width: 640px;
+   /* forms */
+   --text-max-width: 720px;
+   /* prose */
+
+   /* 
+     ============================================
+     TRANSITIONS & EASING
+     ============================================ 
+  */
+   --duration-75: 75ms;
+   --duration-100: 100ms;
+   --duration-150: 150ms;
+   --duration-200: 200ms;
+   --duration-300: 300ms;
+   --duration-500: 500ms;
+
+   --ease-in: cubic-bezier(0.4, 0, 1, 1);
+   --ease-out: cubic-bezier(0, 0, 0.2, 1);
+   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+   /* 
+     ============================================
+     ICON SIZES
+     ============================================ 
+  */
+   --icon-xs: 1rem;
+   /* 16px */
+   --icon-sm: 1.25rem;
+   /* 20px */
+   --icon-md: 1.5rem;
+   /* 24px */
+   --icon-lg: 2rem;
+   /* 32px */
+   --icon-xl: 2.5rem;
+   /* 40px */
+   --icon-2xl: 3rem;
+   /* 48px */
+}
+
+.dark {
+   /* Dark mode is default, but can override if needed */
+   --bg-root: 230 35% 6%;
+}

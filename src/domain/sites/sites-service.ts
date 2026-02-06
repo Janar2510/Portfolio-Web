@@ -140,6 +140,7 @@ export class SitesService {
         site.publishedAt = timestamp;
         site.publishedSnapshot = {
             schemaVersion: site.schemaVersion,
+            locale: site.locale,
             sections: JSON.parse(JSON.stringify(site.sections)), // Deep copy snapshot
             publishedAt: timestamp
         };
@@ -175,5 +176,13 @@ export class SitesService {
         const site = await this.repo.getPublishedBySlug(slug);
         if (!site) throw new NotFoundError(`Published site not found for slug: ${slug}`);
         return site;
+    }
+
+    /**
+     * 8. Deletes a site.
+     */
+    async deleteSite(siteId: string): Promise<void> {
+        if (!siteId) throw new ValidationError('siteId is required');
+        return this.repo.delete(siteId);
     }
 }

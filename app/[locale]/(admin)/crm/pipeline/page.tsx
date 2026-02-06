@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Settings } from 'lucide-react';
+import { Settings, Sparkles, PlusCircle, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -36,6 +36,7 @@ export default function PipelinePage() {
   const [createDealStageId, setCreateDealStageId] = useState<string | null>(
     null
   );
+  const [editingStage, setEditingStage] = useState<PipelineStage | null>(null);
   const queryClient = useQueryClient();
 
   // Real-time subscriptions
@@ -79,7 +80,7 @@ export default function PipelinePage() {
   }, [queryClient]);
 
   // Fetch pipeline stages
-  const { data: stages = [] } = useQuery({
+  const { data: stages = [], isLoading: isLoadingStages } = useQuery({
     queryKey: ['crm-pipeline-stages'],
     queryFn: async () => {
       const supabase = createClient();
@@ -93,7 +94,7 @@ export default function PipelinePage() {
   });
 
   // Fetch all deals
-  const { data: deals = [] } = useQuery({
+  const { data: deals = [], isLoading: isLoadingDeals } = useQuery({
     queryKey: ['crm-deals'],
     queryFn: async () => {
       const supabase = createClient();
@@ -432,100 +433,117 @@ export default function PipelinePage() {
     });
   };
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Skeleton component for loading/hydration
+  const PipelineSkeleton = () => (
+    <div className="flex gap-6 p-8 h-full overflow-hidden">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="flex h-full min-w-[340px] max-w-[340px] flex-col rounded-[2.5rem] border border-white/5 bg-white/[0.02] backdrop-blur-md p-4 space-y-4">
+          <div className="flex justify-between items-center">
+            <div className="h-5 w-32 bg-white/5 rounded-full animate-pulse" />
+            <div className="h-5 w-8 bg-white/5 rounded-full animate-pulse" />
+          </div>
+          <div className="h-1.5 w-full bg-white/5 rounded-full animate-pulse" />
+          <div className="space-y-3 pt-4">
+            {[1, 2, 3].map(j => (
+              <div key={j} className="h-32 w-full bg-white/5 rounded-[1.5rem] animate-pulse" />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   // Get default stage for new deals
   const defaultStage = stages.find(s => !s.is_won && !s.is_lost) || stages[0];
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border bg-card/50 backdrop-blur-sm p-4 animate-slide-down">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Sales Pipeline</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage your deals and pipeline stages
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white"
-            onClick={() => setIsStageSettingsOpen(true)}
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            Customize Stages
-          </Button>
-          <Button
-            className="bg-green-600 hover:bg-green-700"
-            onClick={() => {
-              setCreateDealStageId(defaultStage?.id || '');
-              setIsCreateDealOpen(true);
-            }}
-          >
-            Add Deal
-          </Button>
+    <div className="flex flex-col h-[calc(100vh-4rem)] animate-fade-in overflow-hidden">
+      {/* Pulse-style Header Wrapper */}
+      <div className="max-w-[1600px] w-full mx-auto pt-10 px-8 shrink-0">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">
+              <Sparkles className="w-3 h-3" />
+              CRM Active
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white m-0 font-display">
+              Sales Pipeline
+            </h1>
+            <p className="text-lg text-white/40 max-w-xl">
+              Everything is running smoothly. Manage your deals and pipeline stages.
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              className="rounded-2xl border-white/10 hover:bg-white/5 text-white/70 h-12 px-6"
+              onClick={() => setIsStageSettingsOpen(true)}
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              Customize Stages
+            </Button>
+            <Button
+              size="lg"
+              className="gap-2 rounded-2xl bg-primary text-white hover:bg-primary/90 shadow-glow-seafoam px-8 h-12"
+              onClick={() => {
+                setCreateDealStageId(defaultStage?.id || '');
+                setIsCreateDealOpen(true);
+              }}
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Add Deal</span>
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Pipeline Board */}
-      <div className="flex-1 overflow-hidden relative">
-        <div className="absolute inset-0">
-          {stages.length === 0 ? (
-            <div className="flex h-full items-center justify-center animate-fade-in">
-              <div className="text-center animate-scale-in">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-                  <svg
-                    className="w-8 h-8 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                </div>
-                <p className="text-lg font-semibold text-foreground">
-                  No pipeline stages
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Create your first pipeline stage to get started
-                </p>
-                <Button
-                  className="mt-4 bg-green-600 hover:bg-green-700"
-                  onClick={() => setIsStageSettingsOpen(true)}
-                >
-                  Create Stage
-                </Button>
+      {/* Pipeline Board Wrapper */}
+      <div className="flex-1 min-h-0 relative">
+        {!mounted || isLoadingStages || isLoadingDeals ? (
+          <PipelineSkeleton />
+        ) : stages.length === 0 ? (
+          <div className="flex h-full items-center justify-center animate-fade-in">
+            <div className="text-center animate-scale-in">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow-soft">
+                <BarChart3 className="w-8 h-8" />
               </div>
+              <h2 className="text-2xl font-bold text-white mb-2 font-display">No pipeline stages</h2>
+              <p className="text-white/40 mb-8 max-w-sm mx-auto leading-relaxed">
+                Create your first pipeline stage to get started managing your deals.
+              </p>
+              <Button
+                onClick={() => setIsStageSettingsOpen(true)}
+                className="bg-primary hover:bg-primary/90 text-white rounded-2xl px-8 h-12 shadow-glow-seafoam"
+              >
+                Create Stage
+              </Button>
             </div>
-          ) : (
-            <PipelineBoard
-              stages={stages}
-              deals={deals}
-              contacts={contacts}
-              companies={companies}
-              onStagesReorder={async newStages => {
-                await reorderStagesMutation.mutateAsync(newStages);
-              }}
-              onDealMove={async (dealId, stageId, sortOrder) => {
-                await moveDealMutation.mutateAsync({
-                  dealId,
-                  stageId,
-                  sortOrder,
-                });
-              }}
-              onDealClick={handleDealClick}
-              onAddDeal={handleAddDeal}
-              onStageSettings={stage => {
-                // Could open a focused edit dialog for this stage
-                setIsStageSettingsOpen(true);
-              }}
-            />
-          )}
-        </div>
+          </div>
+        ) : (
+          <PipelineBoard
+            stages={stages}
+            deals={deals}
+            contacts={contacts}
+            companies={companies}
+            onStagesReorder={async newStages => {
+              await reorderStagesMutation.mutateAsync(newStages);
+            }}
+            onDealMove={async (dealId, stageId, sortOrder) => {
+              await moveDealMutation.mutateAsync({ dealId, stageId, sortOrder });
+            }}
+            onDealClick={handleDealClick}
+            onAddDeal={handleAddDeal}
+            onStageSettings={stage => {
+              setEditingStage(stage);
+              setIsStageSettingsOpen(true);
+            }}
+          />
+        )}
       </div>
 
       {/* Deal Detail Modal */}

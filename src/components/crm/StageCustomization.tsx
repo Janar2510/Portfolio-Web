@@ -115,21 +115,21 @@ export function StageCustomization({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Pipeline Stages</h3>
+        <h3 className="text-sm font-black uppercase tracking-widest text-white/30">Pipeline Stages</h3>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button size="sm">
+            <Button size="sm" className="rounded-xl bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all">
               <Plus className="mr-2 h-4 w-4" />
               Add Stage
             </Button>
           </DialogTrigger>
-          <DialogContent aria-describedby="create-stage-description">
+          <DialogContent className="max-w-md bg-black/40 backdrop-blur-3xl border-white/5 rounded-[2.5rem]" aria-describedby="create-stage-description">
             <form onSubmit={handleCreateStage}>
-              <DialogHeader>
-                <DialogTitle>Create New Stage</DialogTitle>
-                <DialogDescription id="create-stage-description">
+              <DialogHeader className="p-6 border-b border-white/5 bg-white/[0.01]">
+                <DialogTitle className="text-2xl font-bold tracking-tight text-white font-display uppercase">Create Stage</DialogTitle>
+                <DialogDescription id="create-stage-description" className="sr-only">
                   Add a new stage to your sales pipeline.
                 </DialogDescription>
               </DialogHeader>
@@ -198,15 +198,16 @@ export function StageCustomization({
                   </div>
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className="p-6 border-t border-white/5 bg-white/[0.01]">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => setIsCreateDialogOpen(false)}
+                  className="rounded-xl text-white/40 hover:text-white"
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Create</Button>
+                <Button type="submit" className="rounded-xl bg-primary text-white hover:bg-primary/90 shadow-glow-seafoam-sm">Create Stage</Button>
               </DialogFooter>
             </form>
           </DialogContent>
@@ -217,46 +218,50 @@ export function StageCustomization({
         {stages.map((stage, index) => (
           <div
             key={stage.id}
-            className="flex items-center gap-2 rounded-lg border p-3"
+            className="flex items-center gap-4 rounded-2xl border border-white/5 bg-white/[0.02] p-4 group/item hover:bg-white/[0.05] hover:border-white/10 transition-all duration-300"
           >
-            <div className="flex items-center gap-2">
-              <GripVertical className="h-4 w-4 text-muted-foreground" />
+            <div className="flex-1 flex items-center gap-4">
               <div
-                className="h-4 w-4 rounded-full"
-                style={{ backgroundColor: stage.color || '#3b82f6' }}
+                className="text-white/10 hover:text-white/30 transition-colors"
+              >
+                <GripVertical className="h-4 w-4" />
+              </div>
+              <div
+                className="h-5 w-5 rounded-lg shadow-glow-soft shrink-0"
+                style={{ backgroundColor: stage.color || 'hsl(var(--primary))' }}
               />
-              <div className="flex-1">
-                <div className="font-medium">{stage.name}</div>
-                <div className="text-xs text-muted-foreground">
-                  {stage.probability}% probability
-                  {stage.is_won && ' • Won'}
-                  {stage.is_lost && ' • Lost'}
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-white uppercase tracking-tight text-sm">{stage.name}</div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-white/20 mt-0.5">
+                  {stage.probability}% prob
+                  {stage.is_won && <span className="text-emerald-400/60 ml-2">• WON</span>}
+                  {stage.is_lost && <span className="text-red-400/60 ml-2">• LOST</span>}
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5 opacity-0 group-hover/item:opacity-100 transition-opacity">
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7"
+                className="h-8 w-8 rounded-lg hover:bg-white/5 text-white/20 hover:text-white"
                 onClick={() => moveStage(index, 'up')}
                 disabled={index === 0}
               >
-                ↑
+                <Plus className="h-3.5 w-3.5 rotate-180" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7"
+                className="h-8 w-8 rounded-lg hover:bg-white/5 text-white/20 hover:text-white"
                 onClick={() => moveStage(index, 'down')}
                 disabled={index === stages.length - 1}
               >
-                ↓
+                <Plus className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7"
+                className="h-8 w-8 rounded-lg hover:bg-white/5 text-white/20 hover:text-white"
                 onClick={() => {
                   setEditingStage(stage);
                   setIsEditDialogOpen(true);
@@ -267,7 +272,7 @@ export function StageCustomization({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-destructive hover:text-destructive"
+                className="h-8 w-8 rounded-lg hover:bg-white/5 text-white/10 hover:text-destructive transition-all"
                 onClick={() => handleDeleteStage(stage.id)}
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -355,18 +360,19 @@ export function StageCustomization({
                   </div>
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className="p-6 border-t border-white/5 bg-white/[0.01]">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => {
                     setIsEditDialogOpen(false);
                     setEditingStage(null);
                   }}
+                  className="rounded-xl text-white/40 hover:text-white"
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Save</Button>
+                <Button type="submit" className="rounded-xl bg-primary text-white hover:bg-primary/90 shadow-glow-seafoam-sm px-6">Save Changes</Button>
               </DialogFooter>
             </form>
           )}

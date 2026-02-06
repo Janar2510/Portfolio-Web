@@ -779,25 +779,26 @@ export class CRMEnhancedService {
     const lead = await this.getLeadById(leadId);
     if (!lead) throw new Error('Lead not found');
 
+    // Create organization if needed
+    let organization: Organization | undefined;
+    if (lead.organization_name) {
+      organization = await this.createOrganization({
+        name: lead.organization_name,
+      });
+    }
+
     // Create person if needed
     let person: Person | undefined;
     if (lead.person_name || lead.email) {
       person = await this.createPerson({
         name: lead.person_name || lead.email || 'Unknown',
+        organization_id: organization?.id,
         emails: lead.email
           ? [{ value: lead.email, label: 'work', primary: true }]
           : [],
         phones: lead.phone
           ? [{ value: lead.phone, label: 'work', primary: true }]
           : [],
-      });
-    }
-
-    // Create organization if needed
-    let organization: Organization | undefined;
-    if (lead.organization_name) {
-      organization = await this.createOrganization({
-        name: lead.organization_name,
       });
     }
 
@@ -815,6 +816,14 @@ export class CRMEnhancedService {
       converted_at: new Date().toISOString(),
       converted_person_id: person?.id,
       converted_organization_id: organization?.id,
+    });
+
+    // Log activity
+    await this.createNote({
+      content: `Lead converted to deal: ${deal.title}`,
+      deal_id: deal.id,
+      person_id: person?.id,
+      organization_id: organization?.id,
     });
 
     return { deal, person, organization };

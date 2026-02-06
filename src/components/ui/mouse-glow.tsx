@@ -31,7 +31,7 @@ export function MouseGlow() {
           translateX: '-50%',
           translateY: '-50%',
           background:
-            'radial-gradient(circle, hsl(var(--zen-teal)) 0%, transparent 70%)',
+            'radial-gradient(circle, hsl(var(--brand-violet)) 0%, transparent 70%)',
           filter: 'blur(100px)',
         }}
       />
@@ -43,7 +43,7 @@ export function MouseGlow() {
           translateX: '-50%',
           translateY: '-50%',
           background:
-            'radial-gradient(circle, hsl(var(--zen-violet)) 0%, transparent 70%)',
+            'radial-gradient(circle, hsl(var(--brand-400)) 0%, transparent 70%)',
           filter: 'blur(80px)',
           transitionDelay: '0.1s',
         }}

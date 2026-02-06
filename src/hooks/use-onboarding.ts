@@ -55,26 +55,20 @@ export function useOnboarding() {
 
   // Update store when data loads
   useEffect(() => {
-    if (data) {
+    if (data && (!progress || data.updated_at !== progress.updated_at)) {
       setProgress({
-        status: data.status as
-          | 'not_started'
-          | 'in_progress'
-          | 'completed'
-          | 'skipped',
+        status: data.status as any,
         current_step: data.current_step,
         current_substep: data.current_substep,
-        steps_completed: data.steps_completed as Record<
-          OnboardingStepId,
-          boolean
-        >,
+        steps_completed: data.steps_completed as any,
         user_type: data.user_type as any,
         primary_goal: data.primary_goal as any,
         selected_template_id: data.selected_template_id,
         steps_skipped: data.steps_skipped || [],
+        updated_at: data.updated_at,
       });
     }
-  }, [data, setProgress]);
+  }, [data, setProgress, progress]);
 
   // Update progress mutation
   const updateProgressMutation = useMutation({

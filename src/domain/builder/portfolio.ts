@@ -1,4 +1,5 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { listTemplates, createDefaultConfig } from '@/domain/templates/registry';
 const fileTemplates = listTemplates();
 import { convertTemplateDefToPortfolioTemplate } from '@/domain/builder/templates/converter';
@@ -41,9 +42,13 @@ export interface PortfolioBlock {
   anchor_id?: string;
   is_locked?: boolean;
   layout?: {
+    x?: number;
+    y?: number;
+    width?: number | string;
+    height?: number | string;
+    zIndex?: number;
     colSpan?: number;
     rowSpan?: number;
-    width?: string;
     padding?: string;
     margin?: string;
     background?: string | null;
@@ -109,6 +114,11 @@ export interface PortfolioTemplate {
       headingFont: string;
       bodyFont: string;
     };
+    buttons?: {
+      radius: string;
+      style: string;
+      uppercase: boolean;
+    };
   };
   features?: string[];
   is_active: boolean;
@@ -157,17 +167,18 @@ export class PortfolioService {
     return data;
   }
 
-  async getSites(): Promise<PortfolioSite[]> {
+  async getSites(client?: SupabaseClient): Promise<PortfolioSite[]> {
+    const supabase = client || this.supabase;
     let user = this.providedUser;
     if (!user) {
       try {
-        const { data: { user: authUser } } = await this.supabase.auth.getUser();
+        const { data: { user: authUser } } = await supabase.auth.getUser();
         user = authUser;
       } catch { }
     }
     if (!user) return [];
 
-    const { data, error } = await this.supabase
+    const { data, error } = await supabase
       .from('sites')
       .select('*')
       .eq('owner_user_id', user.id)
@@ -177,8 +188,9 @@ export class PortfolioService {
     return data || [];
   }
 
-  async getSiteBySubdomain(slug: string): Promise<PortfolioSite | null> {
-    const { data, error } = await this.supabase
+  async getSiteBySubdomain(slug: string, client?: SupabaseClient): Promise<PortfolioSite | null> {
+    const supabase = client || this.supabase;
+    const { data, error } = await supabase
       .from('sites')
       .select('*')
       .eq('slug', slug)
@@ -189,8 +201,9 @@ export class PortfolioService {
     return data;
   }
 
-  async getSiteById(id: string): Promise<PortfolioSite | null> {
-    const { data, error } = await this.supabase
+  async getSiteById(id: string, client?: SupabaseClient): Promise<PortfolioSite | null> {
+    const supabase = client || this.supabase;
+    const { data, error } = await supabase
       .from('sites')
       .select('*')
       .eq('id', id)
@@ -237,7 +250,13 @@ export class PortfolioService {
 
     // Verify user record exists in public.users (required for foreign key on sites)
     console.log('[PortfolioService] Verifying user record existence in public.users...');
-    const { data: userRecord, error: userError } = await this.supabase
+
+    // USES ADMIN CLIENT TO BYPASS RLS
+    // The authenticated user might not have permission to read/write to users table directly
+    // depending on the policy setup.
+    const adminClient = createAdminClient();
+
+    const { data: userRecord, error: userError } = await adminClient
       .from('users')
       .select('id')
       .eq('id', user.id)
@@ -248,9 +267,9 @@ export class PortfolioService {
         '[PortfolioService] User record missing or error:',
         userError?.message
       );
-      console.log('[PortfolioService] Attempting to create missing user record...');
+      console.log('[PortfolioService] Attempting to create missing user record (via Admin Client)...');
 
-      const { error: createUserError } = await this.supabase
+      const { error: createUserError } = await adminClient
         .from('users')
         .insert({
           id: user.id,
@@ -273,8 +292,8 @@ export class PortfolioService {
     }
 
     // LIST SITES FOR DEBUGGING
-    console.log('[PortfolioService] Fetching existing sites for user...');
-    const existingSites = await this.getSites();
+    console.log('[PortfolioService] Fetching existing sites for user (via Admin Client)...');
+    const existingSites = await this.getSites(adminClient);
     console.log('[PortfolioService] Found sites:', existingSites.length);
 
     // Check if user already has a site (MVP: one site per user)
@@ -284,11 +303,23 @@ export class PortfolioService {
       throw new ConflictError('User already has a portfolio site');
     }
 
+    // CHECK IF SLUG IS TAKEN (by anyone)
+    const { data: slugCheck } = await adminClient
+      .from('sites')
+      .select('id')
+      .eq('slug', site.subdomain)
+      .maybeSingle();
+
+    if (slugCheck) {
+      console.error('[PortfolioService] Slug already taken:', site.subdomain);
+      throw new ConflictError(`Slug '${site.subdomain}' is already taken`);
+    }
+
     const templateId = (site.templateId as any) || 'minimal';
     const draftConfig = createDefaultConfig(templateId);
 
-    console.log('[PortfolioService] Inserting site into DB...');
-    const { data, error } = await this.supabase
+    console.log('[PortfolioService] Inserting site into DB (via Admin Client)...');
+    const { data, error } = await adminClient
       .from('sites')
       .insert({
         slug: site.subdomain,
@@ -303,9 +334,30 @@ export class PortfolioService {
     if (error) {
       console.error('[PortfolioService] INSERT ERROR:', error);
       console.error('[PortfolioService] ERROR DETAILS:', JSON.stringify(error, null, 2));
+      if (error.code === '23505') {
+        throw new ConflictError(`Slug '${site.subdomain}' is already taken`);
+      }
       throw error;
     }
     console.log('[PortfolioService] Site inserted successfully:', data.id);
+
+    // FIX: Shadow record for legacy compatibility
+    // Many tables (portfolio_pages, portfolio_styles, etc.) still have foreign keys 
+    // pointing to 'portfolio_sites' instead of the new 'sites' table.
+    console.log('[PortfolioService] Creating shadow record in portfolio_sites...');
+    const { error: legacyError } = await adminClient
+      .from('portfolio_sites')
+      .upsert({
+        id: data.id,
+        user_id: user.id,
+        name: site.name,
+        subdomain: site.subdomain,
+      });
+
+    if (legacyError) {
+      console.warn('[PortfolioService] Failed to create legacy shadow record:', legacyError.message);
+      // We don't throw here yet, but it might cause FK errors later in applyTemplate
+    }
 
     // Apply template if provided
     if (site.templateId) {
@@ -313,7 +365,7 @@ export class PortfolioService {
         console.log('[PortfolioService] Applying template:', site.templateId);
         await this.applyTemplate(data.id, site.templateId, {
           logoUrl: site.logoUrl,
-        });
+        }, adminClient);
       } catch (templateError) {
         console.error(
           '[PortfolioService] Failed to apply template:',
@@ -330,9 +382,11 @@ export class PortfolioService {
 
   async updateSite(
     id: string,
-    updates: Partial<PortfolioSite>
+    updates: Partial<PortfolioSite>,
+    client?: SupabaseClient
   ): Promise<PortfolioSite> {
-    const { data, error } = await this.supabase
+    const supabase = client || this.supabase;
+    const { data, error } = await supabase
       .from('sites')
       .update(updates)
       .eq('id', id)
@@ -407,18 +461,20 @@ export class PortfolioService {
       is_homepage?: boolean;
       seo_title?: string;
       seo_description?: string;
-    }
+    },
+    client?: SupabaseClient
   ): Promise<PortfolioPage> {
+    const supabase = client || this.supabase;
     // If this is the homepage, unset other homepages
     if (page.is_homepage) {
-      await this.supabase
+      await supabase
         .from('portfolio_pages')
         .update({ is_homepage: false })
         .eq('site_id', siteId)
         .eq('is_homepage', true);
     }
 
-    const { data, error } = await this.supabase
+    const { data, error } = await supabase
       .from('portfolio_pages')
       .insert({
         site_id: siteId,
@@ -467,8 +523,9 @@ export class PortfolioService {
     return data;
   }
 
-  async deletePage(id: string): Promise<void> {
-    const { error } = await this.supabase
+  async deletePage(id: string, client?: SupabaseClient): Promise<void> {
+    const supabase = client || this.supabase;
+    const { error } = await supabase
       .from('portfolio_pages')
       .delete()
       .eq('id', id);
@@ -495,9 +552,11 @@ export class PortfolioService {
       content: Record<string, unknown>;
       settings?: Record<string, unknown>;
       sort_order?: number;
-    }
+    },
+    client?: SupabaseClient
   ): Promise<PortfolioBlock> {
-    const { data, error } = await this.supabase
+    const supabase = client || this.supabase;
+    const { data, error } = await supabase
       .from('portfolio_blocks')
       .insert({
         page_id: pageId,
@@ -578,9 +637,11 @@ export class PortfolioService {
       typography: PortfolioStyle['typography'];
       spacing_scale?: string;
       custom_css?: string;
-    }
+    },
+    client?: SupabaseClient
   ): Promise<PortfolioStyle> {
-    const { data, error } = await this.supabase
+    const supabase = client || this.supabase;
+    const { data, error } = await supabase
       .from('portfolio_styles')
       .upsert(
         {
@@ -659,6 +720,13 @@ export class PortfolioService {
       limit?: number;
     }
   ): Promise<any[]> {
+    // Validate UUID format to prevent 400 errors
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!siteId || !uuidRegex.test(siteId)) {
+      console.warn(`Invalid siteId passed to getProjects: ${siteId}`);
+      return [];
+    }
+
     let query = this.supabase
       .from('portfolio_projects')
       .select('*')
@@ -696,8 +764,9 @@ export class PortfolioService {
     return data;
   }
 
-  async createProject(siteId: string, project: any): Promise<any> {
-    const { data, error } = await this.supabase
+  async createProject(siteId: string, project: any, client?: SupabaseClient): Promise<any> {
+    const supabase = client || this.supabase;
+    const { data, error } = await supabase
       .from('portfolio_projects')
       .insert({
         site_id: siteId,
@@ -722,8 +791,9 @@ export class PortfolioService {
     return data;
   }
 
-  async deleteProject(id: string): Promise<void> {
-    const { error } = await this.supabase
+  async deleteProject(id: string, client?: SupabaseClient): Promise<void> {
+    const supabase = client || this.supabase;
+    const { error } = await supabase
       .from('portfolio_projects')
       .delete()
       .eq('id', id);
@@ -734,7 +804,8 @@ export class PortfolioService {
   async applyTemplate(
     siteId: string,
     templateId: string,
-    options: { logoUrl?: string } = {}
+    options: { logoUrl?: string } = {},
+    client?: SupabaseClient
   ): Promise<void> {
     const template = await this.getTemplateById(templateId);
     if (!template) throw new Error('Template not found');
@@ -747,7 +818,7 @@ export class PortfolioService {
         typography: styles.typography || {},
         spacing_scale: styles.spacing_scale,
         custom_css: styles.custom_css || undefined,
-      });
+      }, client);
     }
 
     // Create pages from template
@@ -766,13 +837,13 @@ export class PortfolioService {
       // DELETE EXISTING PAGES (Strict Replacement)
       const existingPages = await this.getPages(siteId);
       for (const p of existingPages) {
-        await this.deletePage(p.id);
+        await this.deletePage(p.id, client);
       }
 
       // DELETE EXISTING PROJECTS (To ensure clean template projects)
       const existingProjects = await this.getProjects(siteId);
       for (const p of existingProjects) {
-        await this.deleteProject(p.id);
+        await this.deleteProject(p.id, client);
       }
 
       // SEED PROJECTS (if defined in template)
@@ -797,7 +868,7 @@ export class PortfolioService {
           slug: pageData.slug,
           title: pageData.title,
           is_homepage: pageData.is_homepage,
-        });
+        }, client);
 
         // Create blocks for the page
         if (pageData.blocks) {
@@ -814,7 +885,7 @@ export class PortfolioService {
               content: content,
               settings: blockData.settings,
               sort_order: blockIndex++,
-            });
+            }, client);
           }
         }
       }

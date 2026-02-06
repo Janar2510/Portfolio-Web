@@ -6,6 +6,9 @@ import { ActivityTimeline } from '@/components/crm/ActivityTimeline';
 import { FollowUpReminders } from '@/components/crm/FollowUpReminders';
 import { NotificationsPanel } from '@/components/crm/NotificationsPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sparkles, Calendar } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
 import type { CRMActivity, FollowUp, Contact, Deal } from '@/domain/crm/crm';
 
 export default function ActivitiesPage() {
@@ -195,20 +198,54 @@ export default function ActivitiesPage() {
     },
   });
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="animate-fade-up max-w-[1440px] mx-auto py-12 px-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="space-y-4">
+            <div className="w-32 h-6 bg-white/5 rounded-full animate-pulse" />
+            <div className="w-64 h-12 bg-white/5 rounded-2xl animate-pulse" />
+          </div>
+        </div>
+        <div className="h-[400px] w-full bg-white/5 rounded-[2.5rem] animate-pulse" />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
-      {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm p-4 animate-slide-down">
-        <h1 className="text-2xl font-bold text-foreground">
-          Activities & Follow-ups
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Manage your CRM activities and follow-up reminders
-        </p>
+    <div className="animate-fade-up max-w-[1440px] mx-auto py-12 px-6">
+      {/* Pulse-style Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">
+            <Sparkles className="w-3 h-3" />
+            Activities Online
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white m-0 font-display">
+            Activities
+          </h1>
+          <p className="text-lg text-white/40 max-w-xl">
+            Stay on top of your interactions and follow-ups.
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Button
+            size="lg"
+            className="gap-2 rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 px-8 h-12"
+          >
+            <Calendar className="w-4 h-4" />
+            <span>View Calendar</span>
+          </Button>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 animate-fade-in">
+      <div className="animate-fade-in">
         <Tabs defaultValue="notifications" className="space-y-4">
           <TabsList>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>

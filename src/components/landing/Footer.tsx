@@ -46,7 +46,7 @@ export function Footer() {
               href="/"
               className="flex items-center gap-3 font-bold text-2xl mb-8 group"
             >
-              <div className="size-10 rounded-xl bg-gradient-accent flex items-center justify-center text-dark shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+              <div className="size-10 rounded-xl bg-gradient-accent flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                 <span className="text-xl">S</span>
               </div>
               <span className="tracking-tight">Supale</span>
@@ -101,7 +101,7 @@ export function Footer() {
                 <li key={link.labelKey}>
                   <a
                     href={link.href}
-                    className="text-gray-400 hover:text-teal-400 transition-colors text-sm"
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium"
                   >
                     {t(`links.${link.labelKey}`)}
                   </a>
@@ -117,7 +117,7 @@ export function Footer() {
                 <li key={link.labelKey}>
                   <a
                     href={link.href}
-                    className="text-gray-400 hover:text-teal-400 transition-colors text-sm"
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium"
                   >
                     {t(`links.${link.labelKey}`)}
                   </a>
@@ -133,7 +133,7 @@ export function Footer() {
                 <li key={link.labelKey}>
                   <a
                     href={link.href}
-                    className="text-gray-400 hover:text-teal-400 transition-colors text-sm"
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium"
                   >
                     {t(`links.${link.labelKey}`)}
                   </a>
@@ -149,7 +149,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-8">
             <span className="text-muted-foreground text-sm flex items-center gap-2.5 font-medium group">
-              <span className="size-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(0,229,188,0.5)]"></span>
+              <span className="size-2 rounded-full bg-primary animate-pulse shadow-glow-soft"></span>
               {t('systemsOperational')}
             </span>
           </div>

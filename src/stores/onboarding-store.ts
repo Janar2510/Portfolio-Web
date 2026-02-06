@@ -15,6 +15,7 @@ export interface OnboardingProgress {
   selected_template_id: string | null;
   steps_skipped: OnboardingStepId[];
   completed_at?: string;
+  updated_at?: string;
 }
 
 interface OnboardingStore {

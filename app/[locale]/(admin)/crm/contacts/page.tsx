@@ -1,146 +1,139 @@
 'use client';
 
 import { useState } from 'react';
+import { Sparkles, PlusCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { peopleService as contactsService } from '@/domain/crm/services/people-service';
+import { orgsService } from '@/domain/crm/services/orgs-service';
+import { dealsService } from '@/domain/crm/services/deals-service';
 import { ContactList } from '@/components/crm/ContactList';
+import { AddDealDialog } from '@/components/crm/AddDealDialog';
+import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
-import type { Contact, Company } from '@/domain/crm/crm';
+import { Person as Contact } from '@/domain/crm/types';
 
 export default function ContactsPage() {
-  const router = useRouter();
   const queryClient = useQueryClient();
+  const supabase = createClient();
+  const [dealDialogContact, setDealDialogContact] = useState<Contact | null>(null);
 
-  // Fetch contacts
-  const { data: contacts = [] } = useQuery({
-    queryKey: ['crm-contacts'],
-    queryFn: async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('contacts')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return (data || []) as Contact[];
-    },
+  // Fetch Contacts
+  const { data: contacts = [], isLoading: isLoadingContacts } = useQuery({
+    queryKey: ['crm', 'contacts'],
+    queryFn: () => contactsService.getAll(),
   });
 
-  // Fetch companies
+  // Fetch Companies
   const { data: companies = [] } = useQuery({
-    queryKey: ['crm-companies'],
+    queryKey: ['crm', 'organizations'],
+    queryFn: () => orgsService.getAll(),
+  });
+
+  // Fetch Stages (for Create Deal)
+  const { data: stages = [] } = useQuery({
+    queryKey: ['crm', 'stages'],
     queryFn: async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('companies')
-        .select('*')
-        .order('name', { ascending: true });
+      const { data, error } = await supabase.from('crm_pipeline_stages').select('*').order('sort_order');
       if (error) throw error;
-      return (data || []) as Company[];
+      return data;
     },
   });
 
-  // Create contact mutation
+  // Mutations
   const createContactMutation = useMutation({
-    mutationFn: async (data: Partial<Contact>) => {
-      const supabase = createClient();
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not authenticated');
-
-      const { data: contact, error } = await supabase
-        .from('contacts')
-        .insert({ ...data, user_id: user.id })
-        .select()
-        .single();
-      if (error) throw error;
-      return contact as Contact;
-    },
+    mutationFn: (data: any) => contactsService.createNew(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crm-contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['crm', 'contacts'] });
+      toast.success('Contact created successfully');
     },
+    onError: (error: any) => {
+      toast.error('Failed to create contact: ' + error.message);
+    }
   });
 
-  // Update contact mutation
   const updateContactMutation = useMutation({
-    mutationFn: async ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: Partial<Contact>;
-    }) => {
-      const supabase = createClient();
-      const { data: contact, error } = await supabase
-        .from('contacts')
-        .update(data)
-        .eq('id', id)
-        .select()
-        .single();
-      if (error) throw error;
-      return contact as Contact;
-    },
+    mutationFn: ({ id, data }: { id: string; data: any }) => contactsService.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crm-contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['crm', 'contacts'] });
+      toast.success('Contact updated successfully');
     },
+    onError: (error: any) => {
+      toast.error('Failed to update contact');
+    }
   });
 
-  // Delete contact mutation
   const deleteContactMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const supabase = createClient();
-      const { error } = await supabase.from('contacts').delete().eq('id', id);
-      if (error) throw error;
-    },
+    mutationFn: (id: string) => contactsService.softDelete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crm-contacts'] });
+      queryClient.invalidateQueries({ queryKey: ['crm', 'contacts'] });
+      toast.success('Contact deleted');
     },
+    onError: (error: any) => {
+      toast.error('Failed to delete contact');
+    }
+  });
+
+  const createDealMutation = useMutation({
+    mutationFn: (data: any) => dealsService.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['crm', 'deals'] });
+      toast.success('Deal created successfully');
+      setDealDialogContact(null);
+    },
+    onError: (error: any) => {
+      console.error('Create Deal Error:', error);
+      toast.error('Failed to create deal: ' + (error.message || 'Unknown error'));
+    }
   });
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
-      <div className="w-96 shrink-0 border-r border-border bg-card animate-slide-down">
+    <div className="animate-fade-up max-w-[1440px] mx-auto py-12 px-6">
+
+
+      {isLoadingContacts ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-[300px] rounded-[2.5rem] bg-white/[0.02] border border-white/5 animate-pulse" />
+          ))}
+        </div>
+      ) : (
         <ContactList
           contacts={contacts}
           companies={companies}
-          onContactSelect={contactId => {
-            router.push(`/crm/contacts/${contactId}`);
+          onContactSelect={(id) => {
+            // For now, no separate detail view, editing happens inline or via dialog
+            console.log('Selected contact:', id);
           }}
-          onContactCreate={async data => {
+          onContactCreate={async (data) => {
             await createContactMutation.mutateAsync(data);
           }}
           onContactUpdate={async (id, data) => {
             await updateContactMutation.mutateAsync({ id, data });
           }}
-          onContactDelete={async id => {
+          onContactDelete={async (id) => {
             await deleteContactMutation.mutateAsync(id);
           }}
+          onCreateDeal={(contact) => {
+            setDealDialogContact(contact);
+          }}
         />
-      </div>
-      <div className="flex-1 flex items-center justify-center animate-fade-in">
-        <div className="text-center animate-scale-in">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-            <svg
-              className="w-8 h-8 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </div>
-          <p className="text-lg font-semibold text-foreground">
-            Select a contact to view details
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Choose a contact from the sidebar or create a new one
-          </p>
-        </div>
-      </div>
+      )}
+
+      {/* Reusing AddDealDialog but pre-filling contact */}
+      {dealDialogContact && (
+        <AddDealDialog
+          isOpen={!!dealDialogContact}
+          onClose={() => setDealDialogContact(null)}
+          stages={stages}
+          contacts={contacts}
+          companies={companies}
+          initialContactId={dealDialogContact.id}
+          onCreateDeal={async (data) => {
+            await createDealMutation.mutateAsync(data);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -1,154 +1,135 @@
 import { TemplateDefinition } from '@/domain/templates/contracts';
+import { createDefaultConfig } from '@/domain/templates/registry';
 import { SiteSection, HeroSection, AboutSection, ProjectsSection, ServicesSection, ContactSection } from '@/domain/sites/site-schema';
 import { PortfolioTemplate } from '@/domain/builder/portfolio';
 
 export function convertTemplateDefToPortfolioTemplate(
   def: TemplateDefinition
 ): PortfolioTemplate {
-  const findSection = <T extends SiteSection>(type: T['type']): T | undefined =>
-    def.defaultSections.find(s => s.type === type) as T | undefined;
-
   const getLocalized = (str: any, fallback: string = ''): string => {
     if (!str) return fallback;
+    if (typeof str === 'string') return str;
     return str.en || str.et || fallback;
   };
-  // Construct blocks for the specific template sections
-  const blocks = [];
+
   let sortOrder = 0;
 
-  // 1. Header is global, but we inject it as a block for the page structure
-  const contactSection = findSection<ContactSection>('contact');
-  blocks.push({
-    block_type: 'header',
-    content: {
-      logo_text: def.name || 'Portfolio',
-      links: [
-        { label: 'HOME', url: '#home' },
-        { label: 'SERVICES', url: '#services' },
-        { label: 'MY WORK', url: '#work' },
-        { label: 'CONTACT', url: '#contact' },
-      ],
-      social_links: contactSection?.content.socials?.map(s => ({
-        platform: s.platform.toLowerCase(),
-        url: s.url
-      })) || [
-          { platform: 'instagram', url: '#' },
-          { platform: 'twitter', url: '#' },
-          { platform: 'linkedin', url: '#' },
-        ],
-    },
-    settings: {
-      layout: 'simple',
-      sticky: true,
-      position: 'fixed',
-    },
-    sort_order: sortOrder++,
+  // Map all defaultSections to blocks
+  const blocks = def.defaultSections.map(section => {
+    // Basic mapping - ensure block_type is always set from section.type initially
+    const block: any = {
+      id: section.id,
+      block_type: section.type,
+      anchor_id: section.id,
+      content: { ...section.content },
+      settings: (section as any).settings || {},
+      sort_order: sortOrder++,
+    };
+
+    // Recursive localization helper
+    const localizeContent = (content: any): any => {
+      if (content === null || content === undefined) return content;
+
+      // If it's a localized string object { et, en }
+      if (typeof content === 'object' && ('et' in content || 'en' in content)) {
+        return getLocalized(content);
+      }
+
+      // Handle arrays
+      if (Array.isArray(content)) {
+        return content.map(item => localizeContent(item));
+      }
+
+      // Handle objects (recurse into properties)
+      if (typeof content === 'object') {
+        const result: any = {};
+        for (const key in content) {
+          result[key] = localizeContent(content[key]);
+        }
+        return result;
+      }
+
+      return content;
+    };
+
+    // Apply localization to the whole content object early
+    block.content = localizeContent(block.content);
+
+    // Map 'about' to 'text' block
+    if (section.type === 'about') {
+      block.block_type = 'text';
+      if (block.content.heading) {
+        block.content.title = block.content.heading;
+        delete block.content.heading;
+      }
+      if (block.content.body) {
+        block.content.text = block.content.body;
+        delete block.content.body;
+      }
+    }
+
+    // Features/Services mapping
+    if (section.type === 'services' || section.type === 'features') {
+      block.block_type = 'features';
+      if (block.content.heading) {
+        block.content.title = block.content.heading;
+        delete block.content.heading;
+      }
+      if (block.content.items) {
+        block.content.features = block.content.items.map((item: any) => ({
+          title: item.title,
+          description: item.description,
+          icon: item.icon || 'Star'
+        }));
+        delete block.content.items;
+      }
+    }
+
+    // Projects mapping
+    if (section.type === 'projects') {
+      block.block_type = 'projects';
+      if (block.content.heading) {
+        block.content.title = block.content.heading;
+        delete block.content.heading;
+      }
+    }
+
+    // Contact/Form mapping
+    if (section.type === 'contact') {
+      block.block_type = 'form';
+      block.content.form_type = 'contact';
+      if (block.content.heading) {
+        block.content.title = block.content.heading;
+        delete block.content.heading;
+      }
+      if (block.content.email) {
+        block.content.recipient_email = block.content.email;
+        delete block.content.email;
+      }
+    }
+
+    // Bento mapping
+    if (section.type === 'bento') {
+      block.block_type = 'bento'; // Explicitly ensure type
+      if (block.content.heading) {
+        block.content.title = block.content.heading;
+        delete block.content.heading;
+      }
+    }
+
+    // Marquee mapping
+    if (section.type === 'marquee') {
+      block.block_type = 'marquee'; // Explicitly ensure type
+    }
+
+    return block;
   });
-
-  // HERO SECTION
-  const heroSection = findSection<HeroSection>('hero');
-  if (heroSection) {
-    const hero = heroSection.content;
-    blocks.push({
-      block_type: 'hero',
-      anchor_id: 'home',
-      content: {
-        headline: getLocalized(hero.headline),
-        subheadline: getLocalized(hero.subheadline),
-        cta_text: getLocalized(hero.ctaLabel, 'Get in Touch'),
-        cta_link: hero.ctaHref || '#work',
-        image_url: '', // New schema doesn't have image in content yet for MVP?
-        show_scroll_indicator: true,
-      },
-      settings: {
-        alignment: 'center',
-        background: 'solid',
-        overlay: false,
-        height: 'full',
-        headline_style: 'serif',
-      },
-      sort_order: sortOrder++,
-    });
-  }
-
-
-  // SERVICES SECTION
-  const servicesSection = findSection<ServicesSection>('services');
-  if (servicesSection) {
-    const services = servicesSection.content;
-    blocks.push({
-      block_type: 'features',
-      anchor_id: 'services',
-      content: {
-        title: getLocalized(services.heading, 'What I Do'),
-        features:
-          services.items?.map((s: any) => ({
-            title: getLocalized(s.title),
-            description: getLocalized(s.description),
-            icon: 'Star',
-          })) || [],
-      },
-      settings: {
-        layout: 'grid',
-        columns: 4,
-        show_icon: true,
-        background: 'glass',
-      },
-      sort_order: sortOrder++,
-    });
-  }
-
-  // PROJECTS SECTION
-  const projectsSection = findSection<ProjectsSection>('projects');
-  if (projectsSection) {
-    const projects = projectsSection.content;
-    blocks.push({
-      block_type: 'project-grid',
-      anchor_id: 'work',
-      content: {
-        title: getLocalized(projects.heading, 'Selected Works'),
-        limit: 6,
-      },
-      settings: {
-        layout: 'grid',
-        columns: 3,
-        show_description: true,
-        show_tags: false,
-        aspect_ratio: 'portrait',
-      },
-      sort_order: sortOrder++,
-    });
-  }
-
-  // CONTACT SECTION
-  if (contactSection) {
-    const contact = contactSection.content;
-    blocks.push({
-      block_type: 'form',
-      anchor_id: 'contact',
-      content: {
-        form_type: 'contact',
-        title: getLocalized(contact.heading, 'Get In Touch'),
-        description: getLocalized(contact.description),
-        fields: [],
-        submit_text: 'Send Message',
-        contact_info: contact.email,
-      },
-      settings: {
-        layout: 'split-with-info',
-        button_style: 'primary',
-        rounded_corners: 'artisanal',
-      },
-      sort_order: sortOrder++,
-    });
-  }
-
 
   return {
     id: def.id,
     name: def.name,
     description: def.description,
-    category: 'portfolio',
+    category: 'portfolio', // TODO: Make this dynamic if added to registry
     thumbnail_url: def.previewImage || null,
     preview_images: [],
     is_active: true,
@@ -161,18 +142,22 @@ export function convertTemplateDefToPortfolioTemplate(
         blocks: blocks,
       },
     ],
-    styles_schema: {
-      color_palette: {
-        primary: '#000000',
-        secondary: '#ffffff',
-        background: '#ffffff',
-        text: '#000000',
-        accent: '#000000',
-      }, // Default or extract from controls if available?
-      typography: {
-        headingFont: 'Inter',
-        bodyFont: 'Inter',
-      },
-    },
+    styles_schema: (() => {
+      const config = createDefaultConfig(def.id);
+      return {
+        color_palette: config?.theme?.palette || {
+          primary: '#000000',
+          secondary: '#ffffff',
+          background: '#ffffff',
+          text: '#000000',
+          accent: '#000000',
+        },
+        typography: config?.theme?.fonts || {
+          headingFont: 'Inter',
+          bodyFont: 'Inter',
+        },
+        buttons: config?.theme?.buttons,
+      };
+    })(),
   } as unknown as PortfolioTemplate;
 }

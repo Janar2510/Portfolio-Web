@@ -14,6 +14,7 @@ interface BlocksStore {
   // Block operations
   addBlock: (block: PortfolioBlock) => void;
   updateBlock: (id: string, updates: Partial<PortfolioBlock>) => void;
+  updateBlockLayout: (id: string, layout: Partial<PortfolioBlock['layout']>) => void;
   deleteBlock: (id: string) => void;
   duplicateBlock: (id: string) => void;
   moveBlock: (id: string, newIndex: number) => void;
@@ -58,6 +59,28 @@ export const useBlocksStore = create<BlocksStore>((set, get) => ({
       selectedBlock:
         state.selectedBlock?.id === id
           ? { ...state.selectedBlock, ...updates }
+          : state.selectedBlock,
+      hasUnsavedChanges: true,
+    })),
+
+  updateBlockLayout: (id, layoutUpdates) =>
+    set(state => ({
+      blocks: state.blocks.map(block =>
+        block.id === id
+          ? {
+            ...block,
+            layout: { ...block.layout, ...layoutUpdates },
+            updated_at: new Date().toISOString()
+          }
+          : block
+      ),
+      selectedBlock:
+        state.selectedBlock?.id === id
+          ? {
+            ...state.selectedBlock,
+            layout: { ...state.selectedBlock.layout, ...layoutUpdates },
+            updated_at: new Date().toISOString()
+          }
           : state.selectedBlock,
       hasUnsavedChanges: true,
     })),

@@ -71,7 +71,7 @@ export function useSavePage() {
 
 export function useAddBlock() {
   // For now, localized to store only, then call useSavePage
-  const { addBlock } = useBlocksStore();
+  const { addBlock, blocks } = useBlocksStore();
   const { setHasUnsavedChanges } = useEditorStore();
 
   return useMutation({
@@ -82,6 +82,11 @@ export function useAddBlock() {
       afterBlockId?: string;
     }) => {
       const id = `${blockType}-${Math.random().toString(36).substr(2, 9)}`;
+
+      // Calculate position for new block (stack vertically with spacing)
+      const existingBlockCount = blocks.length;
+      const defaultYOffset = existingBlockCount * 220; // 200px height + 20px gap
+
       const newBlock: PortfolioBlock = {
         id,
         page_id: 'home',
@@ -89,7 +94,15 @@ export function useAddBlock() {
         content: {},
         settings: {},
         styles: {},
-        sort_order: 0,
+        // Default freeform layout for Canva-like editing
+        layout: {
+          x: 20,
+          y: 20 + defaultYOffset,
+          width: 600,
+          height: 200,
+          zIndex: 10 + existingBlockCount,
+        },
+        sort_order: existingBlockCount,
         is_visible: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -197,9 +210,19 @@ export function useDuplicateBlock() {
       if (!block) throw new Error('Block not found');
 
       const newId = `${block.block_type}-${Math.random().toString(36).substr(2, 9)}`;
-      const newBlock = {
+      const existingLayout = block.layout || {};
+
+      // Offset the duplicate by 30px to make it visible
+      const newBlock: PortfolioBlock = {
         ...block,
         id: newId,
+        layout: {
+          x: (existingLayout.x ?? 20) + 30,
+          y: (existingLayout.y ?? 20) + 30,
+          width: existingLayout.width ?? 600,
+          height: existingLayout.height ?? 200,
+          zIndex: (existingLayout.zIndex ?? 10) + 1,
+        },
         sort_order: blocks.length,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -265,6 +288,14 @@ export function useReplacePageContent() {
         content: b.content,
         settings: {},
         styles: {},
+        // Freeform layout - stack blocks vertically
+        layout: {
+          x: 20,
+          y: 20 + (index * 220),
+          width: 600,
+          height: 200,
+          zIndex: 10 + index,
+        },
         sort_order: index,
         is_visible: true,
         created_at: new Date().toISOString(),

@@ -28,7 +28,8 @@
       "alreadyHasSite": "Sul on juba sait olemas.",
       "invalidName": "Palun sisesta korrektne saidi nimi.",
       "notAuthenticated": "Palun logi sisse.",
-      "unknown": "Midagi läks valesti."
+      "unknown": "Midagi läks valesti.",
+      "subdomainTaken": "See alamdomeen on juba võetud"
     },
     "edit": {
       "title": "Muuda saiti",
@@ -36,6 +37,7 @@
       "actions": {
         "preview": "Eelvaade",
         "publish": "Avalda",
+        "republish": "Avalda muudatused",
         "unpublish": "Võta maha",
         "viewPublic": "Vaata avalikku"
       },
@@ -67,24 +69,30 @@
           "en": "Kirjeldus (EN)"
         }
       },
+      "bento": {
+        "title": "Bento Ruudustik"
+      },
+      "marquee": {
+        "title": "Marquee"
+      },
       "save": "Salvesta muudatused",
       "saved": "Salvestatud",
       "errors": {
         "invalid": "Palun kontrolli kohustuslikke välju.",
         "unknown": "Midagi läks valesti."
-      },
-      "preview": {
-        "title": "Eelvaade",
-        "backToEdit": "Tagasi redaktorisse",
-        "publish": "Avalda",
-        "unpublish": "Võta maha",
-        "publicUrl": "Avalik URL",
-        "openPublic": "Ava",
-        "errors": {
-          "notAuthenticated": "Palun logi sisse.",
-          "invalid": "Palun kontrolli kohustuslikke välju.",
-          "unknown": "Midagi läks valesti."
-        }
+      }
+    },
+    "preview": {
+      "title": "Eelvaade",
+      "backToEdit": "Tagasi redaktorisse",
+      "publish": "Avalda",
+      "unpublish": "Võta maha",
+      "publicUrl": "Avalik URL",
+      "openPublic": "Ava",
+      "errors": {
+        "notAuthenticated": "Palun logi sisse.",
+        "invalid": "Palun kontrolli kohustuslikke välju.",
+        "unknown": "Midagi läks valesti."
       }
     }
   },
@@ -97,6 +105,7 @@
     "delete": "Kustuta",
     "edit": "Muuda",
     "create": "Loo",
+    "collapse": "Ahenda",
     "theme": {
       "light": "Hele",
       "dark": "Tume",
@@ -185,7 +194,8 @@
       "examples": "Näited",
       "faq": "KKK",
       "logIn": "Logi sisse",
-      "startFreeTrial": "Alusta tasuta"
+      "startFreeTrial": "Alusta tasuta",
+      "dashboard": "Töölauale"
     },
     "hero": {
       "badge": "Uus: Professionaalsed mallid",
@@ -194,10 +204,22 @@
       "subtitle": "Kõik-ühes platvorm vabakutselistele, et esitleda töid, hallata kliente ja arendada oma loomingulist äri professionaalsete tööriistadega.",
       "cta": "Alusta tasuta",
       "ctaSecondary": "Vaata näiteid",
+      "goToDashboard": "Töölauale",
       "stats": {
         "freelancers": "Aktiivset vabakutselist",
         "revenue": "Teenitud tulu",
         "satisfaction": "Klientide rahulolu"
+      }
+    },
+    "showcase": {
+      "title": "Ehitatud",
+      "titleHighlight": "Supale'ga",
+      "subtitle": "Liitu tuhandete loojatega, kes usaldavad meile oma professionaalset esitlust.",
+      "viewAll": "Vaata kõiki näiteid",
+      "next": {
+        "title": "Sina oled järgmine",
+        "description": "Alusta oma professionaalse portfoolio loomist juba täna. Krediitkaarti pole vaja.",
+        "button": "Alusta loomist"
       }
     },
     "features": {
@@ -211,6 +233,14 @@
       "customDomain": {
         "title": "Oma domeen",
         "description": "Ühenda oma identiteet kohandatud domeeni ja professionaalsete SSL-sertifikaatidega."
+      },
+      "crm": {
+        "title": "Kliendihaldus",
+        "description": "Integreeritud CRM liiatide haldamiseks, kliendi staatuse jälgimiseks ja tehingute kiiremaks sulgemiseks portfooliost lahkumata."
+      },
+      "analytics": {
+        "title": "Põhjalik analüütika",
+        "description": "Saavuta sügav sissevaade oma vaatajaskonda. Jälgi külastajate käitumist, projektide populaarsust ja konversioonieesmärke."
       }
     },
     "howItWorks": {
@@ -229,6 +259,28 @@
           "number": "02",
           "title": "Võimas kohandamine",
           "description": "Saavuta täielik kontroll oma esteetika üle täiustatud värvipalettide ja tippkreatiivsete disainitud kujundusplokkidega."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Armastatud",
+      "titleHighlight": "loojate poolt",
+      "subtitle": "Ära usu ainult meie sõnu. Liitu disainerite ja arendajate kogukonnaga, kes on oma karjääri uuele tasemele viinud.",
+      "items": {
+        "item1": {
+          "quote": "Supale muutis täielikult seda, kuidas ma oma tööd esitlen. Nädala jooksul pärast uue portfoolio avaldamist sain kaks uut klienti, kes tõid eraldi välja minu saidi professionaalse välimuse.",
+          "name": "Maria Tamm",
+          "designation": "Graafiline disainer"
+        },
+        "item2": {
+          "quote": "CRM-funktsioonid on murrangulised. Varem haldasin kontakte tabelites, kuid nüüd on kõik otse minu portfoolioga ühendatud. See muudab mu töövoo täiesti turvaliseks.",
+          "name": "James Wilson",
+          "designation": "Veebiarendaja"
+        },
+        "item3": {
+          "quote": "Olen proovinud kõiki portfoolio koostajaid. Mitte miski ei ole võrreldav Supale kohandatavuse ja kiirusega. See tundub nagu eritellimusel kodeeritud sait, kuid ehitamine võttis vaid ühe pärastlõuna.",
+          "name": "Elena Kova",
+          "designation": "Arhitekt"
         }
       }
     },
@@ -320,6 +372,7 @@
       "title": "Kas oled valmis looma oma professionaalset portfooliot?",
       "subtitle": "Liitu tuhandete vabakutselistega, kes kasutavad Supale't oma töö esitlemiseks ja äri kasvatamiseks. Alusta oma tasuta 14-päevast prooviperioodi täna.",
       "button": "Alusta tasuta",
+      "dashboardButton": "Töölauale",
       "note": "Krediitkaarti pole vaja. Tühista igal ajal."
     },
     "footer": {
@@ -393,6 +446,7 @@
     "pipeline": "Torustik",
     "activities": "Tegevused",
     "analytics": "Analüütika",
+    "automations": "Automaatikad",
     "portfolioAnalytics": "Portfoolio",
     "crmAnalytics": "CRM",
     "abTesting": "A/B testid",
@@ -401,7 +455,15 @@
     "newContact": "Uus kontakt",
     "newProject": "Uus projekt",
     "status": "Seisund",
-    "tasksToday": "ülesannet täna"
+    "tasksToday": "ülesannet täna",
+    "templates": "Mallid",
+    "builder": "Ehitaja",
+    "sites": "Saidid",
+    "leads": "Müügivihjed",
+    "organizations": "Organisatsioonid",
+    "settings": "Seaded",
+    "new": "Uus",
+    "edit": "Muuda"
   },
   "onboarding": {
     "welcome": {
@@ -426,7 +488,8 @@
         "clientsDesc": "Jälgida kontakte ja tehinguid",
         "both": "Mõlemad",
         "bothDesc": "Portfoolio + kliendihaldus"
-      }
+      },
+      "continue": "Jätka"
     },
     "profile": {
       "title": "Seadista oma profiil",
@@ -522,7 +585,9 @@
       "continue": "Jätka",
       "skip": "Jäta vahele",
       "skipAll": "Jäta sisseelamine vahele",
-      "finish": "Lõpeta"
+      "finish": "Lõpeta",
+      "step": "Samm",
+      "of": "/"
     },
     "progress": {
       "step": "Samm",

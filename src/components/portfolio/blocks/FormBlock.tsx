@@ -139,12 +139,12 @@ export function FormBlock({
         {settings.layout !== 'split-with-info' && (
           <>
             {content.title && (
-              <h2 className="mb-2 text-center text-3xl font-semibold">
+              <h2 className="mb-2 text-center text-3xl font-bold" style={{ color: 'var(--portfolio-text)', fontFamily: 'var(--portfolio-font-heading)' }}>
                 {content.title}
               </h2>
             )}
             {content.description && (
-              <p className="mb-8 text-center text-muted-foreground">
+              <p className="mb-8 text-center text-[var(--portfolio-text)] opacity-60">
                 {content.description}
               </p>
             )}
@@ -155,7 +155,7 @@ export function FormBlock({
           className={cn(
             'w-full',
             settings.layout === 'split-with-info' &&
-              'grid grid-cols-1 lg:grid-cols-2 gap-20 items-start'
+            'grid grid-cols-1 lg:grid-cols-2 gap-20 items-start'
           )}
         >
           {settings.layout === 'split-with-info' && (
@@ -163,10 +163,10 @@ export function FormBlock({
               <h2 className="text-sm font-bold tracking-[0.4em] uppercase text-primary mb-4">
                 Get In Touch
               </h2>
-              <h3 className="text-5xl md:text-6xl font-serif font-bold mb-8">
+              <h3 className="text-5xl md:text-6xl font-bold mb-8" style={{ color: 'var(--portfolio-text)', fontFamily: 'var(--portfolio-font-heading)' }}>
                 {content.title || "Let's Create Something Epic"}
               </h3>
-              <p className="text-muted-foreground text-lg mb-12 leading-relaxed">
+              <p className="text-[var(--portfolio-text)] opacity-70 text-lg mb-12 leading-relaxed">
                 {content.description ||
                   'Available for collaborations, commissions, and speaking engagements worldwide.'}
               </p>
@@ -231,7 +231,7 @@ export function FormBlock({
                 {/* Phone */}
                 {(content as any).contact_info?.phone && (
                   <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-primary border border-white/10">
+                    <div className="w-12 h-12 bg-[var(--portfolio-text)]/5 rounded-full flex items-center justify-center text-primary border border-[var(--portfolio-text)]/10">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -250,7 +250,7 @@ export function FormBlock({
                       <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                         Let's Talk
                       </p>
-                      <p className="font-medium text-white">
+                      <p className="font-medium text-[var(--portfolio-text)]">
                         {(content as any).contact_info.phone}
                       </p>
                     </div>
@@ -265,9 +265,9 @@ export function FormBlock({
             className={cn(
               'space-y-4',
               settings.layout === 'two-column' &&
-                'md:grid md:grid-cols-2 md:gap-4',
+              'md:grid md:grid-cols-2 md:gap-4',
               settings.layout === 'split-with-info' &&
-                'p-10 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-sm'
+              'p-10 bg-[var(--portfolio-text)]/5 border border-[var(--portfolio-text)]/10 backdrop-blur-sm'
             )}
           >
             {fields.includes('name') && (
@@ -293,7 +293,7 @@ export function FormBlock({
                   disabled={isEditing || isSubmitting}
                   className={
                     settings.layout === 'split-with-info'
-                      ? 'bg-black/40 border-white/10 rounded-2xl px-6 py-4 h-auto focus-visible:ring-primary/50'
+                      ? 'bg-[var(--portfolio-background)] border-[var(--portfolio-text)]/10 px-6 py-4 h-auto focus-visible:ring-primary/50 text-[var(--portfolio-text)] placeholder:text-[var(--portfolio-text)]/40'
                       : ''
                   }
                   placeholder={
@@ -325,7 +325,7 @@ export function FormBlock({
                   disabled={isEditing || isSubmitting}
                   className={
                     settings.layout === 'split-with-info'
-                      ? 'bg-black/40 border-white/10 rounded-2xl px-6 py-4 h-auto focus-visible:ring-primary/50'
+                      ? 'bg-[var(--portfolio-background)] border-[var(--portfolio-text)]/10 px-6 py-4 h-auto focus-visible:ring-primary/50 text-[var(--portfolio-text)] placeholder:text-[var(--portfolio-text)]/40'
                       : ''
                   }
                   placeholder={
@@ -347,7 +347,7 @@ export function FormBlock({
                   disabled={isEditing || isSubmitting}
                   className={
                     settings.layout === 'split-with-info'
-                      ? 'bg-black/40 border-white/10 rounded-2xl px-6 py-4 h-auto focus-visible:ring-primary/50'
+                      ? 'bg-[var(--portfolio-background)] border-[var(--portfolio-text)]/10 px-6 py-4 h-auto focus-visible:ring-primary/50 text-[var(--portfolio-text)]'
                       : ''
                   }
                 />
@@ -363,7 +363,7 @@ export function FormBlock({
                   disabled={isEditing || isSubmitting}
                   className={
                     settings.layout === 'split-with-info'
-                      ? 'bg-black/40 border-white/10 rounded-2xl px-6 py-4 h-auto focus-visible:ring-primary/50'
+                      ? 'bg-[var(--portfolio-background)] border-[var(--portfolio-text)]/10 px-6 py-4 h-auto focus-visible:ring-primary/50 text-[var(--portfolio-text)]'
                       : ''
                   }
                 />
@@ -394,7 +394,7 @@ export function FormBlock({
                   disabled={isEditing || isSubmitting}
                   className={
                     settings.layout === 'split-with-info'
-                      ? 'bg-black/40 border-white/10 rounded-2xl px-6 py-4 focus-visible:ring-primary/50 resize-none'
+                      ? 'bg-[var(--portfolio-background)] border-[var(--portfolio-text)]/10 px-6 py-4 focus-visible:ring-primary/50 resize-none text-[var(--portfolio-text)] placeholder:text-[var(--portfolio-text)]/40'
                       : ''
                   }
                   placeholder={
@@ -435,11 +435,16 @@ export function FormBlock({
                       : 'default'
                 }
                 disabled={isEditing || isSubmitting || !siteId}
-                className={
+                className={cn(
                   settings.layout === 'split-with-info'
-                    ? 'w-full py-6 rounded-2xl text-lg font-bold shadow-xl hover:translate-y-[-2px] transition-transform'
+                    ? 'w-full py-6 text-lg font-bold shadow-xl hover:translate-y-[-2px] transition-all duration-300'
                     : ''
-                }
+                )}
+                style={{
+                  backgroundColor: settings.button_style === 'default' ? 'var(--portfolio-primary)' : undefined,
+                  color: settings.button_style === 'default' ? 'var(--portfolio-background)' : undefined,
+                  fontFamily: 'var(--portfolio-font-heading)'
+                }}
               >
                 {isSubmitting
                   ? 'Submitting...'

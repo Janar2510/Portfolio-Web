@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 type Testimonial = {
   quote: string;
@@ -13,28 +14,10 @@ type Testimonial = {
   src: string;
 };
 
-const testimonialsData: Testimonial[] = [
-  {
-    quote:
-      'Supale transformed how I present my work. Within a week of launching my new portfolio, I landed two new high-ticket clients who specifically mentioned the professional look of my site.',
-    name: 'Maria Tamm',
-    designation: 'Graphic Designer',
-    src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=500&auto=format&fit=crop',
-  },
-  {
-    quote:
-      'The CRM features are a game changer. I used to manage leads in spreadsheets, but now everything is connected directly to my portfolio. It secures my workflow completely.',
-    name: 'James Wilson',
-    designation: 'Web Developer',
-    src: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=500&auto=format&fit=crop',
-  },
-  {
-    quote:
-      "I've tried every portfolio builder out there. Nothing compares to the customization and speed of Supale. It feels like a custom-coded site but took me only an afternoon to build.",
-    name: 'Elena Kova',
-    designation: 'Architect',
-    src: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=500&auto=format&fit=crop',
-  },
+const testimonialImages = [
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=500&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=500&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=500&auto=format&fit=crop',
 ];
 
 export function TestimonialsSection({
@@ -45,14 +28,17 @@ export function TestimonialsSection({
   className?: string;
 }) {
   const [active, setActive] = useState(0);
+  const t = useTranslations('landing.testimonials');
+
+  const testimonialsCount = 3;
 
   const handleNext = () => {
-    setActive(prev => (prev + 1) % testimonialsData.length);
+    setActive(prev => (prev + 1) % testimonialsCount);
   };
 
   const handlePrev = () => {
     setActive(
-      prev => (prev - 1 + testimonialsData.length) % testimonialsData.length
+      prev => (prev - 1 + testimonialsCount) % testimonialsCount
     );
   };
 
@@ -70,11 +56,11 @@ export function TestimonialsSection({
   const [rotations, setRotations] = useState<number[]>([]);
 
   useEffect(() => {
-    setRotations(testimonialsData.map(() => Math.floor(Math.random() * 21) - 10));
+    setRotations(Array(testimonialsCount).fill(0).map(() => Math.floor(Math.random() * 21) - 10));
   }, []);
 
   return (
-    <section className="py-24 bg-[#0B1121] overflow-hidden relative">
+    <section className="py-32 bg-background overflow-hidden relative">
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="text-center mb-20 md:mb-32">
           <motion.div
@@ -83,12 +69,11 @@ export function TestimonialsSection({
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-6xl font-bold font-display text-white mb-6">
-              Loved by <span className="text-[#68A9A5]">Creatives</span>
+            <h2 className="text-5xl md:text-7xl font-bold font-display text-white mb-6 tracking-tighter">
+              {t('title')} <span className="text-primary">{t('titleHighlight')}</span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed italic">
-              Don't just take our word for it. Join the community of designers
-              and developers who have elevated their careers.
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed italic">
+              {t('subtitle')}
             </p>
           </motion.div>
         </div>
@@ -101,9 +86,9 @@ export function TestimonialsSection({
             <div className="flex items-center justify-center">
               <div className="relative h-[300px] w-[300px] md:h-[450px] md:w-[450px]">
                 <AnimatePresence mode="popLayout">
-                  {testimonialsData.map((testimonial, index) => (
+                  {testimonialImages.map((src, index) => (
                     <motion.div
-                      key={testimonial.src}
+                      key={src}
                       initial={{
                         opacity: 0,
                         scale: 0.9,
@@ -117,7 +102,7 @@ export function TestimonialsSection({
                         rotate: isActive(index) ? 0 : rotations[index] || 0,
                         zIndex: isActive(index)
                           ? 999
-                          : testimonialsData.length + 2 - index,
+                          : testimonialsCount + 2 - index,
                         y: isActive(index) ? [0, -40, 0] : 0,
                       }}
                       exit={{
@@ -133,8 +118,8 @@ export function TestimonialsSection({
                       className="absolute inset-0 origin-bottom"
                     >
                       <Image
-                        src={testimonial.src}
-                        alt={testimonial.name}
+                        src={src}
+                        alt={`Testimonial ${index + 1}`}
                         width={600}
                         height={600}
                         draggable={false}
@@ -171,14 +156,14 @@ export function TestimonialsSection({
                     className="flex flex-col"
                   >
                     <h3 className="text-3xl md:text-5xl font-bold text-white mb-2 font-display">
-                      {testimonialsData[active].name}
+                      {t(`items.item${active + 1}.name`)}
                     </h3>
-                    <p className="text-xl text-gray-400 font-medium mb-12">
-                      {testimonialsData[active].designation}
+                    <p className="text-xl text-muted-foreground font-medium mb-12">
+                      {t(`items.item${active + 1}.designation`)}
                     </p>
 
-                    <motion.p className="text-xl md:text-2xl text-gray-400 leading-relaxed font-sans font-medium">
-                      {testimonialsData[active].quote
+                    <motion.p className="text-xl md:text-2xl text-white/80 leading-relaxed font-sans font-medium">
+                      {t(`items.item${active + 1}.quote`)
                         .split(' ')
                         .map((word, index) => (
                           <motion.span
@@ -228,8 +213,8 @@ export function TestimonialsSection({
       </div>
 
       {/* Decorative Shaders */}
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#3D726E]/10 rounded-full blur-[120px] pointer-events-none -z-0" />
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#212D50]/20 rounded-full blur-[120px] pointer-events-none -z-0" />
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none -z-0" />
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none -z-0" />
     </section>
   );
 }

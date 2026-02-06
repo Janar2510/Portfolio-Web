@@ -24,6 +24,11 @@ export const ThemeConfigSchema = z.object({
         surface: z.string().optional(),
         border: z.string().optional(),
     }),
+    buttons: z.object({
+        radius: z.string(),
+        style: z.enum(['solid', 'outline', 'ghost', 'link']),
+        uppercase: z.boolean(),
+    }).optional(),
 });
 
 /**

@@ -28,7 +28,8 @@
       "alreadyHasSite": "You already have a site.",
       "invalidName": "Please enter a valid site name.",
       "notAuthenticated": "Please sign in.",
-      "unknown": "Something went wrong."
+      "unknown": "Something went wrong.",
+      "subdomainTaken": "This subdomain is already taken"
     },
     "edit": {
       "title": "Edit site",
@@ -36,6 +37,7 @@
       "actions": {
         "preview": "Preview",
         "publish": "Publish",
+        "republish": "Publish Changes",
         "unpublish": "Unpublish",
         "viewPublic": "View public"
       },
@@ -67,24 +69,30 @@
           "en": "About text (EN)"
         }
       },
+      "bento": {
+        "title": "Bento Grid"
+      },
+      "marquee": {
+        "title": "Marquee"
+      },
       "save": "Save changes",
       "saved": "Saved",
       "errors": {
         "invalid": "Please check required fields.",
         "unknown": "Something went wrong."
-      },
-      "preview": {
-        "title": "Preview",
-        "backToEdit": "Back to editor",
-        "publish": "Publish",
-        "unpublish": "Unpublish",
-        "publicUrl": "Public URL",
-        "openPublic": "Open",
-        "errors": {
-          "notAuthenticated": "Please sign in.",
-          "invalid": "Please check required fields.",
-          "unknown": "Something went wrong."
-        }
+      }
+    },
+    "preview": {
+      "title": "Preview",
+      "backToEdit": "Back to editor",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "publicUrl": "Public URL",
+      "openPublic": "Open",
+      "errors": {
+        "notAuthenticated": "Please sign in.",
+        "invalid": "Please check required fields.",
+        "unknown": "Something went wrong."
       }
     }
   },
@@ -97,6 +105,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "create": "Create",
+    "collapse": "Collapse",
     "theme": {
       "light": "Light",
       "dark": "Dark",
@@ -185,7 +194,8 @@
       "examples": "Examples",
       "faq": "FAQ",
       "logIn": "Log in",
-      "startFreeTrial": "Start Free Trial"
+      "startFreeTrial": "Start Free Trial",
+      "dashboard": "Dashboard"
     },
     "hero": {
       "badge": "New: Professional Templates",
@@ -194,10 +204,22 @@
       "subtitle": "The all-in-one platform for freelancers to showcase work, manage clients, and scale their creative business with professional tools.",
       "cta": "Start Free Trial",
       "ctaSecondary": "View Examples",
+      "goToDashboard": "Go to Dashboard",
       "stats": {
         "freelancers": "Active Freelancers",
         "revenue": "Revenue Generated",
         "satisfaction": "Client Satisfaction"
+      }
+    },
+    "showcase": {
+      "title": "Built with",
+      "titleHighlight": "Supale",
+      "subtitle": "Join thousands of creatives who trust us with their professional presence.",
+      "viewAll": "View All Examples",
+      "next": {
+        "title": "You're Next",
+        "description": "Start building your professional portfolio today. No credit card required.",
+        "button": "Start Building"
       }
     },
     "features": {
@@ -211,6 +233,14 @@
       "customDomain": {
         "title": "Custom Domain",
         "description": "Connect your identity with a custom domain and professional SSL certificates."
+      },
+      "crm": {
+        "title": "Client Management",
+        "description": "Integrated CRM to manage leads, track client status, and close deals faster without leaving your portfolio."
+      },
+      "analytics": {
+        "title": "Advanced Analytics",
+        "description": "Gain deep insights into your audience. Track visitor behavior, project popularity, and conversion goals."
       }
     },
     "howItWorks": {
@@ -229,6 +259,28 @@
           "number": "02",
           "title": "Powerful Customization",
           "description": "Gain full control over your aesthetic with advanced color palettes and layout blocks designed by top creatives."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Loved by",
+      "titleHighlight": "Creatives",
+      "subtitle": "Don't just take our word for it. Join the community of designers and developers who have elevated their careers.",
+      "items": {
+        "item1": {
+          "quote": "Supale transformed how I present my work. Within a week of launching my new portfolio, I landed two new high-ticket clients who specifically mentioned the professional look of my site.",
+          "name": "Maria Tamm",
+          "designation": "Graphic Designer"
+        },
+        "item2": {
+          "quote": "The CRM features are a game changer. I used to manage leads in spreadsheets, but now everything is connected directly to my portfolio. It secures my workflow completely.",
+          "name": "James Wilson",
+          "designation": "Web Developer"
+        },
+        "item3": {
+          "quote": "I've tried every portfolio builder out there. Nothing compares to the customization and speed of Supale. It feels like a custom-coded site but took me only an afternoon to build.",
+          "name": "Elena Kova",
+          "designation": "Architect"
         }
       }
     },
@@ -319,7 +371,8 @@
     "cta": {
       "title": "Ready to Build Your Professional Portfolio?",
       "subtitle": "Join thousands of freelancers who use Supale to showcase their work and grow their business. Start your free 14-day trial today.",
-      "button": "Get Started for Free",
+      "button": "Start Building Your Story",
+      "dashboardButton": "Go to Dashboard",
       "note": "No credit card required. Cancel anytime."
     },
     "footer": {
@@ -383,7 +436,7 @@
   },
   "nav": {
     "dashboard": "Dashboard",
-    "portfolio": "Portfolio",
+    "portfolio": "My Sites",
     "projects": "Projects",
     "projectsBoard": "Board",
     "calendar": "Calendar",
@@ -393,6 +446,7 @@
     "pipeline": "Pipeline",
     "activities": "Activities",
     "analytics": "Analytics",
+    "automations": "Automations",
     "portfolioAnalytics": "Portfolio",
     "crmAnalytics": "CRM",
     "abTesting": "A/B Testing",
@@ -401,7 +455,20 @@
     "newContact": "New Contact",
     "newProject": "New Project",
     "status": "Status",
-    "tasksToday": "tasks today"
+    "tasksToday": "tasks today",
+    "templates": "Templates",
+    "builder": "Builder",
+    "sites": "Sites",
+    "leads": "Leads",
+    "organizations": "Organizations",
+    "settings": "Settings",
+    "new": "New",
+    "edit": "Edit",
+    "sign-in": "Sign In",
+    "overview": "Overview",
+    "documents": "Documents",
+    "mindMaps": "Mind Maps",
+    "spreadsheets": "Spreadsheets"
   },
   "onboarding": {
     "welcome": {
@@ -426,7 +493,8 @@
         "clientsDesc": "Track contacts and deals",
         "both": "Both",
         "bothDesc": "Portfolio + client management"
-      }
+      },
+      "continue": "Continue"
     },
     "profile": {
       "title": "Set up your profile",
@@ -522,7 +590,9 @@
       "continue": "Continue",
       "skip": "Skip",
       "skipAll": "Skip onboarding",
-      "finish": "Finish"
+      "finish": "Finish",
+      "step": "Step",
+      "of": "of"
     },
     "progress": {
       "step": "Step",

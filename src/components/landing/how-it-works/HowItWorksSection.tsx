@@ -31,7 +31,7 @@ export function HowItWorksSection() {
         swirlIterations: 8,
         shape: 'checks' as const,
         shapeScale: 0.08,
-        colors: ['#141C33', '#212D50', '#354F6F', '#3D726E'],
+        colors: ['#0B0F19', '#141C33', '#68A9A5', '#212D50'],
       },
       {
         proportion: 0.4,
@@ -41,7 +41,7 @@ export function HowItWorksSection() {
         swirlIterations: 12,
         shape: 'stripes' as const,
         shapeScale: 0.12,
-        colors: ['#212D50', '#354F6F', '#3D726E', '#68A9A5'],
+        colors: ['#141C33', '#68A9A5', '#212D50', '#0B0F19'],
       },
       {
         proportion: 0.35,
@@ -51,7 +51,7 @@ export function HowItWorksSection() {
         swirlIterations: 10,
         shape: 'checks' as const,
         shapeScale: 0.1,
-        colors: ['#354F6F', '#3D726E', '#68A9A5', '#212D50'],
+        colors: ['#68A9A5', '#212D50', '#0B0F19', '#141C33'],
       },
       {
         proportion: 0.45,
@@ -61,7 +61,7 @@ export function HowItWorksSection() {
         swirlIterations: 15,
         shape: 'stripes' as const,
         shapeScale: 0.09,
-        colors: ['#3D726E', '#68A9A5', '#141C33', '#354F6F'],
+        colors: ['#212D50', '#0B0F19', '#141C33', '#68A9A5'],
       },
     ];
     return configs[index % configs.length];
@@ -86,7 +86,7 @@ export function HowItWorksSection() {
           >
             <h2 className="text-5xl md:text-7xl font-bold font-display text-white mb-6 tracking-tighter">
               {t('title')}{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+              <span className="text-primary">
                 {t('titleHighlight')}
               </span>
             </h2>
@@ -161,8 +161,8 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
         >
-          <GradientButton asChild className="shadow-lg shadow-teal-500/20">
-            <Link href="/register">{t('cta')}</Link>
+          <GradientButton asChild className="shadow-lg shadow-primary/20">
+            <Link href="/sign-up">{t('cta')}</Link>
           </GradientButton>
         </motion.div>
       </div>

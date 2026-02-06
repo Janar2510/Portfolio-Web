@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -32,26 +33,40 @@ export function OnboardingNavigation({
   const isLastStep = currentStep === totalSteps;
 
   return (
-    <div className="flex items-center justify-between border-t border-border bg-card/50 backdrop-blur-sm px-6 py-4 mt-8">
+    <div className="flex items-center justify-between px-0 py-8 mt-12 border-t border-white/5">
       <div className="flex items-center gap-2">
         {!isFirstStep && canGoBack && onBack && (
-          <Button variant="outline" onClick={onBack} disabled={isLoading}>
+          <Button
+            variant="ghost"
+            onClick={onBack}
+            disabled={isLoading}
+            className="text-white/60 hover:text-white hover:bg-white/5 px-6"
+          >
             <ChevronLeft className="mr-2 h-4 w-4" />
             {t('back')}
           </Button>
         )}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         {canSkip && onSkip && !isLastStep && (
-          <Button variant="ghost" onClick={onSkip} disabled={isLoading}>
+          <Button
+            variant="ghost"
+            onClick={onSkip}
+            disabled={isLoading}
+            className="text-white/40 hover:text-white hover:bg-white/5"
+          >
             {t('skip')}
           </Button>
         )}
-        <Button onClick={onNext} disabled={isLoading}>
+        <GradientButton
+          onClick={onNext}
+          disabled={isLoading}
+          className="min-w-[160px] shadow-lg shadow-primary/20"
+        >
           {nextLabel || (isLastStep ? t('finish') : t('continue'))}
-          {!isLastStep && <ChevronRight className="ml-2 h-4 w-4" />}
-        </Button>
+          {!isLastStep && <ChevronRight className="ml-2 h-5 w-5" />}
+        </GradientButton>
       </div>
     </div>
   );

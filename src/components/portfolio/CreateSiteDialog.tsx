@@ -194,7 +194,10 @@ export function CreateSiteDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto" aria-describedby="create-site-desc">
+        <DialogDescription id="create-site-desc" className="sr-only">
+          Create a new portfolio site
+        </DialogDescription>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>{t('createSite')}</DialogTitle>

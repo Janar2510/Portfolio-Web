@@ -71,7 +71,7 @@ export function HeaderBlock({
               ? 'bg-transparent border-transparent'
               : 'bg-background',
           settings.background_color && `bg-[${settings.background_color}]`,
-          'text-white' // Force white for Artisanal elite look
+          'text-[var(--portfolio-text)]'
         )}
       >
         <div className="font-serif font-bold text-2xl tracking-tighter">
@@ -82,9 +82,9 @@ export function HeaderBlock({
               className="h-8 md:h-10 hover:opacity-80 transition-opacity"
             />
           ) : (
-            <span className="text-white">
+            <span className="text-[var(--portfolio-text)]">
               {content.logo_text === 'ELENA.VANCE' ||
-              content.logo_text === 'Elena Vance' ? (
+                content.logo_text === 'Elena Vance' ? (
                 <>
                   ELENA<span className="text-primary">.</span>VANCE
                 </>
@@ -109,8 +109,9 @@ export function HeaderBlock({
                   smooth={true}
                   offset={-100}
                   duration={500}
-                  containerId="preview-scroll-container" // Target the preview container
-                  className="hidden sm:block text-[10px] font-extrabold tracking-[0.4em] uppercase px-2 py-1 transition-all cursor-pointer text-white/90 hover:text-white"
+                  containerId="preview-scroll-container"
+                  className="hidden sm:block text-[10px] font-extrabold tracking-[0.4em] uppercase px-2 py-1 transition-all cursor-pointer text-[var(--portfolio-text)] opacity-90 hover:opacity-100"
+                  ignoreCancelEvents={true}
                 >
                   {link.label}
                 </ScrollLink>
@@ -121,7 +122,7 @@ export function HeaderBlock({
               <Link
                 key={i}
                 href={link.url}
-                className="hidden sm:block text-[10px] font-extrabold tracking-[0.4em] uppercase px-2 py-1 transition-all text-white/90 hover:text-white"
+                className="hidden sm:block text-[10px] font-extrabold tracking-[0.4em] uppercase px-2 py-1 transition-all text-[var(--portfolio-text)] opacity-90 hover:opacity-100"
               >
                 {link.label}
               </Link>
@@ -150,7 +151,7 @@ export function HeaderBlock({
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-all duration-300 hover:scale-110 hover:opacity-100 text-white"
+                className="transition-all duration-300 hover:scale-110 opacity-80 hover:opacity-100 text-[var(--portfolio-text)]"
               >
                 <Icon size={18} />
               </a>

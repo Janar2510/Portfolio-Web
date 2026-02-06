@@ -14,7 +14,7 @@ import {
   useStylesStore,
 } from '@/stores/portfolio';
 import { BlockRenderer } from './BlockRenderer';
-import { SortableBlockWrapper } from './SortableBlockWrapper';
+import { FreeformBlockWrapper } from './FreeformBlockWrapper';
 import { BlockPlaceholder } from './BlockPlaceholder';
 import { BlockToolbar } from './BlockToolbar';
 import {
@@ -50,14 +50,15 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
 
   const cssVariables = styles?.colors
     ? ({
-      '--primary': styles.colors.primary,
-      '--secondary': styles.colors.secondary,
-      '--accent': styles.colors.accent,
-      '--background': styles.colors.background,
-      '--foreground': styles.colors.text,
-      '--muted': styles.colors.surface || styles.colors.secondary || '#f1f5f9',
-      '--muted-foreground': styles.colors.secondary || '#64748b',
-      '--border': styles.colors.border || '#e2e8f0',
+      '--portfolio-primary': styles.colors.primary,
+      '--portfolio-secondary': styles.colors.secondary,
+      '--portfolio-accent': styles.colors.accent,
+      '--portfolio-background': styles.colors.background,
+      '--portfolio-text': styles.colors.text,
+      '--portfolio-surface': styles.colors.surface || styles.colors.secondary || '#f1f5f9',
+      '--portfolio-border': styles.colors.border || '#e2e8f0',
+      '--portfolio-font-heading': (styles.typography as any)?.headingFont || (styles.typography as any)?.heading || 'inherit',
+      '--portfolio-font-body': (styles.typography as any)?.bodyFont || (styles.typography as any)?.body || 'inherit',
     } as React.CSSProperties)
     : {};
 
@@ -114,24 +115,26 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
             isOver && 'ring-2 ring-primary ring-inset',
             darkModeEnabled && 'dark'
           )}
+          id="preview-scroll-container"
           style={{
             ...cssVariables,
-            backgroundColor: styles?.colors?.background,
-            color: styles?.colors?.text,
-            fontFamily: (styles?.typography as any)?.fontFamily || 'inherit',
+            backgroundColor: 'var(--portfolio-background)',
+            color: 'var(--portfolio-text)',
+            fontFamily: 'var(--portfolio-font-body)',
           }}
         >
-          <SortableContext items={blockIds} strategy={rectSortingStrategy}>
-            <div
-              className={cn(
-                'p-4 min-h-[500px]',
-                previewMode === 'mobile'
-                  ? 'flex flex-col space-y-4'
-                  : 'grid grid-cols-12 auto-rows-min gap-4'
-              )}
-            >
-              {blocks.length === 0 ? (
-                <div className="col-span-12">
+          <div
+            className={cn(
+              'p-4 min-h-[800px] relative w-full',
+              darkModeEnabled && 'dark'
+            )}
+            style={{
+              overflowY: 'auto'
+            }}
+          >
+            {blocks.length === 0 ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-[400px]">
                   <BlockPlaceholder
                     onAddBlock={blockType => {
                       addBlockMutation.mutate({
@@ -141,113 +144,94 @@ export function EditorCanvas({ page, previewMode, view }: EditorCanvasProps) {
                     }}
                   />
                 </div>
-              ) : (
-                blocks.map(block => (
-                  <SortableBlockWrapper
-                    key={block.id}
-                    blockId={block.id}
-                    isActive={false} // Managed by parent if needed, or simplistic
-                    colSpan={block.layout?.colSpan || 12}
-                    rowSpan={block.layout?.rowSpan}
-                    onResize={() => {
-                      // Cycle through common grid widths: 12 (full) -> 6 (half) -> 4 (third) -> 3 (quarter) -> 8 (two-thirds) -> 12
-                      const current = block.layout?.colSpan || 12;
-                      const next =
-                        current === 12
-                          ? 6
-                          : current === 6
-                            ? 4
-                            : current === 4
-                              ? 3
-                              : current === 3
-                                ? 8
-                                : 12;
-
-                      updateBlockMutation.mutate({
-                        blockId: block.id,
-                        updates: {
-                          layout: {
-                            ...block.layout,
-                            colSpan: next,
-                          },
+              </div>
+            ) : (
+              blocks.map(block => (
+                <FreeformBlockWrapper
+                  key={block.id}
+                  block={block}
+                  isEditing={view !== 'preview'}
+                  isSelected={selectedBlockId === block.id}
+                  onSelect={() => {
+                    setSelectedBlockId(block.id);
+                    setSelectedBlock(block);
+                  }}
+                  onLayoutUpdate={(layoutUpdates) => {
+                    updateBlockMutation.mutate({
+                      blockId: block.id,
+                      updates: {
+                        layout: {
+                          ...block.layout,
+                          ...layoutUpdates,
                         },
-                      });
+                      },
+                    });
+                  }}
+                >
+                  <div
+                    className={cn(
+                      'group relative w-full h-full',
+                      selectedBlockId === block.id && 'z-10'
+                    )}
+                    data-block-id={block.id}
+                    onMouseEnter={(e) => {
+                      e.stopPropagation();
+                      setHoveredBlockId(block.id);
+                    }}
+                    onMouseLeave={() => setHoveredBlockId(null)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedBlockId(block.id);
+                      setSelectedBlock(block);
                     }}
                   >
-                    <div
-                      className={cn(
-                        'group relative',
-                        selectedBlockId === block.id &&
-                        'ring-2 ring-primary ring-offset-2'
-                      )}
-                      onMouseEnter={() => setHoveredBlockId(block.id)}
-                      onMouseLeave={() => setHoveredBlockId(null)}
-                      onClick={() => {
+                    <BlockToolbar
+                      block={block}
+                      // Removed MoveUp/Down as we are freeform now
+                      onUpdateLayout={(layoutUpdates) => {
+                        updateBlockMutation.mutate({
+                          blockId: block.id,
+                          updates: {
+                            layout: {
+                              ...block.layout,
+                              ...layoutUpdates,
+                            },
+                          },
+                        });
+                      }}
+                      onDuplicate={() => {
+                        duplicateBlockMutation.mutate(block.id);
+                      }}
+                      onDelete={() => {
+                        if (confirm('Delete this block?')) {
+                          deleteBlockMutation.mutate(block.id);
+                        }
+                      }}
+                      onSettings={() => {
                         setSelectedBlockId(block.id);
                         setSelectedBlock(block);
                       }}
-                    >
-                      {/* Block Toolbar on Hover */}
-                      {selectedBlockId === block.id && (
-                        <BlockToolbar
-                          block={block}
-                          onMoveUp={() => {
-                            const index = blocks.findIndex(
-                              b => b.id === block.id
-                            );
-                            if (index > 0) {
-                              moveBlock(block.id, index - 1);
-                            }
-                          }}
-                          onMoveDown={() => {
-                            const index = blocks.findIndex(
-                              b => b.id === block.id
-                            );
-                            if (index < blocks.length - 1) {
-                              moveBlock(block.id, index + 1);
-                            }
-                          }}
-                          onDuplicate={() => {
-                            duplicateBlockMutation.mutate(block.id);
-                          }}
-                          onDelete={() => {
-                            if (confirm('Delete this block?')) {
-                              deleteBlockMutation.mutate(block.id);
-                            }
-                          }}
-                          onSettings={() => {
-                            setSelectedBlockId(block.id);
-                            setSelectedBlock(block);
-                          }}
-                        />
-                      )}
+                    />
 
-                      {/* Block Content */}
-                      <BlockRenderer
-                        block={block}
-                        isEditing={view !== 'preview'}
-                        onUpdate={updates => {
-                          updateBlockMutation.mutate({
-                            blockId: block.id,
-                            updates,
-                          });
-                        }}
-                        onDelete={() => {
-                          deleteBlockMutation.mutate(block.id);
-                        }}
-                        onAddAfter={blockType => {
-                          addBlockMutation.mutate({
-                            blockType,
-                            afterBlockId: block.id,
-                          });
-                        }}
-                      />
-                    </div>
-                  </SortableBlockWrapper>
-                ))
-              )}
-            </div>
-          </SortableContext>
+                    <BlockRenderer
+                      block={block}
+                      isEditing={view !== 'preview'}
+                      isSelected={selectedBlockId === block.id}
+                      onUpdate={updates => {
+                        updateBlockMutation.mutate({
+                          blockId: block.id,
+                          updates,
+                        });
+                      }}
+                      onDelete={() => {
+                        deleteBlockMutation.mutate(block.id);
+                      }}
+                    />
+                  </div>
+                </FreeformBlockWrapper>
+              ))
+            )}
+          </div>
         </div>
       </div>
 

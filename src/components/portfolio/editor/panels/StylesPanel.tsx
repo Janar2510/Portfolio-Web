@@ -12,10 +12,16 @@ import { TypographyPanel } from './TypographyPanel';
 import { SpacingPanel } from './SpacingPanel';
 import { EffectsPanel } from './EffectsPanel';
 
+import { ThemePresetsPanel } from './ThemePresetsPanel';
+
 export function StylesPanel() {
   return (
-    <Tabs defaultValue="colors" className="h-full flex flex-col">
-      <TabsList className="grid grid-cols-4 w-full rounded-none border-b">
+    <Tabs defaultValue="theme" className="h-full flex flex-col">
+      <TabsList className="grid grid-cols-5 w-full rounded-none border-b">
+        <TabsTrigger value="theme" className="flex items-center gap-2 text-xs">
+          <Sparkles className="h-3 w-3" />
+          Theme
+        </TabsTrigger>
         <TabsTrigger value="colors" className="flex items-center gap-2 text-xs">
           <Palette className="h-3 w-3" />
           Colors
@@ -44,6 +50,9 @@ export function StylesPanel() {
       </TabsList>
 
       <div className="flex-1 overflow-auto">
+        <TabsContent value="theme" className="mt-0">
+          <ThemePresetsPanel />
+        </TabsContent>
         <TabsContent value="colors" className="mt-0">
           <ColorsPanel />
         </TabsContent>

@@ -127,13 +127,13 @@ export function StatsBlock({
     >
       <section className="w-full px-4 py-8">
         {content.title && (
-          <h2 className="text-3xl font-bold mb-8 text-center">
+          <h2 className="text-3xl font-bold mb-8 text-center text-[var(--portfolio-text)]">
             {content.title}
           </h2>
         )}
 
         {stats.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-[var(--portfolio-text)] opacity-60">
             {isEditing
               ? 'Add stats in the block settings.'
               : 'No stats to display.'}
@@ -142,26 +142,26 @@ export function StatsBlock({
           <div
             className={cn(
               layout === 'grid' &&
-                `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-6`,
+              `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-6`,
               layout === 'horizontal' && 'flex flex-wrap justify-center gap-8'
             )}
           >
             {stats.map((stat, index) => (
               <Card
                 key={`${stat.id || 'stat'}-${index}`}
-                className="text-center"
+                className="text-center bg-[var(--portfolio-text)]/5 border-[var(--portfolio-text)]/10"
               >
                 <CardContent className="p-6">
                   {stat.icon && (
                     <div className="text-4xl mb-4">{stat.icon}</div>
                   )}
-                  <div className="text-4xl md:text-5xl font-bold mb-2">
+                  <div className="text-4xl md:text-5xl font-bold mb-2 text-[var(--portfolio-text)]">
                     {formatValue(stat)}
                     {stat.suffix && (
                       <span className="text-2xl">{stat.suffix}</span>
                     )}
                   </div>
-                  <div className="text-sm text-muted-foreground uppercase tracking-wide">
+                  <div className="text-sm text-[var(--portfolio-text)] opacity-60 uppercase tracking-wide">
                     {stat.label}
                   </div>
                 </CardContent>

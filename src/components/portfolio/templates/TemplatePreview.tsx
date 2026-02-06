@@ -40,20 +40,57 @@ export function TemplatePreview({
   // Extract blocks from the template for the preview
   const { blocks, styles } = useMemo(() => {
     // Portfolios use the blocks from the first page in the schema
-    const blocks = template.pages_schema?.[0]?.blocks || [];
+    // or fallback to defaultSections if pages_schema is empty (which is true for new templates)
+    const rawBlocks = template.pages_schema?.[0]?.blocks || template.defaultSections || [];
+
+    // Helper to resolve localized content
+    const getLocalized = (content: any): any => {
+      if (!content) return content;
+      if (typeof content === 'object' && 'et' in content && 'en' in content) {
+        return content[template.defaultLocale] || content['en'] || content['et'];
+      }
+      if (Array.isArray(content)) {
+        return content.map(item => getLocalized(item));
+      }
+      if (typeof content === 'object') {
+        const result: any = {};
+        for (const key in content) {
+          result[key] = getLocalized(content[key]);
+        }
+        return result;
+      }
+      return content;
+    };
 
     // Mapped blocks with necessary IDs for the renderer
-    const mappedBlocks: PortfolioBlock[] = blocks.map((b, idx) => ({
-      ...b,
-      id: `preview-block-${idx}`,
-      page_id: 'preview-page',
-      anchor_id: b.block_type + '-' + idx,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      is_visible: true,
-      styles: {},
-      sort_order: idx,
-    })) as PortfolioBlock[];
+    const mappedBlocks: PortfolioBlock[] = rawBlocks.map((b: any, idx) => {
+      // Determine correct block type for renderer
+      // If block comes from converter, it has block_type. If from registry/defaultSections, it has type.
+      let rendererType = b.block_type || b.type;
+
+      // Map Registry types to Renderer types (if legacy type found)
+      if (rendererType === 'about') rendererType = 'text';
+      if (rendererType === 'contact') rendererType = 'form';
+      if (rendererType === 'services') rendererType = 'features';
+
+      // Ensure block has a type
+      rendererType = rendererType || 'text';
+
+      return {
+        ...b,
+        id: b.id || `preview-block-${idx}`,
+        page_id: 'preview-page',
+        anchor_id: b.anchor_id || `${rendererType}-${idx}`,
+        block_type: rendererType,
+        content: getLocalized(b.content) || {},
+        settings: b.settings || {},
+        created_at: b.created_at || new Date().toISOString(),
+        updated_at: b.updated_at || new Date().toISOString(),
+        is_visible: b.is_visible !== undefined ? b.is_visible : true,
+        styles: b.styles || {},
+        sort_order: b.sort_order !== undefined ? b.sort_order : idx,
+      };
+    }) as unknown as PortfolioBlock[];
 
     // Map template styles schema to renderer's expected format
     const mappedStyles = {
@@ -170,8 +207,11 @@ export function TemplatePreview({
                     --muted-foreground: ${styles?.color_palette?.textSecondary || '#64748b'};
                     --border: ${styles?.color_palette?.border || 'rgba(0,0,0,0.1)'};
                     --portfolio-primary: ${styles?.color_palette?.primary || '#000000'};
+                    --portfolio-text: ${styles?.color_palette?.text || '#000000'};
+                    --portfolio-background: ${styles?.color_palette?.background || '#ffffff'};
                     --portfolio-heading-font: ${styles?.typography?.headingFont || 'inherit'};
                     --portfolio-body-font: ${styles?.typography?.bodyFont || 'inherit'};
+                    --radius: ${template.styles_schema?.buttons?.radius || '0.5rem'};
                   }
                   #preview-scroll-container h1, h2, h3, h4, h5, h6 {
                     font-family: var(--portfolio-heading-font);

@@ -14,11 +14,13 @@ import { CustomizeStep } from './steps/CustomizeStep';
 import { ContentStep } from './steps/ContentStep';
 import { TourStep } from './steps/TourStep';
 import { PublishStep } from './steps/PublishStep';
+import { Button } from '@/components/ui/button';
+import { Rocket } from 'lucide-react';
 import type { OnboardingStepId, UserType, PrimaryGoal } from '@/lib/onboarding/steps';
 
 export function OnboardingFlow() {
   const router = useRouter();
-  const { progress, isLoading, updateProgress, logEvent } = useOnboarding();
+  const { progress, isLoading, error, updateProgress, logEvent } = useOnboarding();
   const {
     setCurrentStep,
     setUserType,
@@ -31,6 +33,7 @@ export function OnboardingFlow() {
   } = useOnboardingStore();
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [isNavigating, setIsNavigating] = useState(false);
   const currentStep = ONBOARDING_STEPS[currentStepIndex];
 
   // Initialize from progress
@@ -44,35 +47,50 @@ export function OnboardingFlow() {
   }, [progress, isLoading]);
 
   const handleNext = async () => {
-    if (!progress) return;
+    if (!progress || isNavigating) return;
+    setIsNavigating(true);
 
-    // Mark current step as completed
-    updateStep(currentStep.id, true);
-    await updateProgress({
-      steps_completed: {
-        ...progress.steps_completed,
-        [currentStep.id]: true,
-      },
-      current_step: currentStepIndex + 2,
-    });
-    await logEvent({
-      event_type: 'step_completed',
-      step_name: currentStep.id,
-    });
+    try {
+      // Mark current step as completed in store
+      updateStep(currentStep.id, true);
 
-    // Move to next step
-    if (currentStepIndex < ONBOARDING_STEPS.length - 1) {
-      const nextIndex = currentStepIndex + 1;
-      setCurrentStepIndex(nextIndex);
-      setCurrentStep(nextIndex + 1);
-    } else {
-      // Complete onboarding
-      completeOnboarding();
-      await updateProgress({
-        status: 'completed',
-        completed_at: new Date().toISOString(),
+      // Prepare updates
+      const isFinalStep = currentStepIndex >= ONBOARDING_STEPS.length - 1;
+      const updates: any = {
+        steps_completed: {
+          ...progress.steps_completed,
+          [currentStep.id]: true,
+        },
+      };
+
+      if (!isFinalStep) {
+        updates.current_step = currentStepIndex + 2;
+      } else {
+        updates.status = 'completed';
+        updates.completed_at = new Date().toISOString();
+      }
+
+      // Single database update
+      await updateProgress(updates);
+
+      // Log event
+      await logEvent({
+        event_type: isFinalStep ? 'onboarding_completed' : 'step_completed',
+        step_name: currentStep.id,
       });
-      router.push('/onboarding/complete');
+
+      // Navigate
+      if (!isFinalStep) {
+        const nextIndex = currentStepIndex + 1;
+        setCurrentStepIndex(nextIndex);
+        setCurrentStep(nextIndex + 1);
+      } else {
+        completeOnboarding();
+        router.push('/onboarding/complete');
+      }
+    } finally {
+      // Small timeout to prevent accidental double clicks from skipping multiple steps
+      setTimeout(() => setIsNavigating(false), 500);
     }
   };
 
@@ -90,23 +108,38 @@ export function OnboardingFlow() {
   };
 
   const handleSkip = async () => {
-    if (!progress) return;
+    if (!progress || isNavigating) return;
+    setIsNavigating(true);
 
-    skipStep(currentStep.id);
-    await updateProgress({
-      steps_skipped: [...progress.steps_skipped, currentStep.id],
-    });
-    await logEvent({
-      event_type: 'step_skipped',
-      step_name: currentStep.id,
-    });
+    try {
+      const isFinalStep = currentStepIndex >= ONBOARDING_STEPS.length - 1;
 
-    if (currentStepIndex < ONBOARDING_STEPS.length - 1) {
-      const nextIndex = currentStepIndex + 1;
-      setCurrentStepIndex(nextIndex);
-      setCurrentStep(nextIndex + 1);
-    } else {
-      router.push('/dashboard');
+      const updates: any = {
+        steps_skipped: [...progress.steps_skipped, currentStep.id],
+      };
+
+      if (isFinalStep) {
+        updates.status = 'completed';
+        updates.completed_at = new Date().toISOString();
+      }
+
+      await updateProgress(updates);
+
+      await logEvent({
+        event_type: 'step_skipped',
+        step_name: currentStep.id,
+      });
+
+      if (!isFinalStep) {
+        const nextIndex = currentStepIndex + 1;
+        setCurrentStepIndex(nextIndex);
+        setCurrentStep(nextIndex + 1);
+      } else {
+        completeOnboarding();
+        router.push('/onboarding/complete');
+      }
+    } finally {
+      setTimeout(() => setIsNavigating(false), 500);
     }
   };
 
@@ -118,7 +151,7 @@ export function OnboardingFlow() {
     await logEvent({
       event_type: 'onboarding_abandoned',
     });
-    router.push('/dashboard');
+    router.push('/onboarding/complete');
   };
 
   const handleUserTypeSelect = async (type: UserType) => {
@@ -148,6 +181,47 @@ export function OnboardingFlow() {
     }
   };
 
+  // Logging for diagnostics
+  useEffect(() => {
+    if (progress) {
+      console.log('[OnboardingFlow] Progress status:', progress.status);
+    }
+  }, [progress]);
+
+  // If onboarding is already completed or skipped, redirect
+  // DISABLED: Rely on middleware/layout for redirection to prevent loops
+  /*
+  useEffect(() => {
+    if (progress && (progress.status === 'completed' || progress.status === 'skipped')) {
+      router.push('/dashboard');
+    }
+  }, [progress, router]);
+  */
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center p-8 bg-white/5 border border-white/10 rounded-[2rem] max-w-md backdrop-blur-xl">
+          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Rocket className="h-8 w-8 text-red-500/50" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Onboarding paused</h2>
+          <p className="text-white/40 mb-8">
+            {error.message.includes('onboarding_progress')
+              ? 'Database tables are missing. Please run the latest migrations.'
+              : 'We encountered an unexpected error while loading your progress.'}
+          </p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="w-full h-14 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all font-bold"
+          >
+            Retry Connection
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading || !progress) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -159,11 +233,8 @@ export function OnboardingFlow() {
     );
   }
 
-  // If onboarding is already completed or skipped, redirect
-  if (progress.status === 'completed' || progress.status === 'skipped') {
-    router.push('/dashboard');
-    return null;
-  }
+  // Use a constant to satisfy TS narrowing
+  const currentProgress = progress;
 
   return (
     <OnboardingLayout
@@ -174,8 +245,8 @@ export function OnboardingFlow() {
       <div className="space-y-6">
         {currentStep.id === 'welcome' && (
           <WelcomeStep
-            userType={progress.user_type}
-            primaryGoal={progress.primary_goal}
+            userType={currentProgress.user_type}
+            primaryGoal={currentProgress.primary_goal}
             onUserTypeSelect={handleUserTypeSelect}
             onGoalSelect={handleGoalSelect}
             onContinue={handleNext}
@@ -183,28 +254,30 @@ export function OnboardingFlow() {
         )}
 
         {currentStep.id === 'profile' && (
-          <ProfileStep onContinue={handleNext} onSkip={handleSkip} />
+          <ProfileStep onContinue={handleNext} onSkip={handleSkip} hideInternalButton />
         )}
 
         {currentStep.id === 'template' && (
           <TemplateStep
-            selectedTemplateId={progress.selected_template_id}
+            selectedTemplateId={currentProgress.selected_template_id}
             onTemplateSelect={handleTemplateSelect}
             onContinue={handleNext}
             onSkip={handleSkip}
+            hideInternalButton
           />
         )}
 
         {currentStep.id === 'customize' && (
           <CustomizeStep
-            selectedTemplateId={progress.selected_template_id}
+            selectedTemplateId={currentProgress.selected_template_id}
             onContinue={handleNext}
             onSkip={handleSkip}
+            hideInternalButton
           />
         )}
 
         {currentStep.id === 'content' && (
-          <ContentStep onContinue={handleNext} onSkip={handleSkip} />
+          <ContentStep onContinue={handleNext} onSkip={handleSkip} hideInternalButton />
         )}
 
         {currentStep.id === 'tour' && (
@@ -212,10 +285,10 @@ export function OnboardingFlow() {
         )}
 
         {currentStep.id === 'publish' && (
-          <PublishStep onPublish={handleNext} onSkip={handleSkip} />
+          <PublishStep onPublish={handleNext} onSkip={handleSkip} hideInternalButton />
         )}
 
-        {currentStep.id !== 'welcome' && (
+        {currentStep.id !== 'welcome' && currentStep.id !== 'tour' && (
           <OnboardingNavigation
             currentStep={currentStep.number}
             totalSteps={ONBOARDING_STEPS.length}
@@ -224,6 +297,7 @@ export function OnboardingFlow() {
             onSkip={!currentStep.required ? handleSkip : undefined}
             canGoBack={currentStep.number > 1}
             canSkip={!currentStep.required}
+            isLoading={isNavigating}
           />
         )}
       </div>

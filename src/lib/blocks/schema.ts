@@ -11,6 +11,15 @@ export const baseBlockSchema = z.object({
   page_id: z.string().uuid(),
   block_type: z.string(),
   content: z.record(z.unknown()),
+  layout: z.object({
+    x: z.number().optional(),
+    y: z.number().optional(),
+    width: z.union([z.number(), z.string()]).optional(),
+    height: z.union([z.number(), z.string()]).optional(),
+    zIndex: z.number().optional(),
+    colSpan: z.number().optional(),
+    rowSpan: z.number().optional(),
+  }).optional().default({}),
   settings: z.record(z.unknown()).default({}),
   sort_order: z.number().int().default(0),
   created_at: z.string(),
@@ -33,7 +42,9 @@ export type BlockType =
   | 'brand-hero'
   | 'organic-hero'
   | 'skills'
-  | 'stats';
+  | 'stats'
+  | 'marquee'
+  | 'bento';
 
 // Hero Block
 export const heroBlockContentSchema = z.object({
@@ -303,6 +314,45 @@ export const statsBlockSettingsSchema = z.object({
 export type StatsBlockContent = z.infer<typeof statsBlockContentSchema>;
 export type StatsBlockSettings = z.infer<typeof statsBlockSettingsSchema>;
 
+// Marquee Block
+export const marqueeBlockContentSchema = z.object({
+  items: z.array(z.string()).default(['Design', 'Development', 'Strategy', 'Branding']),
+});
+
+export const marqueeBlockSettingsSchema = z.object({
+  speed: z.enum(['slow', 'normal', 'fast']).default('normal'),
+  direction: z.enum(['left', 'right']).default('left'),
+  gap: z.enum(['small', 'medium', 'large']).default('medium'),
+  background: z.enum(['transparent', 'solid', 'black']).default('transparent'),
+});
+
+export type MarqueeBlockContent = z.infer<typeof marqueeBlockContentSchema>;
+export type MarqueeBlockSettings = z.infer<typeof marqueeBlockSettingsSchema>;
+
+// Bento Grid Block
+export const bentoBlockContentSchema = z.object({
+  items: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      icon: z.string().optional(),
+      image_url: z.string().optional(),
+      col_span: z.number().min(1).max(4).default(1),
+      row_span: z.number().min(1).max(2).default(1),
+      type: z.enum(['text', 'image', 'stats', 'icon']).default('text'),
+    })
+  ).default([]),
+});
+
+export const bentoBlockSettingsSchema = z.object({
+  columns: z.number().min(2).max(4).default(3),
+  gap: z.enum(['small', 'medium', 'large']).default('medium'),
+});
+
+export type BentoBlockContent = z.infer<typeof bentoBlockContentSchema>;
+export type BentoBlockSettings = z.infer<typeof bentoBlockSettingsSchema>;
+
 // Infinite Hero Block
 export const infiniteHeroBlockContentSchema = z.object({
   headline: z.string().optional(),
@@ -387,7 +437,9 @@ export type BlockContent =
   | BrandHeroBlockContent
   | OrganicHeroBlockContent
   | SkillsBlockContent
-  | StatsBlockContent;
+  | StatsBlockContent
+  | MarqueeBlockContent
+  | BentoBlockContent;
 
 // Block settings type union
 export type BlockSettings =
@@ -404,7 +456,9 @@ export type BlockSettings =
   | BrandHeroBlockSettings
   | OrganicHeroBlockSettings
   | SkillsBlockSettings
-  | StatsBlockSettings;
+  | StatsBlockSettings
+  | MarqueeBlockSettings
+  | BentoBlockSettings;
 
 // Block metadata
 export interface BlockMetadata {
@@ -689,6 +743,40 @@ export const blockRegistry: Record<BlockType, BlockMetadata> = {
       animation: true,
     },
   },
+  marquee: {
+    type: 'marquee',
+    name: 'Marquee',
+    description: 'Infinite scrolling text or logos',
+    icon: 'MoveHorizontal',
+    category: 'interactive',
+    defaultContent: {
+      items: ['Trending', 'Modern', 'Creative', 'Design'],
+    },
+    defaultSettings: {
+      speed: 'normal',
+      direction: 'left',
+      gap: 'medium',
+      background: 'transparent',
+    },
+  },
+  bento: {
+    type: 'bento',
+    name: 'Bento Grid',
+    description: 'Modern, responsive grid layout',
+    icon: 'LayoutGrid',
+    category: 'layout',
+    defaultContent: {
+      items: [
+        { id: '1', title: 'Main Feature', col_span: 2, row_span: 2, type: 'text' },
+        { id: '2', title: 'Stat', col_span: 1, row_span: 1, type: 'stats' },
+        { id: '3', title: 'Image', col_span: 1, row_span: 1, type: 'image' },
+      ],
+    },
+    defaultSettings: {
+      columns: 3,
+      gap: 'medium',
+    },
+  },
 };
 
 // Validation helpers
@@ -741,6 +829,12 @@ export function validateBlockContent(
         return true;
       case 'stats':
         statsBlockContentSchema.parse(content);
+        return true;
+      case 'marquee':
+        marqueeBlockContentSchema.parse(content);
+        return true;
+      case 'bento':
+        bentoBlockContentSchema.parse(content);
         return true;
       default:
         return false;
@@ -799,6 +893,12 @@ export function validateBlockSettings(
         return true;
       case 'stats':
         statsBlockSettingsSchema.parse(settings);
+        return true;
+      case 'marquee':
+        marqueeBlockSettingsSchema.parse(settings);
+        return true;
+      case 'bento':
+        bentoBlockSettingsSchema.parse(settings);
         return true;
       default:
         return false;

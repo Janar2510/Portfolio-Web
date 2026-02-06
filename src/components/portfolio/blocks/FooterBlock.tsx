@@ -59,7 +59,7 @@ export function FooterBlock({
         className={cn(
           'w-full border-t transition-colors duration-500',
           settings.layout === 'large-minimal'
-            ? 'bg-black border-white/5 py-20'
+            ? 'bg-[var(--portfolio-background)] border-[var(--portfolio-text)]/5 py-20'
             : 'py-8 px-6',
           !settings.layout ||
             settings.layout === 'simple' ||
@@ -77,7 +77,7 @@ export function FooterBlock({
               <div>
                 <a
                   href="#home"
-                  className="text-3xl font-serif font-bold text-white mb-4 block tracking-tighter"
+                  className="text-3xl font-serif font-bold text-[var(--portfolio-text)] mb-4 block tracking-tighter"
                 >
                   {content.logo_text === 'ELENA.VANCE' ? (
                     <>
@@ -87,7 +87,7 @@ export function FooterBlock({
                     content.logo_text || 'ELENA.VANCE'
                   )}
                 </a>
-                <p className="text-slate-500 max-w-xs text-sm">
+                <p className="text-[var(--portfolio-text)] opacity-50 max-w-xs text-sm" style={{ fontFamily: 'var(--portfolio-font-body)' }}>
                   {content.bio_text ||
                     'Exploring the boundaries of visual expression.'}
                 </p>
@@ -107,7 +107,11 @@ export function FooterBlock({
                     <a
                       key={i}
                       href={link.url}
-                      className="w-12 h-12 bg-white/5 hover:bg-primary hover:text-white transition-all duration-300 rounded-full flex items-center justify-center text-slate-400 shadow-lg hover:shadow-primary/20"
+                      className="w-12 h-12 bg-[var(--portfolio-text)]/5 transition-all duration-300 flex items-center justify-center text-[var(--portfolio-text)] opacity-60 hover:opacity-100 shadow-lg hover:shadow-primary/20"
+                      style={{
+                        '--hover-bg': 'var(--portfolio-primary)',
+                        '--hover-text': 'var(--portfolio-background)'
+                      } as React.CSSProperties}
                     >
                       <Icon size={20} />
                     </a>
@@ -116,13 +120,13 @@ export function FooterBlock({
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 gap-8">
-              <p className="text-slate-500 text-sm">
+            <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-[var(--portfolio-text)]/5 gap-8">
+              <p className="text-[var(--portfolio-text)] opacity-50 text-sm">
                 {content.copyright_text ||
                   `© ${new Date().getFullYear()} Elena Vance.`}
               </p>
 
-              <div className="flex space-x-8 text-xs font-bold uppercase tracking-widest text-slate-500">
+              <div className="flex space-x-8 text-xs font-bold uppercase tracking-widest text-[var(--portfolio-text)] opacity-50">
                 <a href="#" className="hover:text-primary transition-colors">
                   Privacy Policy
                 </a>
@@ -133,7 +137,7 @@ export function FooterBlock({
 
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:text-white transition-colors group"
+                className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:text-[var(--portfolio-text)] transition-colors group"
               >
                 Back to top{' '}
                 <ArrowUp

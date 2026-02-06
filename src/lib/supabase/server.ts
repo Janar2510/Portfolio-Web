@@ -11,10 +11,32 @@ interface CreateClientResult {
 /**
  * Creates a standard Supabase server client with cookie handling.
  */
+/**
+ * Creates a standard Supabase server client with cookie handling.
+ * Includes manual session recovery for robust authentication.
+ */
 export async function createClient(): Promise<SupabaseClient> {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  // Pre-check for auth token to force header injection
+  // This solves the issue where setSession() updates Auth state but not DB headers in some SSR contexts
+  let initialGlobalHeaders: Record<string, string> = {};
+
+  try {
+    const allCookies = cookieStore.getAll();
+    const authCookie = allCookies.find(c => c.name.includes('auth-token') && c.value);
+    if (authCookie) {
+      const decoded = decodeURIComponent(authCookie.value);
+      const cookieData = JSON.parse(decoded);
+      if (cookieData.access_token) {
+        initialGlobalHeaders['Authorization'] = `Bearer ${cookieData.access_token}`;
+      }
+    }
+  } catch (e) {
+    // Ignore parse errors
+  }
+
+  const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -29,13 +51,36 @@ export async function createClient(): Promise<SupabaseClient> {
             );
           } catch {
             // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
           }
         },
       },
+      global: {
+        headers: initialGlobalHeaders
+      }
     }
   );
+
+  // Still perform setSession if needed for internal state consistency
+  // (though the header above should handle the DB request authority)
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session && initialGlobalHeaders['Authorization']) {
+      // We have a token but no session state, try to sync them
+      // This is safe because we verified the token exists above
+      const authCookie = cookieStore.getAll().find(c => c.name.includes('auth-token'));
+      if (authCookie) {
+        const data = JSON.parse(decodeURIComponent(authCookie.value));
+        await supabase.auth.setSession({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token
+        });
+      }
+    }
+  } catch (e) {
+    // console.error('Session check failed', e);
+  }
+
+  return supabase;
 }
 
 /**
@@ -45,34 +90,8 @@ export async function getUser(): Promise<User | null> {
   const supabase = await createClient();
   try {
     const { data: { user } } = await supabase.auth.getUser();
-
-    if (user) return user;
-
-    // Manual recovery attempt (copying logic from middleware)
-    const cookieStore = await cookies();
-    const allCookies = cookieStore.getAll();
-    const authCookie = allCookies.find(c => c.name.includes('auth-token') && c.value);
-
-    if (authCookie) {
-      try {
-        const decoded = decodeURIComponent(authCookie.value);
-        const cookieData = JSON.parse(decoded);
-
-        if (cookieData.access_token && cookieData.refresh_token) {
-          const { data: sessionData } = await supabase.auth.setSession({
-            access_token: cookieData.access_token,
-            refresh_token: cookieData.refresh_token,
-          });
-          return sessionData.session?.user ?? null;
-        }
-      } catch (e) {
-        // Ignore parse errors
-      }
-    }
-
-    return null;
+    return user;
   } catch (error) {
-    // console.error('Error fetching user:', error);
     return null;
   }
 }
@@ -81,48 +100,9 @@ export async function getUser(): Promise<User | null> {
  * Backward compatible wrapper for existing code.
  * Returns both the client and the user.
  */
-// Consolidated client creation to prevent multiple instances
 export async function createClientWithUser(): Promise<CreateClientResult> {
-  const supabase = await createClient();
+  const supabase = await createClient(); // Now fully authenticated
+  const { data: { user } } = await supabase.auth.getUser();
 
-  try {
-    const {
-      data: { user },
-      error
-    } = await supabase.auth.getUser();
-
-    if (error || !user) {
-      console.error('[createClientWithUser] getUser failed:', error);
-    } else {
-      console.log('[createClientWithUser] Success user:', user.id);
-    }
-
-    return { supabase, user };
-  } catch (err) {
-    console.error('[createClientWithUser] Unexpected error:', err);
-    return { supabase, user: null };
-  }
-}
-
-/**
- * Creates a Supabase client with the service role key (Admin).
- * ARNING: This client bypasses Row Level Security. Use with extreme caution.
- */
-export function createAdminClient(): SupabaseClient {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!serviceRoleKey) {
-    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not defined');
-  }
-
-  // We import createClient from the base package for admin usage to avoid cookie overhead
-  const { createClient: createBaseClient } = require('@supabase/supabase-js');
-
-  return createBaseClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
+  return { supabase, user };
 }

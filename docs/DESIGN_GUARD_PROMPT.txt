@@ -1,0 +1,30 @@
+# DESIGN GUARD PROMPT
+
+You are editing UI in the Supale repo. The UI must look like a single premium product.
+
+## NON-NEGOTIABLES
+1) ONE design system: all colors from semantic CSS tokens (shadcn HSL). No parallel palettes.
+2) ZERO hardcoded colors in components: no hex/rgb/hsl literals outside token files.
+3) Consistent layout rhythm: 8px spacing system. No ad-hoc margins/paddings.
+4) Consistent typography: display font for headings only; clean hierarchy (H1/H2/H3/body).
+5) Dark-first accessibility: readable contrast; no white inputs on dark backgrounds; visible focus ring using ring-ring token.
+6) Layout stability: sidebar never overlaps content on desktop; mobile uses drawer/sheet.
+7) Minimal diffs: UI-only changes must not modify domain/services/routes.
+8) Animations: subtle only (160–240ms, small offsets); respect prefers-reduced-motion.
+
+## WORKFLOW (MANDATORY)
+A) Before edits: run `rg "#|rgb\\(|hsl\\(" app src` and note baseline count.
+B) Implement changes in small steps: tokens → AppShell → key pages.
+C) After edits: run the AI Design Review Checklist and report PASS/FAIL with evidence.
+D) If any checklist item fails, fix it before continuing.
+
+## SUCCESS CRITERIA
+- Dashboard, Sites list/new/edit/preview, Landing all share the same system and feel premium.
+- No visual glitches (overlap, white fields, inconsistent spacing).
+- type-check passes.
+
+If requirements conflict, prioritize: tokens + layout stability + input readability.
+
+## Visual North Star
+Supale should feel like a calm, high-end editorial studio inside a modern dark glass cockpit—clean typography, teal-to-navy accents, and subtle motion that makes every interaction feel intentional.
+(Editorial calm + glassy dark cockpit + teal precision.)

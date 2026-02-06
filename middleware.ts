@@ -13,7 +13,6 @@ const publicAuthRoutes = [
   '/reset-password',
   '/verify-email',
   '/auth/callback',
-  '/s',
 ];
 
 export async function middleware(request: NextRequest) {
@@ -85,10 +84,9 @@ export async function middleware(request: NextRequest) {
 
   // Update Supabase session (this handles auth state)
   // Skip Supabase for subdomain routes (public portfolio sites)
-  // Update Supabase session (this handles auth state)
-  // Skip Supabase for subdomain routes (public portfolio sites)
   let supabaseResponse = response;
   let supabaseUser = null;
+
 
   try {
     const { response: res, user } = await updateSession(request, response);
@@ -108,6 +106,16 @@ export async function middleware(request: NextRequest) {
   const redirectIfAuthedRoutes = ['/sign-in', '/sign-up'];
   const shouldRedirectIfAuthed = redirectIfAuthedRoutes.some(r => pathWithoutLocale.startsWith(r));
 
+  // Helper to copy cookies from the Supabase response to the redirect response
+  // This is critical to prevent session loss during redirects.
+  const withUpdatedCookies = (redirectResponse: NextResponse) => {
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+    });
+    return redirectResponse;
+  };
+
+
   // If it's a public auth route
   if (isPublicAuthRoute) {
     // Only check auth state and redirect if on a specific "guest-only" page
@@ -116,9 +124,9 @@ export async function middleware(request: NextRequest) {
       if (supabaseUser) {
         // User is already logged in, redirect to builder
         const redirectUrl = request.nextUrl.clone();
-        redirectUrl.pathname = `/${locale}/builder/sites`;
+        redirectUrl.pathname = `/${locale}/sites`;
         redirectUrl.searchParams.delete('next');
-        return NextResponse.redirect(redirectUrl);
+        return withUpdatedCookies(NextResponse.redirect(redirectUrl));
       }
     }
 
@@ -138,6 +146,7 @@ export async function middleware(request: NextRequest) {
 
   const protectedPrefixes = [
     '/admin',
+    '/sites',
     '/builder',
     '/dashboard',
     '/projects',
@@ -147,27 +156,72 @@ export async function middleware(request: NextRequest) {
     '/portfolio',
     '/deploy',
     '/email',
+    '/documents',
+    '/mind-maps',
+    '/spreadsheets',
   ];
 
   const isProtectedRoute = protectedPrefixes.some(prefix =>
     pathWithoutLocale === prefix || pathWithoutLocale.startsWith(prefix + '/')
   );
 
-  if (isProtectedRoute) {
-    // Check if we have a user from the updateSession call
-    if (!supabaseUser) {
-      // Double check NOT needed here because updateSession already did a thorough check
-      // including manual recovery from cookies.
+  const isOnboardingPath = pathWithoutLocale.startsWith('/onboarding');
+  const isExactOnboardingPath = pathWithoutLocale === '/onboarding' || pathWithoutLocale === '/onboarding/';
 
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = `/${locale}/sign-in`;
+  // 1. Protected Route Authentication Check
+  if (isProtectedRoute && !supabaseUser) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = `/${locale}/sign-in`;
+    const nextPath = pathname + request.nextUrl.search;
+    redirectUrl.searchParams.set('next', nextPath);
+    return withUpdatedCookies(NextResponse.redirect(redirectUrl));
+  }
 
-      // Add next param for redirection after login
-      // Construct the full relative path including search params
-      const nextPath = pathname + request.nextUrl.search;
-      redirectUrl.searchParams.set('next', nextPath);
+  // 2. Onboarding Status Check
+  if (supabaseUser && (isProtectedRoute || isExactOnboardingPath)) {
+    try {
+      const { createServerClient } = await import('@supabase/ssr');
+      const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+          cookies: {
+            getAll() { return []; },
+            setAll() { },
+          },
+        }
+      );
 
-      return NextResponse.redirect(redirectUrl);
+
+      const { data: progress, error: progressError } = await supabase
+        .from('onboarding_progress')
+        .select('status')
+        .eq('user_id', supabaseUser.id)
+        .single();
+
+      const isCompletedOrSkipped = progress?.status === 'completed' || progress?.status === 'skipped';
+
+      console.log('[Middleware] Onboarding check:', {
+        userId: supabaseUser.id,
+        status: progress?.status,
+        error: progressError?.message,
+        path: pathWithoutLocale,
+        isCompletedOrSkipped
+      });
+
+      if (isProtectedRoute && !isCompletedOrSkipped) {
+        console.log('[Middleware] 🚫 Not completed. Redirecting to /onboarding');
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = `/${locale}/onboarding`;
+        return withUpdatedCookies(NextResponse.redirect(redirectUrl));
+      } else if (isExactOnboardingPath && isCompletedOrSkipped) {
+        console.log('[Middleware] ✅ Already completed. Redirecting to /dashboard');
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = `/${locale}/dashboard`;
+        return withUpdatedCookies(NextResponse.redirect(redirectUrl));
+      }
+    } catch (error) {
+      console.error('[Middleware] Onboarding check error:', error);
     }
   }
 

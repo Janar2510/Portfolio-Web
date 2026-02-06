@@ -99,118 +99,32 @@ export function ProductsList({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Products</h2>
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Product
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <form onSubmit={handleCreate}>
-              <DialogHeader>
-                <DialogTitle>Create Product</DialogTitle>
-                <DialogDescription>
-                  Add a new product to your catalog
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Product Name *</Label>
-                  <Input id="name" name="name" required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="code">Product Code</Label>
-                  <Input id="code" name="code" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea id="description" name="description" rows={3} />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="unit_price">Unit Price</Label>
-                    <Input
-                      id="unit_price"
-                      name="unit_price"
-                      type="number"
-                      step="0.01"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="currency">Currency</Label>
-                    <Select name="currency" defaultValue="EUR">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="EUR">EUR</SelectItem>
-                        <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="GBP">GBP</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="unit">Unit</Label>
-                    <Input id="unit" name="unit" defaultValue="unit" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="tax_percentage">Tax %</Label>
-                    <Input
-                      id="tax_percentage"
-                      name="tax_percentage"
-                      type="number"
-                      step="0.01"
-                      defaultValue="0"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
-                  <Input id="category" name="category" />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsCreateOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">Create</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
-
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map(product => (
-          <Card key={product.id}>
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Package className="h-5 w-5 text-muted-foreground" />
+          <Card key={product.id} className="surface-elevated border-white/5 bg-white/[0.02] backdrop-blur-sm rounded-3xl overflow-hidden hover:bg-white/[0.04] transition-all">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                    <Package className="h-5 w-5" />
+                  </div>
                   <div>
-                    <h3 className="font-semibold">{product.name}</h3>
+                    <h3 className="font-bold text-lg text-white font-display">
+                      {product.name}
+                    </h3>
                     {product.code && (
-                      <p className="text-sm text-muted-foreground">
-                        Code: {product.code}
+                      <p className="text-xs text-white/40 uppercase tracking-widest font-mono">
+                        {product.code}
                       </p>
                     )}
                   </div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1.5">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8"
+                    className="h-9 w-9 text-white/40 hover:text-white hover:bg-white/5"
                     onClick={() => setEditingProduct(product)}
                   >
                     <Edit2 className="h-4 w-4" />
@@ -218,30 +132,34 @@ export function ProductsList({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-destructive"
+                    className="h-9 w-9 text-white/20 hover:text-destructive hover:bg-destructive/10"
                     onClick={() => handleDelete(product.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
+
               {product.description && (
-                <p className="text-sm text-muted-foreground mb-2">
+                <p className="text-sm text-white/60 mb-6 line-clamp-2 leading-relaxed">
                   {product.description}
                 </p>
               )}
-              <div className="flex items-center gap-2 flex-wrap">
-                {product.unit_price && (
-                  <Badge variant="secondary">
+
+              <div className="flex items-center gap-2 flex-wrap pt-4 border-t border-white/5">
+                {product.unit_price != null && (
+                  <Badge className="bg-primary/20 text-primary border-none font-bold px-3 py-1">
                     {product.unit_price.toFixed(2)} {product.currency}
                   </Badge>
                 )}
                 {product.category && (
-                  <Badge variant="outline">{product.category}</Badge>
+                  <Badge variant="outline" className="border-white/10 text-white/40 font-medium">
+                    {product.category}
+                  </Badge>
                 )}
                 {product.tax_percentage > 0 && (
-                  <Badge variant="outline">
-                    Tax: {product.tax_percentage}%
+                  <Badge variant="outline" className="border-white/10 text-white/40 font-medium">
+                    {product.tax_percentage}% tax
                   </Badge>
                 )}
               </div>
@@ -254,62 +172,68 @@ export function ProductsList({
       {editingProduct && (
         <Dialog
           open={!!editingProduct}
-          onOpenChange={() => setEditingProduct(null)}
+          onOpenChange={(open) => !open && setEditingProduct(null)}
         >
-          <DialogContent>
+          <DialogContent className="max-w-md bg-[hsl(var(--bg-elevated))] border-white/5 text-white rounded-[2rem]">
             <form onSubmit={handleUpdate}>
               <DialogHeader>
-                <DialogTitle>Edit Product</DialogTitle>
-                <DialogDescription>Update product details</DialogDescription>
+                <DialogTitle className="text-2xl font-bold font-display">Edit Product</DialogTitle>
+                <DialogDescription className="text-white/40">
+                  Update product details in your catalog
+                </DialogDescription>
               </DialogHeader>
-              <div className="space-y-4 py-4">
+              <div className="space-y-4 py-6">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-name">Product Name *</Label>
+                  <Label htmlFor="edit-name" className="text-white/60">Product Name *</Label>
                   <Input
                     id="edit-name"
                     name="name"
                     defaultValue={editingProduct.name}
+                    className="bg-white/5 border-white/10 text-white rounded-xl focus:ring-primary/20"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-code">Product Code</Label>
+                  <Label htmlFor="edit-code" className="text-white/60">Product Code</Label>
                   <Input
                     id="edit-code"
                     name="code"
                     defaultValue={editingProduct.code || ''}
+                    className="bg-white/5 border-white/10 text-white rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-description">Description</Label>
+                  <Label htmlFor="edit-description" className="text-white/60">Description</Label>
                   <Textarea
                     id="edit-description"
                     name="description"
                     rows={3}
                     defaultValue={editingProduct.description || ''}
+                    className="bg-white/5 border-white/10 text-white rounded-xl"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="edit-unit_price">Unit Price</Label>
+                    <Label htmlFor="edit-unit_price" className="text-white/60">Unit Price</Label>
                     <Input
                       id="edit-unit_price"
                       name="unit_price"
                       type="number"
                       step="0.01"
                       defaultValue={editingProduct.unit_price || ''}
+                      className="bg-white/5 border-white/10 text-white rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="edit-currency">Currency</Label>
+                    <Label htmlFor="edit-currency" className="text-white/60">Currency</Label>
                     <Select
                       name="currency"
                       defaultValue={editingProduct.currency}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white/5 border-white/10 text-white rounded-xl">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-[hsl(var(--bg-elevated))] border-white/10 text-white">
                         <SelectItem value="EUR">EUR</SelectItem>
                         <SelectItem value="USD">USD</SelectItem>
                         <SelectItem value="GBP">GBP</SelectItem>
@@ -319,42 +243,48 @@ export function ProductsList({
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="edit-unit">Unit</Label>
+                    <Label htmlFor="edit-unit" className="text-white/60">Unit</Label>
                     <Input
                       id="edit-unit"
                       name="unit"
                       defaultValue={editingProduct.unit}
+                      className="bg-white/5 border-white/10 text-white rounded-xl"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="edit-tax_percentage">Tax %</Label>
+                    <Label htmlFor="edit-tax_percentage" className="text-white/60">Tax %</Label>
                     <Input
                       id="edit-tax_percentage"
                       name="tax_percentage"
                       type="number"
                       step="0.01"
                       defaultValue={editingProduct.tax_percentage}
+                      className="bg-white/5 border-white/10 text-white rounded-xl"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-category">Category</Label>
+                  <Label htmlFor="edit-category" className="text-white/60">Category</Label>
                   <Input
                     id="edit-category"
                     name="category"
                     defaultValue={editingProduct.category || ''}
+                    className="bg-white/5 border-white/10 text-white rounded-xl"
                   />
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className="gap-2">
                 <Button
                   type="button"
                   variant="outline"
+                  className="rounded-xl border-white/10 hover:bg-white/5 text-white/60"
                   onClick={() => setEditingProduct(null)}
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Update</Button>
+                <Button type="submit" className="rounded-xl bg-primary text-white hover:bg-primary/90">
+                  Save Changes
+                </Button>
               </DialogFooter>
             </form>
           </DialogContent>

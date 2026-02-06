@@ -31,6 +31,7 @@ import {
   DragEndEvent,
   DragStartEvent,
   DragOverlay,
+  defaultDropAnimationSideEffects,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useState } from 'react';
@@ -94,12 +95,37 @@ export function EditorLayout({ pageId, siteId }: EditorLayoutProps) {
       setBlocks(mappedBlocks as any);
 
       // 3. Set Styles
+      const safeTheme = theme || {};
+      const safePalette = safeTheme.palette || {
+        primary: '#000000',
+        secondary: '#ffffff',
+        background: '#ffffff',
+        surface: '#f5f5f5',
+        text: '#000000',
+        textMuted: '#666666'
+      };
+
       setStyles({
         id: 'styles',
         site_id: siteId,
-        colors: theme.palette,
-        typography: theme.fonts,
-        spacing: { scale: 'default' },
+        colors: safePalette,
+        typography: safeTheme.fonts || { heading: 'Inter', body: 'Inter' },
+        spacing: {
+          scale: 'default',
+          sectionPadding: 'py-12 md:py-20',
+          containerWidth: 'max-w-7xl',
+          borderRadius: 'rounded-2xl'
+        },
+        effects: {
+          shadows: true,
+          animations: true,
+          animationSpeed: 'normal',
+          scrollAnimations: true,
+          hoverEffects: true
+        },
+        layout: {
+          containerWidth: 'max-w-7xl'
+        },
         assets: site.draft_config.assets || {},
         siteTitle: site.draft_config.siteTitle,
         bio: site.draft_config.bio,
@@ -263,10 +289,29 @@ export function EditorLayout({ pageId, siteId }: EditorLayoutProps) {
         </div>
 
         {/* Global Drag Overlay */}
-        <DragOverlay>
+        <DragOverlay dropAnimation={{
+          sideEffects: defaultDropAnimationSideEffects({
+            styles: {
+              active: {
+                opacity: '0.4',
+              },
+            },
+          }),
+        }}>
           {draggedBlock ? (
-            <div className="p-4 bg-background border rounded shadow-lg opacity-80 w-64 pointer-events-none">
-              {draggedBlock.block_type || 'Block'}
+            <div className="w-[300px] p-4 bg-background border rounded-xl shadow-2xl opacity-90 scale-105 rotate-2 cursor-grabbing pointer-events-none ring-2 ring-primary">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  {/* Icon placeholder - could be dynamic based on block type */}
+                  <div className="w-4 h-4 bg-primary rounded-sm" />
+                </div>
+                <div>
+                  <span className="font-bold text-sm block capitalize">{draggedBlock.block_type?.replace('-', ' ') || 'Block'}</span>
+                  <span className="text-xs text-muted-foreground">Drag to position</span>
+                </div>
+              </div>
+              <div className="h-2 w-3/4 bg-muted rounded mb-2" />
+              <div className="h-2 w-1/2 bg-muted rounded" />
             </div>
           ) : null}
         </DragOverlay>

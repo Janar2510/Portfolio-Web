@@ -22,8 +22,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import { ImageSlider } from '@/components/ui/ImageSlider';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { motion } from 'framer-motion';
+import { Globe } from 'lucide-react';
 
 const sliderImages = [
   '/templates/editorial-minimal-hero.png',
@@ -324,48 +325,67 @@ export default function SignInPage() {
 
   return (
     <div className="flex min-h-screen bg-background overflow-hidden">
-      {/* Left Column: Image Slider (Visible on large screens) */}
-      <div className="hidden lg:block lg:w-1/2 xl:w-7/12 relative">
-        <ImageSlider images={sliderImages} className="h-full w-full" />
-        <div className="absolute inset-0 bg-navy-deep/20 z-[5]" />
-        <div className="absolute top-1/2 left-12 -translate-y-1/2 z-10 max-w-lg">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <h1 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg leading-tight">
-              Transforming portolios into{' '}
-              <span className="text-secondary">digital experiences</span>.
-            </h1>
-            <p className="text-xl text-white/90 drop-shadow-md">
-              Join thousands of stylists and creators building their
-              professional presence with our editorial-grade tools.
-            </p>
-          </motion.div>
+      {/* Left Column: Visual Area (Visible on large screens) */}
+      <div className="hidden lg:flex lg:w-1/2 xl:w-7/12 relative bg-[#0B0F19] items-center justify-center overflow-hidden">
+        {/* Ambient Glows from HowItWorksSection */}
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="absolute top-[-10%] left-[-10%] w-[80%] h-[80%] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[80%] h-[80%] bg-secondary/10 rounded-full blur-[120px] pointer-events-none" />
         </div>
 
-        {/* Logo/Brand Name */}
+        {/* Brand Name / Logo */}
         <div className="absolute top-10 left-12 z-20 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shadow-lg">
-            <span className="text-navy-deep font-bold text-xl">S</span>
+          <div className="size-10 rounded-xl bg-primary flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-xl font-display">S</span>
           </div>
           <span className="text-white font-display font-bold text-2xl tracking-tight">
             Supale
           </span>
         </div>
+
+        <div className="relative z-10 max-w-xl px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-6xl xl:text-7xl font-display font-bold text-white mb-8 leading-[1.1] tracking-tighter">
+              Build your <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                Professional Face.
+              </span>
+            </h1>
+            <p className="text-xl text-muted-foreground font-light leading-relaxed">
+              The all-in-one platform for creatives to showcase work, manage clients, and grow their professional brand.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Decorative glass elements */}
+        <div className="absolute bottom-20 left-12 right-12 flex gap-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-1 bg-white/5 rounded-full flex-1 overflow-hidden">
+              <motion.div
+                initial={{ x: "-100%" }}
+                animate={{ x: "100%" }}
+                transition={{ duration: 3, repeat: Infinity, delay: i * 1, ease: "linear" }}
+                className="h-full w-1/2 bg-gradient-to-r from-transparent via-primary/50 to-transparent"
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Right Column: Sign In Form */}
-      <div className="w-full lg:w-1/2 xl:w-5/12 flex flex-col items-center justify-center p-8 sm:p-12 lg:p-20 bg-background relative">
-        <div className="w-full max-w-md space-y-8">
+      <div className="w-full lg:w-1/2 xl:w-5/12 flex flex-col items-center justify-center p-6 sm:p-12 lg:p-20 bg-[#0B0F19] relative">
+        <div className="w-full max-w-md space-y-8 relative z-10">
           {/* Mobile Logo */}
-          <div className="lg:hidden flex justify-center mb-8">
+          <div className="lg:hidden flex justify-center mb-12">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shadow-lg">
-                <span className="text-navy-deep font-bold text-xl">S</span>
+              <div className="size-10 rounded-xl bg-primary flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl font-display">S</span>
               </div>
-              <span className="text-foreground font-display font-bold text-2xl tracking-tight">
+              <span className="text-white font-display font-bold text-2xl tracking-tight">
                 Supale
               </span>
             </div>
@@ -377,10 +397,10 @@ export default function SignInPage() {
             transition={{ duration: 0.5 }}
           >
             <div className="space-y-2 mb-8">
-              <h2 className="text-3xl font-display font-bold tracking-tight">
+              <h2 className="text-4xl font-display font-bold tracking-tight text-white">
                 {t('signIn')}
               </h2>
-              <p className="text-muted-foreground">{t('signInToAccount')}</p>
+              <p className="text-muted-foreground font-light">{t('signInToAccount')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -415,7 +435,7 @@ export default function SignInPage() {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium">
+                  <Label htmlFor="email" className="text-sm font-medium text-white/70">
                     {t('email')}
                   </Label>
                   <Input
@@ -427,13 +447,13 @@ export default function SignInPage() {
                     required
                     disabled={loading}
                     autoComplete="email"
-                    className="h-12 px-4 rounded-xl border-border bg-muted/50 focus:bg-background transition-all"
+                    className="h-12 px-4 rounded-xl border-white/10 bg-white/5 focus:bg-white/10 text-white transition-all"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password">{t('password')}</Label>
+                    <Label htmlFor="password" className="text-white/70">{t('password')}</Label>
                     <Link
                       href="/forgot-password"
                       className="text-sm font-medium text-secondary hover:text-secondary/80 transition-colors"
@@ -449,25 +469,25 @@ export default function SignInPage() {
                     required
                     disabled={loading}
                     autoComplete="current-password"
-                    className="h-12 px-4 rounded-xl border-border bg-muted/50 focus:bg-background transition-all"
+                    className="h-12 px-4 rounded-xl border-white/10 bg-white/5 focus:bg-white/10 text-white transition-all"
                   />
                 </div>
               </div>
 
-              <Button
+              <GradientButton
                 type="submit"
-                className="w-full h-12 rounded-xl text-white font-semibold shadow-lg shadow-navy-deep/20 transition-all hover:scale-[1.02] active:scale-[0.98] bg-[#0F172A] hover:bg-[#1e293b]"
+                className="w-full h-12 rounded-xl text-white font-bold shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_0_30px_-5px_hsl(var(--primary))]"
                 disabled={loading}
               >
                 {loading ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                     <span>Signing in...</span>
                   </div>
                 ) : (
                   t('signIn')
                 )}
-              </Button>
+              </GradientButton>
 
               <div className="relative py-4">
                 <div className="absolute inset-0 flex items-center">

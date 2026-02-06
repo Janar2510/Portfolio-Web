@@ -228,6 +228,33 @@ export function CyberHeroBlock({
     }
   }, [visibleWords, titleWords.length]);
 
+  const [renderer, setRenderer] = useState<THREE.WebGPURenderer | null>(null);
+
+  useEffect(() => {
+    // Initialize WebGPU renderer asynchronously
+    const initRenderer = async () => {
+      try {
+        const r = new THREE.WebGPURenderer({
+          antialias: true,
+          alpha: true
+        });
+        await r.init();
+        setRenderer(r);
+      } catch (e) {
+        console.error('Failed to initialize WebGPURenderer:', e);
+      }
+    };
+
+    initRenderer();
+
+    return () => {
+      // Cleanup if needed
+      if (renderer) {
+        renderer.dispose();
+      }
+    };
+  }, []);
+
   return (
     <BaseBlock
       block={block}
@@ -344,28 +371,23 @@ export function CyberHeroBlock({
           </button>
         </div>
 
-        <div className="absolute inset-0 z-0">
-          <Canvas
-            flat
-            gl={canvas => {
-              const renderer = new THREE.WebGPURenderer({
-                canvas,
-                antialias: true,
-              });
-              renderer.init();
-              return renderer;
-            }}
-          >
-            <PostProcessing fullScreenEffect={true} />
-            <Scene
-              imageUrl={
-                content.image_url || 'https://i.postimg.cc/XYwvXN8D/img-4.png'
-              }
-              depthUrl={
-                content.depth_url || 'https://i.postimg.cc/2SHKQh2q/raw-4.webp'
-              }
-            />
-          </Canvas>
+        <div className="absolute inset-0 z-0 bg-black">
+          {renderer && (
+            <Canvas
+              flat
+              gl={renderer}
+            >
+              <PostProcessing fullScreenEffect={true} />
+              <Scene
+                imageUrl={
+                  content.image_url || 'https://i.postimg.cc/XYwvXN8D/img-4.png'
+                }
+                depthUrl={
+                  content.depth_url || 'https://i.postimg.cc/2SHKQh2q/raw-4.webp'
+                }
+              />
+            </Canvas>
+          )}
         </div>
       </div>
     </BaseBlock>

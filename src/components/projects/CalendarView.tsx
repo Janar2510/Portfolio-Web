@@ -16,6 +16,7 @@ import {
   subWeeks,
   startOfDay,
   parseISO,
+  isSameHour,
 } from 'date-fns';
 import {
   ChevronLeft,
@@ -23,6 +24,11 @@ import {
   Calendar as CalendarIcon,
   List,
   Grid,
+  Clock,
+  CheckSquare,
+  Phone,
+  Users,
+  Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,43 +39,48 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import type { Task, Subtask, TaskComment } from '@/domain/projects/projects';
+
+export type EventType = 'task' | 'meeting' | 'call' | 'email' | 'other';
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  description?: string;
+  start: Date;
+  end?: Date;
+  type: EventType;
+  color?: string; // 'blue', 'red', etc. or hex
+  metadata?: any;
+}
 
 interface CalendarViewProps {
-  tasks: Task[];
-  onTaskClick: (task: Task) => void;
+  events: CalendarEvent[];
+  onEventClick: (event: CalendarEvent) => void;
   currentDate?: Date;
 }
 
 type ViewMode = 'month' | 'week' | 'day';
 
 export function CalendarView({
-  tasks,
-  onTaskClick,
+  events,
+  onEventClick,
   currentDate = new Date(),
 }: CalendarViewProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('month');
   const [currentViewDate, setCurrentViewDate] = useState(currentDate);
 
-  // Filter tasks with due dates
-  const tasksWithDueDates = useMemo(() => {
-    return tasks.filter(task => task.due_date && !task.completed_at);
-  }, [tasks]);
-
-  // Group tasks by date
-  const tasksByDate = useMemo(() => {
-    const grouped: Record<string, Task[]> = {};
-    tasksWithDueDates.forEach(task => {
-      if (task.due_date) {
-        const dateKey = format(parseISO(task.due_date), 'yyyy-MM-dd');
-        if (!grouped[dateKey]) {
-          grouped[dateKey] = [];
-        }
-        grouped[dateKey].push(task);
+  // Group events by date (string yyyy-MM-dd)
+  const eventsByDate = useMemo(() => {
+    const grouped: Record<string, CalendarEvent[]> = {};
+    events.forEach(event => {
+      const dateKey = format(event.start, 'yyyy-MM-dd');
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
       }
+      grouped[dateKey].push(event);
     });
     return grouped;
-  }, [tasksWithDueDates]);
+  }, [events]);
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCurrentViewDate(prev =>
@@ -95,11 +106,26 @@ export function CalendarView({
     setCurrentViewDate(new Date());
   };
 
-  const priorityColors = {
-    low: 'bg-blue-100 text-blue-800 border-blue-200',
-    medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    high: 'bg-orange-100 text-orange-800 border-orange-200',
-    urgent: 'bg-red-100 text-red-800 border-red-200',
+  const getTypeIcon = (type: EventType) => {
+    switch (type) {
+      case 'task': return <CheckSquare className="h-3 w-3" />;
+      case 'call': return <Phone className="h-3 w-3" />;
+      case 'meeting': return <Users className="h-3 w-3" />;
+      case 'email': return <Mail className="h-3 w-3" />;
+      default: return <Clock className="h-3 w-3" />;
+    }
+  }
+
+  const getEventColorClass = (type: EventType, color?: string) => {
+    if (color && !['task', 'meeting', 'call', 'email'].includes(type) && color.startsWith('bg-')) return color; // Allow passing Tailwind classes directly if needed
+
+    switch (type) {
+      case 'task': return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800';
+      case 'meeting': return 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800';
+      case 'call': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800';
+      case 'email': return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700';
+      default: return 'bg-zinc-100 text-zinc-800 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700';
+    }
   };
 
   const renderMonthView = () => {
@@ -112,13 +138,13 @@ export function CalendarView({
     const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col border rounded-lg bg-background">
         {/* Week day headers */}
-        <div className="grid grid-cols-7 border-b">
+        <div className="grid grid-cols-7 border-b bg-muted/40">
           {weekDays.map(day => (
             <div
               key={day}
-              className="p-2 text-center text-sm font-semibold text-muted-foreground"
+              className="p-3 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider"
             >
               {day}
             </div>
@@ -126,10 +152,10 @@ export function CalendarView({
         </div>
 
         {/* Calendar grid */}
-        <div className="grid grid-cols-7">
+        <div className="grid grid-cols-7 auto-rows-fr">
           {days.map(day => {
             const dateKey = format(day, 'yyyy-MM-dd');
-            const dayTasks = tasksByDate[dateKey] || [];
+            const dayEvents = eventsByDate[dateKey] || [];
             const isCurrentMonth = isSameMonth(day, currentViewDate);
             const isToday = isSameDay(day, new Date());
 
@@ -137,41 +163,43 @@ export function CalendarView({
               <div
                 key={day.toISOString()}
                 className={cn(
-                  'min-h-[100px] border-b border-r p-2',
-                  !isCurrentMonth && 'bg-muted/30',
-                  isToday && 'bg-blue-50'
+                  'min-h-[120px] border-b border-r p-2 transition-colors hover:bg-muted/10',
+                  !isCurrentMonth && 'bg-muted/10 text-muted-foreground',
+                  isToday && 'bg-primary/5'
                 )}
               >
-                <div
-                  className={cn(
-                    'mb-1 text-sm font-medium',
-                    isToday &&
-                    'rounded-full bg-blue-600 text-white w-6 h-6 flex items-center justify-center',
-                    !isCurrentMonth && 'text-muted-foreground'
-                  )}
-                >
-                  {format(day, 'd')}
+                <div className="flex justify-between items-start mb-2">
+                  <span
+                    className={cn(
+                      'text-sm font-medium h-7 w-7 flex items-center justify-center rounded-full',
+                      isToday && 'bg-primary text-primary-foreground'
+                    )}
+                  >
+                    {format(day, 'd')}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground hidden lg:inline-block">
+                    {format(day, 'EEE')}
+                  </span>
                 </div>
+
                 <div className="space-y-1">
-                  {dayTasks.slice(0, 3).map(task => (
+                  {dayEvents.slice(0, 4).map(event => (
                     <button
-                      key={task.id}
-                      onClick={() => onTaskClick(task)}
+                      key={event.id}
+                      onClick={() => onEventClick(event)}
                       className={cn(
-                        'w-full rounded px-1.5 py-0.5 text-left text-xs truncate border',
-                        task.priority
-                          ? priorityColors[task.priority]
-                          : 'bg-gray-100 text-gray-800 border-gray-200',
-                        'hover:opacity-80 transition-opacity'
+                        'w-full flex items-center gap-1.5 rounded-sm px-1.5 py-1 text-left text-xs truncate border shadow-sm transition-all hover:scale-[1.02]',
+                        getEventColorClass(event.type, event.color)
                       )}
-                      title={task.title}
+                      title={event.title}
                     >
-                      {task.title}
+                      <span className="opacity-70">{getTypeIcon(event.type)}</span>
+                      <span className="truncate font-medium">{event.title}</span>
                     </button>
                   ))}
-                  {dayTasks.length > 3 && (
-                    <div className="text-xs text-muted-foreground px-1.5">
-                      +{dayTasks.length - 3} more
+                  {dayEvents.length > 4 && (
+                    <div className="text-[10px] font-medium text-muted-foreground px-1.5 py-0.5 rounded-sm bg-muted/50 text-center">
+                      +{dayEvents.length - 4} more
                     </div>
                   )}
                 </div>
@@ -190,36 +218,30 @@ export function CalendarView({
     const hours = Array.from({ length: 24 }, (_, i) => i);
 
     return (
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full border rounded-lg overflow-hidden bg-background">
         {/* Day headers */}
-        <div className="grid grid-cols-8 border-b">
-          <div className="p-2 border-r"></div>
+        <div className="grid grid-cols-8 border-b bg-muted/40 divide-x">
+          <div className="p-2 border-r bg-muted/50"></div>
           {days.map(day => {
-            const dateKey = format(day, 'yyyy-MM-dd');
-            const dayTasks = tasksByDate[dateKey] || [];
             const isToday = isSameDay(day, new Date());
-
             return (
               <div
                 key={day.toISOString()}
                 className={cn(
-                  'p-2 text-center border-r',
-                  isToday && 'bg-blue-50'
+                  'p-3 text-center',
+                  isToday && 'bg-primary/5'
                 )}
               >
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                   {format(day, 'EEE')}
                 </div>
                 <div
                   className={cn(
-                    'text-lg font-semibold',
-                    isToday && 'text-blue-600'
+                    'text-xl font-bold mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full',
+                    isToday && 'bg-primary text-primary-foreground'
                   )}
                 >
                   {format(day, 'd')}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {dayTasks.length} tasks
                 </div>
               </div>
             );
@@ -228,12 +250,12 @@ export function CalendarView({
 
         {/* Time grid */}
         <div className="flex-1 overflow-y-auto">
-          <div className="grid grid-cols-8">
-            <div className="border-r">
+          <div className="grid grid-cols-8 bg-background">
+            <div className="border-r border-b divide-y bg-muted/10">
               {hours.map(hour => (
                 <div
                   key={hour}
-                  className="h-16 border-b p-1 text-xs text-muted-foreground"
+                  className="h-20 p-2 text-xs font-medium text-right text-muted-foreground"
                 >
                   {format(new Date().setHours(hour, 0, 0, 0), 'h a')}
                 </div>
@@ -241,39 +263,39 @@ export function CalendarView({
             </div>
             {days.map(day => {
               const dateKey = format(day, 'yyyy-MM-dd');
-              const dayTasks = tasksByDate[dateKey] || [];
+              const dayEvents = eventsByDate[dateKey] || [];
               const isToday = isSameDay(day, new Date());
 
               return (
                 <div
                   key={day.toISOString()}
-                  className={cn('border-r', isToday && 'bg-blue-50/30')}
+                  className={cn('border-r relative divide-y', isToday && 'bg-primary/5')}
                 >
                   {hours.map(hour => {
-                    const hourTasks = dayTasks.filter(task => {
-                      if (!task.due_time) return hour === 9; // Default to 9 AM if no time
-                      const [taskHour] = task.due_time.split(':').map(Number);
-                      return taskHour === hour;
+                    // Filter events happening in this hour
+                    const hourEvents = dayEvents.filter(event => {
+                      const eventHour = event.start.getHours();
+                      return eventHour === hour;
                     });
 
                     return (
-                      <div key={hour} className="h-16 border-b p-1">
-                        {hourTasks.map(task => (
-                          <button
-                            key={task.id}
-                            onClick={() => onTaskClick(task)}
-                            className={cn(
-                              'w-full rounded px-1.5 py-0.5 text-left text-xs truncate border mb-1',
-                              task.priority
-                                ? priorityColors[task.priority]
-                                : 'bg-gray-100 text-gray-800 border-gray-200',
-                              'hover:opacity-80 transition-opacity'
-                            )}
-                            title={task.title}
-                          >
-                            {task.title}
-                          </button>
-                        ))}
+                      <div key={hour} className="h-20 border-b p-1 relative group hover:bg-muted/10 transition-colors">
+                        <div className="space-y-1">
+                          {hourEvents.map(event => (
+                            <button
+                              key={event.id}
+                              onClick={() => onEventClick(event)}
+                              className={cn(
+                                'w-full flex items-center gap-1.5 rounded-sm px-1.5 py-1 text-left text-xs truncate border shadow-sm',
+                                getEventColorClass(event.type, event.color)
+                              )}
+                              title={event.title}
+                            >
+                              <span className="opacity-70">{getTypeIcon(event.type)}</span>
+                              <span className="truncate font-medium">{event.title}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     );
                   })}
@@ -287,83 +309,78 @@ export function CalendarView({
   };
 
   const renderDayView = () => {
-    const dateKey = format(currentViewDate, 'yyyy-MM-dd');
-    const dayTasks = tasksByDate[dateKey] || [];
     const isToday = isSameDay(currentViewDate, new Date());
     const hours = Array.from({ length: 24 }, (_, i) => i);
+    const dateKey = format(currentViewDate, 'yyyy-MM-dd');
+    const dayEvents = eventsByDate[dateKey] || [];
 
-    // Group tasks by hour
-    const tasksByHour = hours.reduce(
+    // Group events by hour
+    const eventsByHour = hours.reduce(
       (acc, hour) => {
-        acc[hour] = dayTasks.filter(task => {
-          if (!task.due_time) return hour === 9; // Default to 9 AM if no time
-          const [taskHour] = task.due_time.split(':').map(Number);
-          return taskHour === hour;
+        acc[hour] = dayEvents.filter(event => {
+          return event.start.getHours() === hour;
         });
         return acc;
       },
-      {} as Record<number, Task[]>
+      {} as Record<number, CalendarEvent[]>
     );
 
     return (
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full border rounded-lg overflow-hidden bg-background">
         {/* Day header */}
-        <div className={cn('p-4 border-b', isToday && 'bg-blue-50')}>
-          <div className="text-sm text-muted-foreground">
+        <div className={cn('p-6 border-b', isToday && 'bg-primary/5')}>
+          <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             {format(currentViewDate, 'EEEE')}
           </div>
           <div
-            className={cn('text-2xl font-semibold', isToday && 'text-blue-600')}
+            className={cn('text-3xl font-bold mt-1', isToday && 'text-primary')}
           >
             {format(currentViewDate, 'MMMM d, yyyy')}
           </div>
-          <div className="text-sm text-muted-foreground mt-1">
-            {dayTasks.length} tasks
+          <div className="text-sm font-medium text-muted-foreground mt-2 flex items-center gap-2">
+            <span className="bg-muted px-2 py-0.5 rounded-full text-foreground">{dayEvents.length}</span> events scheduled
           </div>
         </div>
 
         {/* Time slots */}
         <div className="flex-1 overflow-y-auto">
-          <div className="grid grid-cols-2">
+          <div className="divide-y">
             {hours.map(hour => {
-              const hourTasks = tasksByHour[hour] || [];
+              const hourEvents = eventsByHour[hour] || [];
 
               return (
-                <div key={hour} className="border-b p-3">
-                  <div className="text-xs text-muted-foreground mb-2">
+                <div key={hour} className="flex min-h-[5rem] group hover:bg-muted/5 transition-colors">
+                  <div className="w-24 p-4 text-sm font-medium text-muted-foreground border-r bg-muted/10 shrink-0">
                     {format(new Date().setHours(hour, 0, 0, 0), 'h:mm a')}
                   </div>
-                  <div className="space-y-2">
-                    {hourTasks.map(task => (
-                      <button
-                        key={task.id}
-                        onClick={() => onTaskClick(task)}
-                        className={cn(
-                          'w-full rounded-lg p-2 text-left border',
-                          task.priority
-                            ? priorityColors[task.priority]
-                            : 'bg-gray-100 text-gray-800 border-gray-200',
-                          'hover:opacity-80 transition-opacity'
-                        )}
-                      >
-                        <div className="font-medium text-sm">{task.title}</div>
-                        {task.description && (
-                          <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                            {task.description}
+                  <div className="flex-1 p-2">
+                    <div className="space-y-2">
+                      {hourEvents.map(event => (
+                        <button
+                          key={event.id}
+                          onClick={() => onEventClick(event)}
+                          className={cn(
+                            'w-full flex items-center gap-3 rounded-lg p-3 text-left border shadow-sm hover:scale-[1.01] transition-all',
+                            getEventColorClass(event.type, event.color)
+                          )}
+                        >
+                          <div className="p-2 bg-background/50 rounded-md backdrop-blur-sm">
+                            {getTypeIcon(event.type)}
                           </div>
-                        )}
-                        {task.due_time && (
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {task.due_time}
+                          <div className="min-w-0">
+                            <div className="font-semibold text-sm">{event.title}</div>
+                            {event.description && (
+                              <div className="text-xs opacity-80 mt-0.5 line-clamp-1">
+                                {event.description}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </button>
-                    ))}
-                    {hourTasks.length === 0 && (
-                      <div className="text-xs text-muted-foreground">
-                        No tasks
-                      </div>
-                    )}
+                          <div className="ml-auto text-xs font-mono opacity-70">
+                            {format(event.start, 'h:mm a')}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               );
@@ -402,37 +419,44 @@ export function CalendarView({
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col gap-4">
       {/* Header */}
-      <div className="flex items-center justify-between border-b p-4">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg">
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
+              className="h-8 w-8"
               onClick={() => handleNavigation('prev')}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
+              size="sm"
+              className="h-8 font-medium"
+              onClick={goToToday}
+            >
+              Today
+            </Button>
+            <Button
+              variant="ghost"
               size="icon"
+              className="h-8 w-8"
               onClick={() => handleNavigation('next')}
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
-            <Button variant="outline" onClick={goToToday}>
-              Today
-            </Button>
           </div>
-          <h2 className="text-lg font-semibold">{getViewTitle()}</h2>
+          <h2 className="text-xl font-bold tracking-tight">{getViewTitle()}</h2>
         </div>
         <div className="flex items-center gap-2">
           <Select
             value={viewMode}
             onValueChange={value => setViewMode(value as ViewMode)}
           >
-            <SelectTrigger className="w-[120px]">
+            <SelectTrigger className="w-[120px] bg-background">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -460,7 +484,7 @@ export function CalendarView({
       </div>
 
       {/* Calendar content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-hidden shadow-sm border rounded-lg bg-card">
         {viewMode === 'month' && renderMonthView()}
         {viewMode === 'week' && renderWeekView()}
         {viewMode === 'day' && renderDayView()}

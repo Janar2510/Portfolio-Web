@@ -180,7 +180,7 @@ export function BrandHeroBlock({
       onDelete={onDelete}
       onAddAfter={onAddAfter}
       onEdit={onEdit}
-      className="bg-black text-white"
+      className="bg-[var(--portfolio-background)] text-[var(--portfolio-text)]"
     >
       <div className="relative h-screen w-full overflow-hidden">
         {/* Aurora Shader Background */}
@@ -201,7 +201,7 @@ export function BrandHeroBlock({
                 <a
                   key={idx}
                   href={link.href}
-                  className="hover:text-gray-300 transition-colors uppercase tracking-widest font-medium"
+                  className="hover:opacity-70 transition-opacity uppercase tracking-widest font-medium text-[var(--portfolio-text)]"
                 >
                   {link.label}
                 </a>
@@ -219,10 +219,10 @@ export function BrandHeroBlock({
               <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6 animate-slide-up">
                 {title}
               </h1>
-              <p className="text-lg text-gray-300 max-w-md mb-10 overflow-hidden leading-relaxed animate-slide-up opacity-80">
+              <p className="text-lg text-[var(--portfolio-text)] opacity-60 max-w-md mb-10 overflow-hidden leading-relaxed animate-slide-up">
                 {subtitle}
               </p>
-              <button className="bg-white text-black font-bold px-10 py-4 rounded-md hover:bg-gray-200 transition-all hover:scale-105 active:scale-95 shadow-2xl">
+              <button className="bg-[var(--portfolio-text)] text-[var(--portfolio-background)] font-bold px-10 py-4 rounded-md hover:opacity-90 transition-all hover:scale-105 active:scale-95 shadow-2xl">
                 {ctaText}
               </button>
             </div>
@@ -237,7 +237,7 @@ export function BrandHeroBlock({
             <button
               type="button"
               aria-label="Chat"
-              className="bg-white/5 backdrop-blur-md border border-white/10 rounded-full h-14 w-14 flex items-center justify-center hover:bg-white/20 transition-all hover:scale-110 active:scale-90"
+              className="bg-[var(--portfolio-text)]/5 backdrop-blur-md border border-[var(--portfolio-text)]/10 rounded-full h-14 w-14 flex items-center justify-center hover:bg-[var(--portfolio-text)]/20 transition-all hover:scale-110 active:scale-90"
             >
               <ChatIcon />
             </button>

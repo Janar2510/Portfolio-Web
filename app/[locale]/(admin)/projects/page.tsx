@@ -1,629 +1,133 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ProjectList, type Project } from '@/components/projects/ProjectList';
+import { useQuery } from '@tanstack/react-query';
+import { projectsService } from '@/domain/projects';
+import { CreateProjectDialog } from '@/components/projects/CreateProjectDialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
-  KanbanBoard,
-  type ProjectColumn,
-  type ProjectTask,
-} from '@/components/projects/KanbanBoard';
-import { TaskDetailModal } from '@/components/projects/TaskDetailModal';
-import {
-  type Task,
-  type Subtask,
-  type TaskComment,
-  type ProjectColumn as ServiceProjectColumn,
-} from '@/domain/projects/projects';
-import { createClient } from '@/lib/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+  Search,
+  Plus,
+  Loader2,
+  Folder,
+  MoreVertical,
+  Calendar,
+  Users
+} from 'lucide-react';
+import { Link } from '@/i18n/routing';
+import { cn } from '@/lib/utils';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function ProjectsPage() {
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
-    null
-  );
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch projects
-  const { data: projectsData } = useQuery({
+  const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
-    queryFn: async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return { projects: data || [], total: data?.length || 0 };
-    },
+    queryFn: () => projectsService.getAll(),
   });
 
-  // Fetch columns for selected project
-  const { data: columns = [] } = useQuery({
-    queryKey: ['project-columns', selectedProjectId],
-    queryFn: async () => {
-      if (!selectedProjectId) return [];
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('project_columns')
-        .select('*')
-        .eq('project_id', selectedProjectId)
-        .order('sort_order', { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!selectedProjectId,
-  });
-
-  // Fetch tasks for selected project
-  const { data: tasks = [] } = useQuery({
-    queryKey: ['project-tasks', selectedProjectId],
-    queryFn: async () => {
-      if (!selectedProjectId) return [];
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .eq('project_id', selectedProjectId)
-        .order('sort_order', { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!selectedProjectId,
-  });
-
-  // Fetch subtasks for selected task
-  const { data: subtasks = [] } = useQuery({
-    queryKey: ['task-subtasks', selectedTask?.id],
-    queryFn: async () => {
-      if (!selectedTask?.id) return [];
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('subtasks')
-        .select('*')
-        .eq('task_id', selectedTask.id)
-        .order('sort_order', { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!selectedTask?.id,
-  });
-
-  // Fetch comments for selected task
-  const { data: comments = [] } = useQuery({
-    queryKey: ['task-comments', selectedTask?.id],
-    queryFn: async () => {
-      if (!selectedTask?.id) return [];
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('task_comments')
-        .select('*')
-        .eq('task_id', selectedTask.id)
-        .order('created_at', { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!selectedTask?.id,
-  });
-
-  // Create project mutation
-  const createProjectMutation = useMutation({
-    mutationFn: async (data: {
-      name: string;
-      description?: string;
-      color?: string;
-    }) => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) throw new Error('User not found');
-
-      const { data: project, error } = await supabase
-        .from('projects')
-        .insert({
-          ...data,
-          user_id: user.id,
-          status: 'active',
-        })
-        .select()
-        .single();
-      if (error) throw error;
-
-      // Create default columns
-      const defaultColumns = [
-        { name: 'To Do', sort_order: 0, is_done_column: false },
-        { name: 'In Progress', sort_order: 1, is_done_column: false },
-        { name: 'Done', sort_order: 2, is_done_column: true },
-      ];
-      for (const column of defaultColumns) {
-        await supabase.from('project_columns').insert({
-          project_id: project.id,
-          ...column,
-        });
-      }
-
-      return project;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-    },
-  });
-
-  // Update project mutation
-  const updateProjectMutation = useMutation({
-    mutationFn: async ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: Partial<Project>;
-    }) => {
-      const supabase = createClient();
-      const { data: project, error } = await supabase
-        .from('projects')
-        .update(data)
-        .eq('id', id)
-        .select()
-        .single();
-      if (error) throw error;
-      return project;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-    },
-  });
-
-  // Delete project mutation
-  const deleteProjectMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const supabase = createClient();
-      const { error } = await supabase.from('projects').delete().eq('id', id);
-      if (error) throw error;
-    },
-    onSuccess: (_, deletedProjectId) => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
-      if (selectedProjectId === deletedProjectId) {
-        setSelectedProjectId(null);
-      }
-    },
-  });
-
-  // Reorder columns mutation
-  const reorderColumnsMutation = useMutation({
-    mutationFn: async (columns: ProjectColumn[]) => {
-      const supabase = createClient();
-      const updates = columns.map((col, index) =>
-        supabase
-          .from('project_columns')
-          .update({ sort_order: index })
-          .eq('id', col.id)
-      );
-      await Promise.all(updates);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['project-columns', selectedProjectId],
-      });
-    },
-  });
-
-  // Move task mutation
-  const moveTaskMutation = useMutation({
-    mutationFn: async ({
-      taskId,
-      columnId,
-      sortOrder,
-    }: {
-      taskId: string;
-      columnId: string;
-      sortOrder: number;
-    }) => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('tasks')
-        .update({ column_id: columnId, sort_order: sortOrder })
-        .eq('id', taskId)
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['project-tasks', selectedProjectId],
-      });
-    },
-  });
-
-  // Update task mutation
-  const updateTaskMutation = useMutation({
-    mutationFn: async ({
-      taskId,
-      updates,
-    }: {
-      taskId: string;
-      updates: Partial<Task>;
-    }) => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('tasks')
-        .update(updates)
-        .eq('id', taskId)
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['project-tasks', selectedProjectId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['task-subtasks', selectedTask?.id],
-      });
-    },
-  });
-
-  // Delete task mutation
-  const deleteTaskMutation = useMutation({
-    mutationFn: async (taskId: string) => {
-      const supabase = createClient();
-      const { error } = await supabase.from('tasks').delete().eq('id', taskId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['project-tasks', selectedProjectId],
-      });
-      setIsTaskModalOpen(false);
-      setSelectedTask(null);
-    },
-  });
-
-  // Create task mutation
-  const createTaskMutation = useMutation({
-    mutationFn: async ({
-      projectId,
-      columnId,
-      title,
-    }: {
-      projectId: string;
-      columnId: string;
-      title: string;
-    }) => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      // Get current max sort order
-      const { data: existingTasks } = await supabase
-        .from('tasks')
-        .select('sort_order')
-        .eq('column_id', columnId)
-        .order('sort_order', { ascending: false })
-        .limit(1);
-
-      const newSortOrder =
-        existingTasks?.[0]?.sort_order !== undefined
-          ? existingTasks[0].sort_order + 1
-          : 0;
-
-      const { data, error } = await supabase
-        .from('tasks')
-        .insert({
-          project_id: projectId,
-          column_id: columnId,
-          title,
-          sort_order: newSortOrder,
-          assignee_id: user.id, // Assign to creator by default
-        })
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['project-tasks', selectedProjectId],
-      });
-    },
-  });
-
-  // Create subtask mutation
-  const createSubtaskMutation = useMutation({
-    mutationFn: async ({
-      taskId,
-      title,
-    }: {
-      taskId: string;
-      title: string;
-    }) => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('subtasks')
-        .insert({ task_id: taskId, title })
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['task-subtasks', selectedTask?.id],
-      });
-    },
-  });
-
-  // Update subtask mutation
-  const updateSubtaskMutation = useMutation({
-    mutationFn: async ({
-      subtaskId,
-      updates,
-    }: {
-      subtaskId: string;
-      updates: Partial<Subtask>;
-    }) => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('subtasks')
-        .update(updates)
-        .eq('id', subtaskId)
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['task-subtasks', selectedTask?.id],
-      });
-    },
-  });
-
-  // Delete subtask mutation
-  const deleteSubtaskMutation = useMutation({
-    mutationFn: async (subtaskId: string) => {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from('subtasks')
-        .delete()
-        .eq('id', subtaskId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['task-subtasks', selectedTask?.id],
-      });
-    },
-  });
-
-  // Create comment mutation
-  const createCommentMutation = useMutation({
-    mutationFn: async ({
-      taskId,
-      content,
-    }: {
-      taskId: string;
-      content: string;
-    }) => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-      const { data, error } = await supabase
-        .from('task_comments')
-        .insert({ task_id: taskId, user_id: user.id, content })
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['task-comments', selectedTask?.id],
-      });
-    },
-  });
-
-  // Update comment mutation
-  const updateCommentMutation = useMutation({
-    mutationFn: async ({
-      commentId,
-      content,
-    }: {
-      commentId: string;
-      content: string;
-    }) => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('task_comments')
-        .update({ content })
-        .eq('id', commentId)
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['task-comments', selectedTask?.id],
-      });
-    },
-  });
-
-  // Delete comment mutation
-  const deleteCommentMutation = useMutation({
-    mutationFn: async (commentId: string) => {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from('task_comments')
-        .delete()
-        .eq('id', commentId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['task-comments', selectedTask?.id],
-      });
-    },
-  });
-
-  const handleTaskClick = async (task: ProjectTask) => {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('id', task.id)
-      .single();
-    if (error) throw error;
-    if (data) {
-      setSelectedTask(data as Task);
-      setIsTaskModalOpen(true);
-    }
-  };
-
-  const projects = projectsData?.projects || [];
+  const filteredProjects = projects.filter(p =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-gradient-to-br from-[hsl(var(--background))] via-[hsl(142_60%_6%)] to-[hsl(var(--background))] animate-fade-in">
-      {/* Project List Sidebar */}
-      <div className="w-64 shrink-0 bg-card border-r border-border animate-slide-down">
-        <ProjectList
-          projects={projects}
-          currentProjectId={selectedProjectId || undefined}
-          onProjectSelect={setSelectedProjectId}
-          onProjectCreate={async data => {
-            const newProject = await createProjectMutation.mutateAsync(data);
-            if (newProject) {
-              setSelectedProjectId(newProject.id);
-            }
-          }}
-          onProjectUpdate={async (id, data) => {
-            await updateProjectMutation.mutateAsync({ id, data });
-          }}
-          onProjectDelete={async id => {
-            await deleteProjectMutation.mutateAsync(id);
-          }}
-        />
+    <div className="h-full flex flex-col bg-black/20">
+      {/* Header */}
+      <div className="flex-none p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white/[0.01]">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-white font-display uppercase">Projects</h1>
+          <p className="text-white/40 max-w-lg">Manage your team's work, track progress, and hit deadlines.</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="relative w-full md:w-64 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-10 pl-9 bg-white/5 border-white/10 rounded-xl focus:border-primary/50 transition-all"
+            />
+          </div>
+          <Button
+            onClick={() => setIsCreateOpen(true)}
+            className="h-10 px-6 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-glow-primary transition-all active:scale-95"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Project
+          </Button>
+        </div>
       </div>
 
-      {/* Kanban Board */}
-      <div className="flex-1 overflow-hidden">
-        {selectedProjectId ? (
-          <KanbanBoard
-            projectId={selectedProjectId}
-            columns={columns as ProjectColumn[]}
-            tasks={tasks as ProjectTask[]}
-            onColumnsReorder={async newColumns => {
-              await reorderColumnsMutation.mutateAsync(newColumns);
-            }}
-            onTasksReorder={async () => {
-              // This is handled by moveTask
-            }}
-            onTaskMove={async (taskId, columnId, sortOrder) => {
-              await moveTaskMutation.mutateAsync({
-                taskId,
-                columnId,
-                sortOrder,
-              });
-            }}
-            onTaskClick={handleTaskClick}
-            onTaskCreate={async (columnId, title) => {
-              if (selectedProjectId) {
-                await createTaskMutation.mutateAsync({
-                  projectId: selectedProjectId,
-                  columnId,
-                  title,
-                });
-              }
-            }}
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center animate-fade-in">
-            <div className="text-center animate-scale-in">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  />
-                </svg>
-              </div>
-              <p className="text-lg font-semibold text-foreground">
-                Select a project to get started
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Choose a project from the sidebar or create a new one
-              </p>
+      {/* Content */}
+      <div className="flex-1 p-8 overflow-y-auto">
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full text-white/20">
+            <Loader2 className="w-8 h-8 animate-spin" />
+          </div>
+        ) : filteredProjects.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+            <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5">
+              <Folder className="w-12 h-12 text-white/10" />
             </div>
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold text-white">No projects found</h3>
+              <p className="text-white/40">Get started by creating your first project.</p>
+            </div>
+            <Button
+              onClick={() => setIsCreateOpen(true)}
+              variant="outline"
+              className="mt-4 border-white/10 hover:bg-white/5 text-white rounded-xl"
+            >
+              Create Project
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProjects.map((project) => (
+              <Link
+                key={project.id}
+                href={`/projects/${project.id}`}
+                className="group relative flex flex-col p-6 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                <div className="flex items-start justify-between mb-4 relative z-10">
+                  <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/5 group-hover:border-primary/20 group-hover:bg-primary/10 transition-colors">
+                    <Folder className="w-6 h-6" style={{ color: project.color }} />
+                  </div>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-white/20 hover:text-white rounded-full">
+                    <MoreVertical className="w-4 h-4" />
+                  </Button>
+                </div>
+
+                <div className="space-y-2 mb-6 flex-1 relative z-10">
+                  <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors line-clamp-1">{project.name}</h3>
+                  <p className="text-sm text-white/40 line-clamp-2">{project.description || 'No description provided.'}</p>
+                </div>
+
+                <div className="flex items-center justify-between text-xs font-medium text-white/30 pt-4 border-t border-white/5 relative z-10">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>{formatDistanceToNow(new Date(project.updated_at))} ago</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span>View Board</span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         )}
       </div>
 
-      {/* Task Detail Modal */}
-      {selectedTask && (
-        <TaskDetailModal
-          task={selectedTask}
-          isOpen={isTaskModalOpen}
-          onClose={() => {
-            setIsTaskModalOpen(false);
-            setSelectedTask(null);
-          }}
-          onUpdate={async (taskId, updates) => {
-            await updateTaskMutation.mutateAsync({ taskId, updates });
-            // Refresh task data
-            const supabase = createClient();
-            const { data: updatedTask, error } = await supabase
-              .from('tasks')
-              .select('*')
-              .eq('id', taskId)
-              .single();
-            if (!error && updatedTask) {
-              setSelectedTask(updatedTask as Task);
-            }
-          }}
-          onDelete={async taskId => {
-            await deleteTaskMutation.mutateAsync(taskId);
-          }}
-          subtasks={subtasks}
-          comments={comments}
-          onSubtaskCreate={async (taskId, title) => {
-            await createSubtaskMutation.mutateAsync({ taskId, title });
-          }}
-          onSubtaskUpdate={async (subtaskId, updates) => {
-            await updateSubtaskMutation.mutateAsync({ subtaskId, updates });
-          }}
-          onSubtaskDelete={async subtaskId => {
-            await deleteSubtaskMutation.mutateAsync(subtaskId);
-          }}
-          onCommentCreate={async (taskId, content) => {
-            await createCommentMutation.mutateAsync({ taskId, content });
-          }}
-          onCommentUpdate={async (commentId, content) => {
-            await updateCommentMutation.mutateAsync({ commentId, content });
-          }}
-          onCommentDelete={async commentId => {
-            await deleteCommentMutation.mutateAsync(commentId);
-          }}
-          currentUserId={user?.id}
-        />
-      )}
+      <CreateProjectDialog
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+      />
     </div>
   );
 }

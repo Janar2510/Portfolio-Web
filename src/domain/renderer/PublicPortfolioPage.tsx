@@ -37,6 +37,7 @@ export function PublicPortfolioPage({ config }: PublicPortfolioPageProps) {
     '--accent': palette.accent,
     '--font-heading': fonts.headingFont,
     '--font-body': fonts.bodyFont,
+    '--radius': theme.buttons?.radius || '0.5rem',
   } as React.CSSProperties;
 
   return (

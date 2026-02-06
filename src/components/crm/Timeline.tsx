@@ -41,7 +41,7 @@ export function Timeline({ items }: TimelineProps) {
     }
 
     return (
-        <div className="space-y-6 relative ml-4 border-l border-border pl-6 pb-4">
+        <div className="space-y-10 relative ml-6 border-l-2 border-dashed border-white/10 pl-10 pb-4">
             {sortedItems.map((item) => {
                 const isActivity = item.type === 'activity';
                 const date = new Date(isActivity ? item.created_at : item.sent_at);
@@ -50,18 +50,18 @@ export function Timeline({ items }: TimelineProps) {
                     <div key={item.id} className="relative group">
                         {/* Icon Bubble */}
                         <div className={cn(
-                            "absolute -left-[37px] top-0 h-8 w-8 rounded-full border-2 border-background flex items-center justify-center z-10",
-                            isActivity && item.activity_type === 'note' && "bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50 dark:text-yellow-400",
-                            isActivity && item.activity_type === 'call' && "bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400",
-                            isActivity && item.activity_type === 'meeting' && "bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-400",
-                            isActivity && item.activity_type === 'task' && "bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-400",
-                            !isActivity && "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400", // Email
+                            "absolute -left-[57px] top-0 h-10 w-10 rounded-2xl border border-white/10 flex items-center justify-center z-10 shadow-glow-soft",
+                            isActivity && item.activity_type === 'note' && "bg-amber-500/10 text-amber-400 border-amber-500/20",
+                            isActivity && item.activity_type === 'call' && "bg-sky-500/10 text-sky-400 border-sky-500/20",
+                            isActivity && item.activity_type === 'meeting' && "bg-violet-500/10 text-violet-400 border-violet-500/20",
+                            isActivity && item.activity_type === 'task' && "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+                            !isActivity && "bg-white/5 text-white/40 border-white/10", // Email
                         )}>
-                            {isActivity && item.activity_type === 'note' && <FileText className="h-4 w-4" />}
-                            {isActivity && item.activity_type === 'call' && <Phone className="h-4 w-4" />}
-                            {isActivity && item.activity_type === 'meeting' && <Users className="h-4 w-4" />}
-                            {isActivity && item.activity_type === 'task' && <CheckSquare className="h-4 w-4" />}
-                            {!isActivity && <Mail className="h-4 w-4" />}
+                            {isActivity && item.activity_type === 'note' && <FileText className="h-5 w-5" />}
+                            {isActivity && item.activity_type === 'call' && <Phone className="h-5 w-5" />}
+                            {isActivity && item.activity_type === 'meeting' && <Users className="h-5 w-5" />}
+                            {isActivity && item.activity_type === 'task' && <CheckSquare className="h-5 w-5" />}
+                            {!isActivity && <Mail className="h-5 w-5" />}
                         </div>
 
                         {/* Content Card */}
@@ -80,13 +80,13 @@ export function Timeline({ items }: TimelineProps) {
                             </div>
 
                             {/* Body */}
-                            <div className="bg-card border rounded-lg p-3 text-sm shadow-sm relative group-hover:shadow-md transition-shadow">
+                            <div className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-6 text-sm shadow-sm relative group-hover:bg-white/[0.04] group-hover:border-white/10 transition-all duration-300">
                                 {isActivity && (
                                     <div className="whitespace-pre-wrap">
                                         {item.description || item.title}
                                         {/* If task has due date */}
                                         {item.due_date && (
-                                            <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground bg-secondary/50 p-1.5 rounded w-fit">
+                                            <div className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-400/60 bg-emerald-400/5 border border-emerald-400/10 p-2 px-3 rounded-full w-fit">
                                                 <Calendar className="h-3 w-3" />
                                                 Due: {format(new Date(item.due_date), 'PPP p')}
                                             </div>
