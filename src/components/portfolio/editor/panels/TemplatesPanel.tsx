@@ -125,49 +125,48 @@ export function TemplatesPanel() {
             >
               {/* Visual Preview Stub */}
               <div className="scale-65 h-full w-full opacity-80 group-hover:scale-75 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-                {template.id === 'espresso' && (
-                  <div className="w-full h-full bg-[#2B211E] p-2 flex flex-col gap-2">
-                    <div className="text-[#EFEBE9] font-serif text-[8px]">
-                      The Espresso Stroll
+                {template.id === 'artisanal-vision' && (
+                  <div className="w-full h-full bg-[#020202] p-2 flex flex-col gap-1 items-center justify-center text-center">
+                    <div className="text-[#6366f1] text-[6px] font-bold uppercase tracking-widest opacity-80">
+                      Digital Artist
                     </div>
-                    <div className="h-12 w-full bg-[#3E2723] rounded-sm"></div>
+                    <div className="text-white font-serif text-[10px] leading-tight max-w-[80%]">
+                      Capturing the Unseen Realm
+                    </div>
+                    <div className="w-8 h-[1px] bg-[#6366f1]/50 my-1"></div>
+                    <div className="grid grid-cols-3 gap-1 w-full px-2">
+                      <div className="h-4 bg-white/5 rounded-sm"></div>
+                      <div className="h-4 bg-white/5 rounded-sm"></div>
+                      <div className="h-4 bg-white/5 rounded-sm"></div>
+                    </div>
+                  </div>
+                )}
+                {template.id === 'neon-noir' && (
+                  <div className="w-full h-full bg-[#050505] p-2 flex flex-col gap-2 border border-[#00ffcc]/20">
+                    <div className="text-[#00ffcc] font-mono text-[8px] flex items-center gap-1">
+                      <div className="w-1 h-1 bg-[#00ffcc] animate-pulse"></div>
+                      SYSTEM.ROOT
+                    </div>
+                    <div className="h-8 w-full bg-gradient-to-r from-[#00ffcc]/10 to-transparent border-l-2 border-[#00ffcc] flex items-center px-2">
+                      <div className="h-1 w-12 bg-[#00ffcc]/40"></div>
+                    </div>
                     <div className="grid grid-cols-2 gap-1">
-                      <div className="h-6 bg-[#4E342E] rounded-sm"></div>
-                      <div className="h-6 bg-[#4E342E] rounded-sm"></div>
+                      <div className="h-4 bg-[#ff00ff]/5 rounded-sm border border-[#ff00ff]/10"></div>
+                      <div className="h-4 bg-[#ff00ff]/5 rounded-sm border border-[#ff00ff]/10"></div>
                     </div>
                   </div>
                 )}
-                {template.id === 'ava' && (
-                  <div className="w-full h-full bg-[#FFF8F5] p-2 flex flex-col justify-center text-center">
-                    <div className="text-[#1F2937] font-bold text-[10px] leading-tight mb-2">
-                      Creative copywriter
-                    </div>
-                    <div className="h-1 w-8 bg-[#FF8A65] mx-auto mb-2"></div>
-                    <div className="text-[6px] text-gray-400">Introduction</div>
+                {template.id === 'bento-grid' && (
+                  <div className="w-full h-full bg-[#050505] p-2 grid grid-cols-4 grid-rows-3 gap-1">
+                    <div className="col-span-2 row-span-1 bg-[#68A9A5]/20 rounded-sm"></div>
+                    <div className="col-span-1 row-span-1 bg-white/5 rounded-sm"></div>
+                    <div className="col-span-1 row-span-2 bg-[#68A9A5]/40 rounded-sm"></div>
+                    <div className="col-span-2 row-span-1 bg-white/5 rounded-sm"></div>
+                    <div className="col-span-1 row-span-1 bg-[#68A9A5]/10 rounded-sm"></div>
+                    <div className="col-span-2 row-span-1 bg-white/10 rounded-sm"></div>
                   </div>
                 )}
-                {template.id === 'bernadette' && (
-                  <div className="w-full h-full bg-[#F5F5F4] p-2 flex flex-row items-center gap-2">
-                    <div className="h-10 w-10 rounded-full bg-[#D7CCC8] flex-shrink-0"></div>
-                    <div className="space-y-1">
-                      <div className="h-2 w-16 bg-[#8D6E63] rounded-full"></div>
-                      <div className="h-1 w-12 bg-[#D6D3D1] rounded-full"></div>
-                    </div>
-                  </div>
-                )}
-                {template.id === 'emily' && (
-                  <div className="w-full h-full bg-[#FAFAFA] p-2 flex flex-col gap-2">
-                    <div className="flex justify-between items-center">
-                      <div className="h-1 w-8 bg-black"></div>
-                      <div className="h-1 w-4 bg-gray-300"></div>
-                    </div>
-                    <div className="mt-2 text-[8px] font-serif leading-tight">
-                      Creative copywriter helping your business stand out
-                    </div>
-                    <div className="h-16 w-full bg-gray-200 mt-1"></div>
-                  </div>
-                )}
-                {!['espresso', 'ava', 'bernadette', 'emily'].includes(
+                {!['espresso', 'ava', 'bernadette', 'emily', 'artisanal-vision', 'neon-noir', 'bento-grid'].includes(
                   template.id
                 ) && (
                     <div className="w-full h-full bg-muted/50 p-2 flex flex-col items-center justify-center gap-2">

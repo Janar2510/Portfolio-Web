@@ -5,69 +5,104 @@
 
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BlocksPanel } from './panels/BlocksPanel';
-import { PagesPanel } from './panels/PagesPanel';
-import { StylesPanel } from './panels/StylesPanel';
-import { SettingsPanel } from './panels/SettingsPanel';
-import { TemplatesPanel } from './panels/TemplatesPanel';
 import { useEditorStore } from '@/stores/portfolio';
 import { cn } from '@/lib/utils';
+import { EDITOR_WIZARD_STEPS } from '@/lib/portfolio/editor-wizard';
+import { Button } from '@/components/ui/button';
+import { TemplateStep } from './panels/TemplateStep';
+import { ContentStep } from './panels/ContentStep';
+import { MediaStep } from './panels/MediaStep';
+import { ThemeStep } from './panels/ThemeStep';
+import { ContactStep } from './panels/ContactStep';
+import { PublishStep } from './panels/PublishStep';
 
 interface EditorSidebarProps {
   className?: string;
+  siteId: string;
 }
 
-export function EditorSidebar({ className }: EditorSidebarProps) {
-  const { sidebarTab, setSidebarTab } = useEditorStore();
+export function EditorSidebar({ className, siteId }: EditorSidebarProps) {
+  const { wizardStep, setWizardStep } = useEditorStore();
+  const stepIndex = EDITOR_WIZARD_STEPS.findIndex(
+    step => step.id === wizardStep
+  );
+  const currentStep = EDITOR_WIZARD_STEPS[stepIndex] || EDITOR_WIZARD_STEPS[0];
+
+  const stepContent = {
+    template: <TemplateStep />,
+    content: <ContentStep />,
+    media: <MediaStep />,
+    theme: <ThemeStep />,
+    contact: <ContactStep />,
+    publish: <PublishStep siteId={siteId} />,
+  } as const;
 
   return (
-    <div className={cn('bg-background border-r flex flex-col', className)}>
-      <Tabs
-        value={sidebarTab}
-        onValueChange={value =>
-          setSidebarTab(
-            value as 'blocks' | 'styles' | 'pages' | 'settings' | 'templates'
-          )
-        }
-        className="flex flex-col h-full"
-      >
-        <TabsList className="grid grid-cols-5 w-full rounded-none border-b">
-          <TabsTrigger value="blocks" className="text-xs">
-            Blocks
-          </TabsTrigger>
-          <TabsTrigger value="pages" className="text-xs">
-            Pages
-          </TabsTrigger>
-          <TabsTrigger value="styles" className="text-xs">
-            Styles
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="text-xs">
-            Settings
-          </TabsTrigger>
-          <TabsTrigger value="templates" className="text-xs">
-            Templates
-          </TabsTrigger>
-        </TabsList>
+    <div className={cn('bg-background flex flex-col', className)}>
+      <div className="border-b" style={{ padding: 'var(--space-4)' }}>
+        <h2 className="text-sm font-semibold">Build your site</h2>
+        <p className="text-xs text-muted-foreground">
+          Follow the steps to publish your portfolio.
+        </p>
+      </div>
 
-        <div className="flex-1 overflow-auto">
-          <TabsContent value="blocks" className="mt-0 h-full">
-            <BlocksPanel />
-          </TabsContent>
-          <TabsContent value="pages" className="mt-0 h-full">
-            <PagesPanel />
-          </TabsContent>
-          <TabsContent value="styles" className="mt-0 h-full">
-            <StylesPanel />
-          </TabsContent>
-          <TabsContent value="settings" className="mt-0 h-full">
-            <SettingsPanel />
-          </TabsContent>
-          <TabsContent value="templates" className="mt-0 h-full">
-            <TemplatesPanel />
-          </TabsContent>
+      <div
+        className="flex flex-col border-b"
+        style={{ padding: 'var(--space-4)', gap: 'var(--space-2)' }}
+      >
+        {EDITOR_WIZARD_STEPS.map(step => (
+          <Button
+            key={step.id}
+            variant={wizardStep === step.id ? 'default' : 'outline'}
+            onClick={() => setWizardStep(step.id)}
+            className="justify-between"
+          >
+            <span className="text-xs font-medium">{step.title}</span>
+            <span className="text-[10px] text-muted-foreground">
+              {step.id}
+            </span>
+          </Button>
+        ))}
+      </div>
+
+      <div className="flex-1 overflow-auto">{stepContent[currentStep.id]}</div>
+
+      <div
+        className="border-t"
+        style={{ padding: 'var(--space-4)', gap: 'var(--space-2)' }}
+      >
+        <div className="flex items-center justify-between">
+          <Button
+            variant="outline"
+            onClick={() =>
+              setWizardStep(
+                EDITOR_WIZARD_STEPS[Math.max(stepIndex - 1, 0)].id
+              )
+            }
+            disabled={stepIndex === 0}
+          >
+            Back
+          </Button>
+          <Button
+            onClick={() =>
+              setWizardStep(
+                EDITOR_WIZARD_STEPS[
+                  Math.min(stepIndex + 1, EDITOR_WIZARD_STEPS.length - 1)
+                ].id
+              )
+            }
+            disabled={stepIndex === EDITOR_WIZARD_STEPS.length - 1}
+          >
+            Next
+          </Button>
         </div>
-      </Tabs>
+        <p
+          className="text-[10px] text-muted-foreground"
+          style={{ marginTop: 'var(--space-2)' }}
+        >
+          {currentStep.description}
+        </p>
+      </div>
     </div>
   );
 }

@@ -15,11 +15,18 @@ export interface BaseSection {
 export interface HeroSection extends BaseSection {
     type: 'hero';
     content: {
+        badge?: LocalizedString;
         headline: RequiredLocalizedString;
         subheadline?: LocalizedString;
         ctaLabel?: LocalizedString;
         ctaHref?: string;
         backgroundImage?: string;
+    };
+    settings?: {
+        headline_style?: 'normal' | 'gradient' | 'serif' | 'script';
+        overlay?: boolean;
+        height?: 'auto' | 'half' | 'full';
+        alignment?: 'left' | 'center' | 'right';
     };
 }
 
@@ -30,6 +37,7 @@ export interface AboutSection extends BaseSection {
         subheading?: LocalizedString;
         body: RequiredLocalizedString;
         avatarImage?: { src: string; alt?: LocalizedString };
+        imagePlaceholder?: boolean;
     };
 }
 
@@ -57,6 +65,7 @@ export interface ServicesSection extends BaseSection {
             id: string;
             title: RequiredLocalizedString;
             description?: LocalizedString;
+            icon?: string;
         }>;
     };
 }

@@ -10,7 +10,14 @@ export type TemplateId =
     | 'saas-modern'
     | 'bento-grid'
     | 'marquee-portfolio'
-    | 'brutalist';
+    | 'brutalist'
+    | 'artisanal-vision'
+    | 'editorial-minimal'
+    | 'playful-pop'
+    | 'peak-perspective'
+    | 'cyber-dream'
+    | 'organic-flow'
+    | 'midnight-voyage';
 
 export type LocalizedString = Partial<Record<Locale, string>>;
 export type RequiredLocalizedString = Record<Locale, string>;

@@ -16,48 +16,55 @@ import type { PortfolioBlock } from '@/domain/builder/portfolio';
 
 export function useSavePage() {
   const queryClient = useQueryClient();
-  const { currentPage, setHasUnsavedChanges } = useEditorStore();
+  const { currentPage, setHasUnsavedChanges, draftConfig } = useEditorStore();
   const { blocks } = useBlocksStore();
   const { styles } = useStylesStore();
   const { addHistoryEntry } = useHistoryStore();
 
   return useMutation({
     mutationFn: async () => {
-      if (!currentPage) throw new Error('No page selected');
-
       const siteService = new SiteService();
 
-      if (!styles) throw new Error('Styles not initialized');
+      if (draftConfig && currentPage) {
+        await siteService.updateDraft(currentPage.site_id, draftConfig);
+      } else {
+        if (!currentPage) throw new Error('No page selected');
+        if (!styles) throw new Error('Styles not initialized');
 
-      // Save everything to config_draft
-      await siteService.updateDraft(currentPage.site_id, {
-        siteTitle: styles.siteTitle,
-        bio: styles.bio,
-        theme: {
-          fonts: styles.typography as any,
-          palette: styles.colors as any,
-        },
-        assets: styles.assets as any,
-        sections: {
-          order: blocks.map(b => b.id),
-          visibility: Object.fromEntries(blocks.map(b => [b.id, !!b.is_visible])),
-          content: Object.fromEntries(blocks.map(b => [b.id, b.content])),
-        }
-      });
+        // Save everything to config_draft (legacy block editor)
+        await siteService.updateDraft(currentPage.site_id, {
+          siteTitle: styles.siteTitle,
+          bio: styles.bio,
+          theme: {
+            fonts: styles.typography as any,
+            palette: styles.colors as any,
+          },
+          assets: styles.assets as any,
+          sections: {
+            order: blocks.map(b => b.id),
+            visibility: Object.fromEntries(
+              blocks.map(b => [b.id, !!b.is_visible])
+            ),
+            content: Object.fromEntries(blocks.map(b => [b.id, b.content])),
+          },
+        });
+      }
 
       // Add history entry to store
-      addHistoryEntry({
-        site_id: currentPage.site_id,
-        entity_type: 'page',
-        entity_id: currentPage.id,
-        action: 'update',
-        previous_state: null,
-        new_state: { blocks },
-        description: 'Page saved',
-        changed_by: null,
-        session_id: null,
-        is_undoable: true,
-      });
+      if (currentPage) {
+        addHistoryEntry({
+          site_id: currentPage.site_id,
+          entity_type: 'page',
+          entity_id: currentPage.id,
+          action: 'update',
+          previous_state: null,
+          new_state: { blocks },
+          description: 'Page saved',
+          changed_by: null,
+          session_id: null,
+          is_undoable: true,
+        });
+      }
 
       setHasUnsavedChanges(false);
     },

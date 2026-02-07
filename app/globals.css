@@ -191,6 +191,22 @@
     border: 1px solid hsl(var(--border-subtle));
   }
 
+  .gradient-border-card {
+    position: relative;
+    padding: var(--space-0_5);
+    border-radius: var(--radius-panel);
+    background: var(--gradient-brand);
+    background-size: 200% 200%;
+    animation: gradientBorderShift 10s ease infinite;
+  }
+
+  .gradient-border-card__inner {
+    border-radius: calc(var(--radius-panel) - var(--space-0_5));
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border-subtle));
+    box-shadow: var(--shadow-surface);
+  }
+
   /* Text gradients - subtle, readable */
   .text-gradient {
     color: hsl(var(--text-primary));
@@ -271,6 +287,20 @@
 
   50% {
     opacity: 0.8;
+  }
+}
+
+@keyframes gradientBorderShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
   }
 }
 

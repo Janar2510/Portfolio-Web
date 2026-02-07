@@ -50,6 +50,45 @@ export const PRESET_PALETTES = [
             surface: '#171717',
             border: '#262626'
         }
+    },
+    {
+        id: 'artisanal',
+        name: 'Artisanal Dark',
+        colors: {
+            background: '#020202',
+            primary: '#6366f1',
+            secondary: '#a855f7',
+            accent: '#6366f1',
+            text: '#ffffff',
+            surface: '#0a0a0a',
+            border: 'rgba(255,255,255,0.08)'
+        }
+    },
+    {
+        id: 'system-root',
+        name: 'System Root',
+        colors: {
+            background: '#101b33',
+            primary: '#0d7666',
+            secondary: '#60aca3',
+            accent: '#0d7666',
+            text: '#ffffff',
+            surface: '#202f4f',
+            border: 'rgba(96, 172, 163, 0.2)'
+        }
+    },
+    {
+        id: 'sandstone',
+        name: 'Editorial Warm',
+        colors: {
+            background: '#000000',
+            primary: '#AB6530',
+            secondary: '#87410F',
+            accent: '#AB6530',
+            text: '#EAEAEA',
+            surface: '#111111',
+            border: '#BEBEBE'
+        }
     }
 ];
 
@@ -67,6 +106,14 @@ export const PRESET_FONTS = [
         name: 'Elegant Serif',
         fonts: {
             body: '"Lora", serif',
+            heading: '"Playfair Display", serif'
+        }
+    },
+    {
+        id: 'premium-serif',
+        name: 'Premium Serif',
+        fonts: {
+            body: '"Inter", sans-serif',
             heading: '"Playfair Display", serif'
         }
     },

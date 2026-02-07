@@ -935,6 +935,120 @@ export const templates: TemplateRegistry = {
                 accent: '#ff0000',
             }
         }
+    },
+    'artisanal-vision': {
+        id: 'artisanal-vision',
+        name: 'Artisanal Vision',
+        description: 'Premium, modern portfolio for digital artists featuring immersive visual storytelling.',
+        templateVersion: 1,
+        defaultLocale: 'en',
+        defaultSections: [
+            {
+                id: 'hero-1',
+                type: 'hero',
+                enabled: true,
+                content: {
+                    badge: { en: 'Digital Surrealism Artist', et: 'Digitaalne sürrealist' },
+                    headline: { en: 'Capturing the Unseen Realm', et: 'Püüdes nähtamatut maailma' },
+                    subheadline: {
+                        en: 'Exploring the intersection of human emotion and digital abstraction through immersive visual experiences.',
+                        et: 'Avastades inimemotsiooni ja digitaalse abstraktsiooni kokkupuutepunkte läbi kaasahaaravate visuaalsete kogemuste.'
+                    },
+                    ctaLabel: { en: 'Explore Gallery', et: 'Avasta galeriid' },
+                    backgroundImage: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&q=80&w=2000'
+                },
+                settings: {
+                    headline_style: 'gradient',
+                    overlay: true,
+                    height: 'full'
+                }
+            },
+            {
+                id: 'marquee-1',
+                type: 'marquee',
+                enabled: true,
+                content: {
+                    items: [
+                        { en: 'SURREALISM', et: 'SÜRREALISM' },
+                        { en: 'DIGITAL ART', et: 'DIGITAALNE KUNST' },
+                        { en: '3D MODELLING', et: '3D MODELLERIMINE' },
+                        { en: 'VISUAL STORYTELLING', et: 'VISUAALNE JUTUVESTMINE' }
+                    ]
+                },
+                settings: { speed: 'slow', background: 'transparent' }
+            },
+            {
+                id: 'about-1',
+                type: 'about',
+                enabled: true,
+                content: {
+                    heading: { en: 'The Artistic Pulse', et: 'Kunstiline pulss' },
+                    body: {
+                        en: 'Blending traditional techniques with cutting-edge technology to deliver visual excellence across multiple mediums.',
+                        et: 'Põimides traditsioonilisi tehnikaid kaasaegse tehnoloogiaga, et pakkuda visuaalset tipptasemel tulemust läbi erinevate meediumite.'
+                    }
+                }
+            },
+            {
+                id: 'projects-1',
+                type: 'projects',
+                enabled: true,
+                content: {
+                    heading: { en: 'Selected Works', et: 'Valitud tööd' },
+                    items: [
+                        {
+                            id: 'p1',
+                            title: { en: 'Neon Dreams', et: 'Neon-unenäod' },
+                            description: { en: 'A dive into futuristic cityscapes.', et: 'Sukeldumine futuristlikesse linnapiltidesse.' },
+                            image: { src: 'https://picsum.photos/id/1015/800/1000' }
+                        },
+                        {
+                            id: 'p2',
+                            title: { en: 'Ocean Whisper', et: 'Ookeani sosin' },
+                            description: { en: 'Capturing the movement of water.', et: 'Püüdes vee liikumis.' },
+                            image: { src: 'https://picsum.photos/id/1041/800/1000' }
+                        }
+                    ]
+                }
+            },
+            {
+                id: 'contact-1',
+                type: 'contact',
+                enabled: true,
+                content: {
+                    heading: { en: 'Let\'s Create Something Epic', et: 'Loome midagi eepilist' },
+                    email: 'hello@artisanal.art',
+                    formEnabled: true
+                }
+            },
+            {
+                id: 'footer-1',
+                type: 'footer',
+                enabled: true,
+                content: {
+                    text: { en: '© 2024 Artisanal Vision. Crafted with passion.', et: '© 2024 Artisanal Vision. Loodud kirega.' }
+                }
+            }
+        ],
+        theme: {
+            palette: {
+                primary: '#6366f1',
+                secondary: '#a855f7',
+                background: '#020202',
+                text: '#ffffff',
+                accent: '#6366f1',
+                surface: '#0a0a0a'
+            },
+            fonts: {
+                headingFont: 'Playfair Display',
+                bodyFont: 'Inter'
+            },
+            buttons: {
+                radius: '0px',
+                style: 'solid',
+                uppercase: true
+            }
+        }
     }
 };
 

@@ -151,6 +151,9 @@
    --space-2xl: var(--space-12);
    --space-3xl: var(--space-16);
 
+  /* Card layout rhythm */
+  --card-gap: var(--space-4);
+
    /* 
      ============================================
      TYPOGRAPHY SCALE (Editorial)
