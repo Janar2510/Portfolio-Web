@@ -1,0 +1,4 @@
+- [ ] Verify the new editor wizard flow loads a draft config.
+- [ ] Confirm template selection updates the live preview.
+- [ ] Save a draft and ensure publish/unpublish works.
+- [ ] Verify SEO title/description are saved in draft_config.

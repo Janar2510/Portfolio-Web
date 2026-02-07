@@ -48,6 +48,8 @@ export const TemplateConfigSchema = z.object({
     templateId: z.string(),
     siteTitle: z.string().optional(),
     bio: z.string().optional(),
+    seo_title: z.string().optional(),
+    seo_description: z.string().optional(),
     theme: ThemeConfigSchema,
     sections: SectionsConfigSchema,
     custom_css: z.string().optional(),

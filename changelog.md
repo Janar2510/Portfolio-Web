@@ -1,0 +1,4 @@
+- 2026-02-07
+  - Replaced the portfolio editor layout with a wizard flow and live preview.
+  - Added template-first editing steps for content, media, theme, and publish.
+  - Stored SEO title/description fields in draft config and editor step.

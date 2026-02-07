@@ -1,0 +1,4 @@
+- [ ] Validate wizard step navigation for all templates.
+- [ ] Confirm content fields update draft_config sections correctly.
+- [ ] Review spacing tokens and gradient border animation on cards.
+- [ ] Confirm SEO fields persist in draft_config and save flow.
